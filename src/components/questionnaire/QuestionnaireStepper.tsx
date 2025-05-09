@@ -11,6 +11,7 @@ import DateStep from "./steps/DateStep";
 import LocationStep from "./steps/LocationStep";
 import GuestCountStep from "./steps/GuestCountStep";
 import FinalStep from "./steps/FinalStep";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface QuestionnaireStepperProps {
   onComplete: () => void;
@@ -129,34 +130,39 @@ const QuestionnaireStepper = ({ onComplete }: QuestionnaireStepperProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStep}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="min-h-[400px] flex flex-col"
-        >
-          {renderStep()}
-        </motion.div>
-      </AnimatePresence>
-      
-      <div className="flex justify-center">
-        {/* Progress dots */}
-        <div className="flex space-x-2">
-          {steps.map((step, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentStep ? "bg-wednest-sage" : "bg-gray-300"
-              }`}
-            />
-          ))}
+    <Card className="w-full max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-wednest-beige">
+      <CardContent className="p-0">
+        <div className="bg-gradient-to-r from-wednest-sage-light to-wednest-sage p-1" />
+        <div className="p-6 space-y-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="min-h-[400px] flex flex-col"
+            >
+              {renderStep()}
+            </motion.div>
+          </AnimatePresence>
+          
+          <div className="flex justify-center">
+            {/* Progress dots */}
+            <div className="flex space-x-2">
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentStep ? "bg-wednest-sage" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

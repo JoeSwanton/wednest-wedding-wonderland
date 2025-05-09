@@ -1,53 +1,86 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Bell, Menu, Search, Settings } from "lucide-react";
+import WeddingSummary from "@/components/dashboard/WeddingSummary";
+import TaskProgressChart from "@/components/dashboard/TaskProgressChart";
+import BudgetOverview from "@/components/dashboard/BudgetOverview";
+import QuickActions from "@/components/dashboard/QuickActions";
+import UpcomingEvents from "@/components/dashboard/UpcomingEvents";
+import { supabase } from "@/integrations/supabase/client";
 
 const Dashboard = () => {
   const { user, userProfile, signOut } = useAuth();
   const navigate = useNavigate();
+  const [weddingDetails, setWeddingDetails] = useState<any>(null);
+  
+  useEffect(() => {
+    const fetchWeddingDetails = async () => {
+      if (!user) return;
+      
+      try {
+        const { data } = await supabase
+          .from('wedding_details')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+          
+        setWeddingDetails(data);
+      } catch (error) {
+        console.error('Error fetching wedding details:', error);
+      }
+    };
+    
+    fetchWeddingDetails();
+  }, [user]);
   
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-serif text-wednest-brown">Your Wedding Dashboard</h1>
-          <Button variant="outline" onClick={signOut}>Sign Out</Button>
+    <div className="min-h-screen bg-gradient-to-b from-white to-wednest-beige/20">
+      <header className="bg-white shadow-sm border-b border-wednest-beige/30">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-serif text-wednest-brown">Your Wedding Dashboard</h1>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon" className="text-wednest-brown">
+              <Search className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="text-wednest-brown">
+              <Bell className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="text-wednest-brown">
+              <Settings className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" onClick={signOut} className="ml-2">Sign Out</Button>
+          </div>
         </div>
       </header>
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-          <div className="px-4 py-5 sm:px-6">
-            <h2 className="text-lg font-medium text-wednest-brown">Welcome to your personalized dashboard!</h2>
-            <p className="mt-1 text-sm text-wednest-brown-light">
-              This is where you'll manage all your wedding planning tasks.
-            </p>
-          </div>
-          <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
-            <p className="text-wednest-brown">
-              Your dashboard has been customized based on your questionnaire responses. Start exploring the features below!
-            </p>
-            
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Dashboard cards would go here */}
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
-                <h3 className="font-medium text-wednest-brown">Wedding Timeline</h3>
-                <p className="text-sm text-wednest-brown-light mt-2">Track your planning progress and upcoming tasks</p>
-              </div>
-              
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
-                <h3 className="font-medium text-wednest-brown">Budget Tracker</h3>
-                <p className="text-sm text-wednest-brown-light mt-2">Manage your wedding expenses and stay on budget</p>
-              </div>
-              
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
-                <h3 className="font-medium text-wednest-brown">Guest List</h3>
-                <p className="text-sm text-wednest-brown-light mt-2">Organize your guest list and track RSVPs</p>
-              </div>
-            </div>
-          </div>
+      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        {/* Welcome Section */}
+        <div className="bg-gradient-to-r from-wednest-sage-light to-wednest-sage rounded-lg shadow-sm p-6 mb-8 text-white">
+          <h2 className="text-2xl font-serif">
+            Welcome, {weddingDetails?.partner1_name || "there"}!
+          </h2>
+          <p className="opacity-90 mt-1">
+            {weddingDetails ? 
+              `Your wedding planning journey is underway. Here's your latest progress.` : 
+              "Let's start planning your dream wedding."}
+          </p>
+        </div>
+        
+        {/* Dashboard Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <WeddingSummary />
+          <TaskProgressChart />
+          <QuickActions />
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <BudgetOverview />
+          <UpcomingEvents />
         </div>
       </main>
     </div>
