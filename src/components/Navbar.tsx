@@ -14,12 +14,13 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     try {
+      console.log("Navbar: Initiating sign out");
       await signOut();
       toast({
         title: "Signed out successfully",
         description: "You have been signed out of your account.",
       });
-      navigate('/auth');
+      // No need to navigate here as it's handled by onAuthStateChange
     } catch (error) {
       console.error("Error signing out:", error);
       toast({
