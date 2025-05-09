@@ -1,13 +1,34 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
+      navigate('/auth');
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Sign out failed",
+        description: "There was a problem signing you out. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -48,7 +69,7 @@ const Navbar = () => {
               {user.email}
             </span>
             <Button 
-              onClick={() => signOut()} 
+              onClick={handleSignOut} 
               variant="outline" 
               className="border-wednest-sage text-wednest-brown hover:bg-wednest-sage hover:text-white"
             >
@@ -118,7 +139,7 @@ const Navbar = () => {
                 <span className="text-wednest-brown">{user.email}</span>
                 <Button 
                   onClick={() => {
-                    signOut();
+                    handleSignOut();
                     toggleMobileMenu();
                   }} 
                   className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"

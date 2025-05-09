@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUserProfile({ full_name, user_type, is_new_user: isNewUser });
             
             // Redirect new users to questionnaire
-            if (isNewUser && window.location.pathname !== '/questionnaire') {
+            if (isNewUser && window.location.pathname !== '/questionnaire' && window.location.pathname !== '/auth') {
               navigate('/questionnaire');
             } else if (!isNewUser && window.location.pathname === '/auth') {
               navigate('/dashboard');
@@ -110,7 +110,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [navigate]);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+      setSession(null);
+      setUserProfile(null);
+    } catch (error) {
+      console.error("Error signing out:", error);
+      throw error;
+    }
   };
 
   return (

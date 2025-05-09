@@ -10,10 +10,12 @@ import BudgetOverview from "@/components/dashboard/BudgetOverview";
 import QuickActions from "@/components/dashboard/QuickActions";
 import UpcomingEvents from "@/components/dashboard/UpcomingEvents";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
   const { user, userProfile, signOut } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [weddingDetails, setWeddingDetails] = useState<any>(null);
   
   useEffect(() => {
@@ -36,6 +38,24 @@ const Dashboard = () => {
     fetchWeddingDetails();
   }, [user]);
   
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
+      navigate('/auth');
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Sign out failed",
+        description: "There was a problem signing you out. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-wednest-beige/20">
       <header className="bg-white shadow-sm border-b border-wednest-beige/30">
@@ -53,7 +73,7 @@ const Dashboard = () => {
             <Button variant="ghost" size="icon" className="text-wednest-brown">
               <Settings className="h-5 w-5" />
             </Button>
-            <Button variant="outline" onClick={signOut} className="ml-2">Sign Out</Button>
+            <Button variant="outline" onClick={handleSignOut} className="ml-2">Sign Out</Button>
           </div>
         </div>
       </header>
