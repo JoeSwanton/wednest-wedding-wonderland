@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,22 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// WedNest custom colors
+				wednest: {
+					sage: '#7D8E74',
+					'sage-light': '#A6B59E',
+					'sage-dark': '#5A6A53',
+					cream: '#F8F5F0',
+					beige: '#E6DFD2',
+					brown: '#695F4C',
+					'brown-light': '#8A7F66',
+					gold: '#D4BE83'
 				}
+			},
+			fontFamily: {
+				'cormorant': ['Cormorant Garamond', 'serif'],
+				'montserrat': ['Montserrat', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
