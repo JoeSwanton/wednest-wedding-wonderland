@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
-import { Google } from "lucide-react";
+import { Github } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface SignUpFormProps {
@@ -178,7 +177,7 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
           className="w-full flex items-center justify-center gap-2"
           onClick={handleGoogleSignIn}
         >
-          <Google className="h-4 w-4" />
+          <Github className="h-4 w-4" />
           Sign up with Google
         </Button>
         

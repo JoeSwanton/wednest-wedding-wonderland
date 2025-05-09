@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
-import { Google } from "lucide-react";
+import { Github } from "lucide-react";
 
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
@@ -123,7 +123,7 @@ const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
           className="w-full flex items-center justify-center gap-2"
           onClick={handleGoogleSignIn}
         >
-          <Google className="h-4 w-4" />
+          <Github className="h-4 w-4" />
           Sign in with Google
         </Button>
         
