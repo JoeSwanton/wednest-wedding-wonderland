@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -66,12 +67,14 @@ const QuestionnaireStepper = ({ onComplete }: QuestionnaireStepperProps) => {
     try {
       if (!user) return;
       
-      await supabase.from('wedding_details').upsert({
+      const weddingData = {
         user_id: user.id,
         ...formData,
         created_at: new Date().toISOString(),
-      });
+        updated_at: new Date().toISOString()
+      };
       
+      await supabase.from('wedding_details').upsert(weddingData);
       onComplete();
     } catch (error) {
       console.error("Error saving questionnaire data:", error);
