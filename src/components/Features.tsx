@@ -1,5 +1,6 @@
 
 import { Heart, Search, Calendar, Presentation, Package, Award } from "lucide-react";
+import VendorCards from "./VendorCards";
 
 const featuresList = [
   {
@@ -38,7 +39,7 @@ const Features = () => {
   return (
     <div className="w-full py-16 px-4 md:px-8 bg-wednest-cream">
       <div className="max-w-4xl mx-auto text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-cormorant font-semibold text-wednest-brown mb-4">
+        <h2 className="text-3xl md:text-4xl font-serif font-normal text-wednest-brown mb-4">
           Say "I Do" to Stress-Free Planning
         </h2>
         <p className="text-wednest-brown-light text-lg">
@@ -46,13 +47,13 @@ const Features = () => {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
         {featuresList.map((feature, index) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
             <div className="mb-4">
               {feature.icon}
             </div>
-            <h3 className="text-xl font-cormorant font-semibold text-wednest-brown mb-2">
+            <h3 className="text-xl font-serif font-normal text-wednest-brown mb-2">
               {feature.title}
             </h3>
             <p className="text-wednest-brown-light">
@@ -60,6 +61,13 @@ const Features = () => {
             </p>
           </div>
         ))}
+      </div>
+
+      <div className="max-w-6xl mx-auto">
+        <h3 className="text-2xl font-serif font-normal text-wednest-brown mb-6 text-center md:text-left">
+          Featured Wedding Professionals
+        </h3>
+        <VendorCards />
       </div>
     </div>
   );
