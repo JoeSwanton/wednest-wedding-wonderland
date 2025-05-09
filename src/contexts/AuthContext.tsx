@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 interface UserProfile {
   full_name?: string;
   user_type?: "couple" | "vendor";
+  is_new_user?: boolean;
 }
 
 interface AuthContextType {
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, currentSession) => {
+      async (event, currentSession) => {
         setSession(currentSession);
         const currentUser = currentSession?.user ?? null;
         setUser(currentUser);
@@ -37,7 +38,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (currentUser) {
           // Extract user metadata
           const { full_name, user_type } = currentUser.user_metadata || {};
-          setUserProfile({ full_name, user_type });
+          
+          // Check if user has completed the questionnaire
+          if (event === 'SIGNED_IN') {
+            const { data: weddingDetails } = await supabase
+              .from('wedding_details')
+              .select('*')
+              .eq('user_id', currentUser.id)
+              .maybeSingle();
+              
+            // If no wedding details, mark as new user
+            const isNewUser = weddingDetails === null;
+            setUserProfile({ full_name, user_type, is_new_user: isNewUser });
+            
+            // Redirect new users to questionnaire
+            if (isNewUser && window.location.pathname !== '/questionnaire') {
+              navigate('/questionnaire');
+            } else if (!isNewUser && window.location.pathname === '/auth') {
+              navigate('/dashboard');
+            }
+          } else {
+            setUserProfile({ full_name, user_type });
+          }
         } else {
           setUserProfile(null);
         }
@@ -51,7 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
       setSession(currentSession);
       const currentUser = currentSession?.user ?? null;
       setUser(currentUser);
@@ -59,7 +81,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (currentUser) {
         // Extract user metadata
         const { full_name, user_type } = currentUser.user_metadata || {};
-        setUserProfile({ full_name, user_type });
+        
+        // Check if user has completed the questionnaire
+        const { data: weddingDetails } = await supabase
+          .from('wedding_details')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .maybeSingle();
+          
+        // If no wedding details, mark as new user
+        const isNewUser = weddingDetails === null;
+        setUserProfile({ full_name, user_type, is_new_user: isNewUser });
+        
+        // Redirect new users to questionnaire if not already there
+        if (isNewUser && window.location.pathname !== '/questionnaire' && window.location.pathname !== '/auth') {
+          setTimeout(() => navigate('/questionnaire'), 0);
+        }
       } else {
         setUserProfile(null);
       }

@@ -10,6 +10,8 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Questionnaire from "./pages/Questionnaire";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,10 @@ const TitleUpdater = () => {
       document.title = "Find Wedding Vendors - WedNest";
     } else if (location.pathname === "/auth") {
       document.title = "Sign In - WedNest";
+    } else if (location.pathname === "/questionnaire") {
+      document.title = "Wedding Questionnaire - WedNest";
+    } else if (location.pathname === "/dashboard") {
+      document.title = "Your Dashboard - WedNest";
     }
   }, [location]);
   
@@ -41,7 +47,8 @@ const AppRoutes = () => (
       
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
-        {/* Add protected routes here */}
+        <Route path="/questionnaire" element={<Questionnaire />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Route>
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
