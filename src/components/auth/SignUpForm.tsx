@@ -36,6 +36,9 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     setError(null);
 
     try {
+      console.log("Starting sign up process");
+      console.log("User type selected:", userType);
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -47,14 +50,23 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Signup error:", error);
+        throw error;
+      }
+      
+      console.log("Sign up successful:", data);
       
       if (data.user) {
         toast({
           title: "Registration successful!",
           description: "Please check your email to confirm your account.",
         });
-        navigate("/");
+        
+        // Short delay before navigation to ensure Supabase processes are complete
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
       }
     } catch (error: any) {
       setError(error.message || "An error occurred during sign up");
