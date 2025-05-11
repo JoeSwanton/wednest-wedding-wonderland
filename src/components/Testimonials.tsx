@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "WedNest simplified our planning process and helped us find amazing vendors that matched our style perfectly.",
+    quote: "Enosi simplified our planning process and helped us find amazing vendors that matched our style perfectly.",
     author: "Sarah & Michael",
     location: "Brisbane"
   },

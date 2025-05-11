@@ -29,7 +29,7 @@ const Auth = () => {
             <p className="text-wednest-brown-light">
               {activeTab === "signin" 
                 ? "Enter your email and password to access your account" 
-                : "Join WedNest to start planning your perfect wedding"}
+                : "Join Enosi to start planning your perfect wedding"}
             </p>
           </div>
           

@@ -39,7 +39,7 @@ const Navbar = () => {
     <nav className="w-full py-4 px-4 md:px-8 flex items-center justify-between border-b border-wednest-beige">
       <Link to="/" className="flex items-center">
         <h1 className="text-2xl md:text-3xl font-serif font-semibold text-wednest-brown">
-          WedNest
+          Enosi
         </h1>
       </Link>
       

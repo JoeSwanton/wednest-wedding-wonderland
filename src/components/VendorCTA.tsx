@@ -19,7 +19,7 @@ const VendorCTA = () => {
             Wedding Professionals, Grow Your Business
           </h2>
           <p className="mb-6 opacity-90 text-lg">
-            Join WedNest to showcase your services to engaged couples who are actively planning their wedding.
+            Join Enosi to showcase your services to engaged couples who are actively planning their wedding.
           </p>
           <Button className="bg-white text-wednest-sage hover:bg-wednest-cream">
             Join as a Vendor

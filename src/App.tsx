@@ -21,17 +21,17 @@ const TitleUpdater = () => {
   
   useEffect(() => {
     // Set default title
-    document.title = "WedNest - Your All-in-One Australian Wedding Planning Platform";
+    document.title = "Enosi - Your All-in-One Australian Wedding Planning Platform";
     
     // You can add more route-specific titles here
     if (location.pathname === "/vendors") {
-      document.title = "Find Wedding Vendors - WedNest";
+      document.title = "Find Wedding Vendors - Enosi";
     } else if (location.pathname === "/auth") {
-      document.title = "Sign In - WedNest";
+      document.title = "Sign In - Enosi";
     } else if (location.pathname === "/questionnaire") {
-      document.title = "Wedding Questionnaire - WedNest";
+      document.title = "Wedding Questionnaire - Enosi";
     } else if (location.pathname === "/dashboard") {
-      document.title = "Your Dashboard - WedNest";
+      document.title = "Your Dashboard - Enosi";
     }
   }, [location]);
   
