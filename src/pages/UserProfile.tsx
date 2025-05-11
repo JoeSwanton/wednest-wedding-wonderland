@@ -5,11 +5,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AccountSettings from "@/components/profile/AccountSettings";
 import PaymentManagement from "@/components/profile/PaymentManagement";
-import { Settings, CreditCard, Bell, Lock } from "lucide-react";
+import { Settings, CreditCard, Bell, Lock, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  const { user } = useAuth();
+  const { user, signOut, userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("account");
+  const { toast } = useToast();
+  const navigate = useNavigate();
   
   const tabs = [
     {
@@ -26,6 +31,25 @@ const UserProfile = () => {
     },
     // Additional tabs could be added here in the future
   ];
+
+  const handleSignOut = async () => {
+    try {
+      console.log("Profile: Initiating sign out");
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account."
+      });
+      // No need to navigate here as it's handled by onAuthStateChange
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Sign out failed",
+        description: "There was a problem signing you out. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -82,6 +106,21 @@ const UserProfile = () => {
                       </button>
                     ))}
                   </nav>
+                </div>
+                
+                {/* New section for account management */}
+                <div className="mt-6 pt-6 border-t border-wednest-beige">
+                  <h4 className="text-xs uppercase text-wednest-brown-light font-medium tracking-wider mb-3 px-2">
+                    Account
+                  </h4>
+                  <Button 
+                    variant="ghost" 
+                    onClick={handleSignOut}
+                    className="w-full flex items-center justify-start gap-3 text-wednest-brown-light hover:text-wednest-brown hover:bg-wednest-cream/50"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Sign Out</span>
+                  </Button>
                 </div>
               </div>
             </div>
