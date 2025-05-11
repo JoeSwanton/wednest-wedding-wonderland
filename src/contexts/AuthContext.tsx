@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface UserProfile {
   full_name?: string;
@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Set up auth state listener first
@@ -52,10 +53,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const isNewUser = weddingDetails === null;
             setUserProfile({ full_name, user_type, is_new_user: isNewUser });
             
-            // Redirect new users to questionnaire
-            if (isNewUser && window.location.pathname !== '/questionnaire' && window.location.pathname !== '/auth') {
-              navigate('/questionnaire');
-            } else if (!isNewUser && window.location.pathname === '/auth') {
+            // Only redirect new users if they're not already on the questionnaire page
+            // and not on the auth page (to prevent loops after initial sign-in)
+            if (isNewUser && 
+                location.pathname !== '/questionnaire' && 
+                location.pathname !== '/auth') {
+              // Use setTimeout to avoid rendering issues
+              setTimeout(() => navigate('/questionnaire'), 0);
+            } else if (!isNewUser && location.pathname === '/auth') {
+              // Only redirect from auth page to dashboard if user is not new
               navigate('/dashboard');
             }
           } else {
@@ -95,8 +101,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const isNewUser = weddingDetails === null;
         setUserProfile({ full_name, user_type, is_new_user: isNewUser });
         
-        // Redirect new users to questionnaire if not already there
-        if (isNewUser && window.location.pathname !== '/questionnaire' && window.location.pathname !== '/auth') {
+        // Only redirect new users if they're not already on the questionnaire page
+        // and not on the auth page (to prevent loops)
+        if (isNewUser && 
+            location.pathname !== '/questionnaire' && 
+            location.pathname !== '/auth' &&
+            location.pathname !== '/') {  // Added check for home page
           setTimeout(() => navigate('/questionnaire'), 0);
         }
       } else {
@@ -109,7 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, location.pathname]); // Added location.pathname to dependencies
 
   const signOut = async () => {
     try {
