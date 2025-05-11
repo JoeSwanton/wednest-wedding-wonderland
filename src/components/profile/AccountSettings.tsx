@@ -84,6 +84,16 @@ const AccountSettings = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
+          <Label htmlFor="userType">Account Type</Label>
+          <div className="p-3 bg-gray-50 rounded border border-gray-100">
+            {userProfile?.user_type === 'vendor' ? 'Wedding Vendor' : 'Couple Planning a Wedding'}
+          </div>
+          <p className="text-xs text-wednest-brown-light">
+            This is the account type you selected during registration.
+          </p>
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="fullName">Full Name</Label>
           <div className="relative">
             <User className="absolute left-3 top-3 h-4 w-4 text-wednest-brown-light" />

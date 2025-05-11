@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      user_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_role: Database["public"]["Enums"]["user_role"]
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+          user_role: Database["public"]["Enums"]["user_role"]
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_role?: Database["public"]["Enums"]["user_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wedding_details: {
         Row: {
           created_at: string
@@ -52,17 +94,51 @@ export type Database = {
           wedding_date_status?: string
           wedding_location_status?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "wedding_details_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wedding_details_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
-      [_ in never]: never
+      couple_view: {
+        Row: {
+          bio: string | null
+          display_name: string | null
+          email: string | null
+          id: string | null
+          user_role: Database["public"]["Enums"]["user_role"] | null
+        }
+        Relationships: []
+      }
+      vendor_view: {
+        Row: {
+          bio: string | null
+          display_name: string | null
+          email: string | null
+          id: string | null
+          user_role: Database["public"]["Enums"]["user_role"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "couple" | "vendor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -177,6 +253,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["couple", "vendor"],
+    },
   },
 } as const
