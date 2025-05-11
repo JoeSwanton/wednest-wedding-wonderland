@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               // Only redirect new users if they're not already on the questionnaire page
               // and not on the auth page (to prevent loops after initial sign-in)
               if (isNewUser && 
+                  user_type === 'couple' &&
                   !nonRedirectPaths.includes(location.pathname) &&
                   location.pathname !== '/') {
                 // Use setTimeout to avoid rendering issues
@@ -77,7 +78,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               } else if (!isNewUser && location.pathname === '/auth') {
                 // Only redirect from auth page to dashboard if user is not new
                 console.log("Redirecting existing user to dashboard");
-                navigate('/dashboard');
+                if (user_type === 'vendor') {
+                  navigate('/vendor');
+                } else {
+                  navigate('/dashboard');
+                }
               }
             } catch (error) {
               console.error("Error in auth state change handler:", error);
