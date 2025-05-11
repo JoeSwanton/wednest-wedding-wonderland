@@ -1,0 +1,150 @@
+
+import { VendorData } from "@/components/vendors/VendorCard";
+
+// Expanded mock business data
+export const mockBusinesses: VendorData[] = [
+  {
+    id: 1,
+    type: "DJ",
+    name: "Rhythm Masters Entertainment",
+    location: "Sydney, NSW",
+    availability: "Medium",
+    price: "$$$",
+    description: "High-energy DJs who specialize in reading the crowd and creating the perfect dance floor atmosphere.",
+    rating: 4.9,
+    tags: ["High Energy", "Dance Floor Experts"],
+    imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 2,
+    type: "Venue",
+    name: "Elegant Gardens Estate",
+    location: "Yarra Valley, VIC",
+    availability: "Medium",
+    price: "$$$$",
+    description: "A beautiful garden estate with indoor and outdoor ceremony options.",
+    rating: 4.8,
+    tags: ["Garden", "Outdoor", "Indoor"],
+    imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 3,
+    type: "Photographer",
+    name: "Captured Moments Studio",
+    location: "Melbourne, VIC",
+    availability: "High",
+    price: "$$",
+    description: "Award-winning photography team specializing in candid, natural wedding photos.",
+    rating: 4.7,
+    tags: ["Candid", "Natural", "Documentary"],
+    imageUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+  },
+  {
+    id: 4,
+    type: "Florist",
+    name: "Bloom & Willow Designs",
+    location: "Brisbane, QLD",
+    availability: "Low",
+    price: "$$$",
+    description: "Bespoke floral arrangements using locally sourced, seasonal blooms.",
+    rating: 4.9,
+    tags: ["Sustainable", "Local", "Custom"],
+    imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+  },
+  {
+    id: 5,
+    type: "Catering",
+    name: "Fine Taste Catering",
+    location: "Adelaide, SA",
+    availability: "High",
+    price: "$$$$",
+    description: "Exquisite farm-to-table menus customized for your special day.",
+    rating: 4.8,
+    tags: ["Gourmet", "Farm-to-Table", "Custom Menus"],
+    imageUrl: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 6,
+    type: "Wedding Planner",
+    name: "Perfect Day Coordinators",
+    location: "Perth, WA",
+    availability: "Medium",
+    price: "$$$",
+    description: "Full-service planning team specializing in stress-free, seamless wedding experiences.",
+    rating: 5.0,
+    tags: ["Full Service", "Day-of Coordination", "Luxury"],
+    imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+  },
+  {
+    id: 7,
+    type: "Cake Designer",
+    name: "Sweet Creations Bakery",
+    location: "Hobart, TAS",
+    availability: "Low",
+    price: "$$",
+    description: "Artisan wedding cakes and dessert tables with a focus on local, seasonal flavors.",
+    rating: 4.7,
+    tags: ["Custom Design", "Gluten-Free Options", "Dessert Table"],
+    imageUrl: "https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 8,
+    type: "Videographer",
+    name: "Cinematic Love Stories",
+    location: "Gold Coast, QLD",
+    availability: "Medium",
+    price: "$$$",
+    description: "Cinematic wedding films that capture the emotion and beauty of your special day.",
+    rating: 4.9,
+    tags: ["Cinematic", "Documentary", "Drone Footage"],
+    imageUrl: "https://images.unsplash.com/photo-1571727153934-b7db5101be96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 9,
+    type: "Venue",
+    name: "Harborview Reception Center",
+    location: "Sydney, NSW",
+    availability: "High",
+    price: "$$$$",
+    description: "Stunning waterfront venue with panoramic harbor views and elegant ballrooms.",
+    rating: 4.8,
+    tags: ["Waterfront", "Ballroom", "City Views"],
+    imageUrl: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+  },
+  {
+    id: 10,
+    type: "DJ",
+    name: "Soundscape Productions",
+    location: "Canberra, ACT",
+    availability: "Medium",
+    price: "$$",
+    description: "Professional DJs and lighting specialists creating immersive entertainment experiences.",
+    rating: 4.5,
+    tags: ["DJ", "Lighting", "MC Services"],
+    imageUrl: "https://images.unsplash.com/photo-1516873240891-4bf014598ab4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 11,
+    type: "Makeup Artist",
+    name: "Bridal Beauty Specialists",
+    location: "Melbourne, VIC",
+    availability: "High",
+    price: "$$$",
+    description: "Expert makeup artists creating flawless, long-lasting looks for brides and bridal parties.",
+    rating: 4.9,
+    tags: ["Bridal Makeup", "Hair Styling", "On-Location"],
+    imageUrl: "https://images.unsplash.com/photo-1560869713-7d8c17c9e525?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  },
+  {
+    id: 12,
+    type: "Transportation",
+    name: "Luxury Fleet Services",
+    location: "Brisbane, QLD",
+    availability: "Medium",
+    price: "$$$",
+    description: "Classic and modern luxury vehicles for stylish wedding transportation.",
+    rating: 4.6,
+    tags: ["Classic Cars", "Limousines", "Luxury Vehicles"],
+    imageUrl: "https://images.unsplash.com/photo-1532202193792-e95ef22f1bce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80"
+  }
+];
