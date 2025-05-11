@@ -1,11 +1,15 @@
 
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 const ProtectedRoute = () => {
-  const { user, loading } = useAuth();
+  const { user, userProfile, loading } = useAuth();
+  const location = useLocation();
   
-  // If auth is still loading, show nothing or a loading indicator
+  // Check if the route is a vendor route
+  const isVendorRoute = location.pathname.startsWith('/vendor');
+  
+  // If auth is still loading, show loading indicator
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -19,7 +23,19 @@ const ProtectedRoute = () => {
     return <Navigate to="/auth" replace />;
   }
   
-  // If user is authenticated, render the child routes
+  // For vendor routes, check if user is a vendor
+  if (isVendorRoute && userProfile?.user_type !== 'vendor') {
+    // Redirect non-vendors away from vendor routes
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  // For couple routes, check if user is a couple
+  if (!isVendorRoute && location.pathname !== '/profile' && userProfile?.user_type === 'vendor') {
+    // Redirect vendors to vendor dashboard
+    return <Navigate to="/vendor" replace />;
+  }
+  
+  // If user is authenticated and has proper permissions, render the child routes
   return <Outlet />;
 };
 

@@ -18,6 +18,10 @@ import Inspiration from "./pages/Inspiration";
 import Blog from "./pages/Blog";
 import UserProfile from "./pages/UserProfile";
 
+// Import vendor pages
+import VendorDashboard from "./pages/vendor/VendorDashboard";
+import VendorListings from "./pages/vendor/VendorListings";
+
 const queryClient = new QueryClient();
 
 // Title updater component
@@ -45,6 +49,10 @@ const TitleUpdater = () => {
       document.title = "Wedding Blog - Enosi";
     } else if (location.pathname === "/profile") {
       document.title = "Your Profile - Enosi";
+    } else if (location.pathname === "/vendor") {
+      document.title = "Vendor Dashboard - Enosi";
+    } else if (location.pathname.startsWith("/vendor/")) {
+      document.title = "Vendor Portal - Enosi";
     }
   }, [location]);
   
@@ -62,11 +70,26 @@ const AppRoutes = () => (
       <Route path="/inspiration" element={<Inspiration />} />
       <Route path="/blog" element={<Blog />} />
       
-      {/* Protected routes */}
+      {/* Protected routes for couples */}
       <Route element={<ProtectedRoute />}>
         <Route path="/questionnaire" element={<Questionnaire />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<UserProfile />} />
+      </Route>
+      
+      {/* Protected routes for vendors */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/vendor" element={<VendorDashboard />} />
+        <Route path="/vendor/listings" element={<VendorListings />} />
+        {/* Add placeholders for other vendor routes */}
+        <Route path="/vendor/bookings" element={<div>Bookings page (Coming Soon)</div>} />
+        <Route path="/vendor/messages" element={<div>Messages page (Coming Soon)</div>} />
+        <Route path="/vendor/packages" element={<div>Packages page (Coming Soon)</div>} />
+        <Route path="/vendor/earnings" element={<div>Earnings page (Coming Soon)</div>} />
+        <Route path="/vendor/reviews" element={<div>Reviews page (Coming Soon)</div>} />
+        <Route path="/vendor/insights" element={<div>Insights page (Coming Soon)</div>} />
+        <Route path="/vendor/settings" element={<div>Settings page (Coming Soon)</div>} />
+        <Route path="/vendor/subscription" element={<div>Subscription page (Coming Soon)</div>} />
       </Route>
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
