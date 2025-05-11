@@ -43,7 +43,7 @@ const Vendors = () => {
           {/* Vendor Listing */}
           <div className="mt-12">
             <h2 className="text-2xl font-serif text-wednest-brown mb-6">
-              Featured Vendors
+              All Vendors
             </h2>
             <VendorCards />
           </div>
