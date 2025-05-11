@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +7,8 @@ interface UserProfile {
   full_name?: string;
   user_type?: "couple" | "vendor";
   is_new_user?: boolean;
+  business_name?: string;
+  business_category?: string;
 }
 
 interface AuthContextType {
@@ -44,8 +45,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (currentUser) {
           console.log("User is authenticated:", currentUser.id);
           // Extract user metadata
-          const { full_name, user_type } = currentUser.user_metadata || {};
-          console.log("User metadata:", { full_name, user_type });
+          const { full_name, user_type, business_name, business_category } = currentUser.user_metadata || {};
+          console.log("User metadata:", { full_name, user_type, business_name, business_category });
           
           // Check if user has completed the questionnaire
           if (event === 'SIGNED_IN') {
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               // If no wedding details, mark as new user
               const isNewUser = weddingDetails === null;
               console.log("Is new user:", isNewUser);
-              setUserProfile({ full_name, user_type, is_new_user: isNewUser });
+              setUserProfile({ full_name, user_type, is_new_user: isNewUser, business_name, business_category });
               
               // Only redirect new users if they're not already on the questionnaire page
               // and not on the auth page (to prevent loops after initial sign-in)
@@ -82,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               console.error("Error in auth state change handler:", error);
             }
           } else {
-            setUserProfile({ full_name, user_type });
+            setUserProfile({ full_name, user_type, business_name, business_category });
           }
         } else {
           console.log("No authenticated user");
@@ -109,8 +110,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (currentUser) {
         console.log("User found in session:", currentUser.id);
         // Extract user metadata
-        const { full_name, user_type } = currentUser.user_metadata || {};
-        console.log("User metadata from session:", { full_name, user_type });
+        const { full_name, user_type, business_name, business_category } = currentUser.user_metadata || {};
+        console.log("User metadata from session:", { full_name, user_type, business_name, business_category });
         
         try {
           // Check if user has completed the questionnaire
@@ -127,7 +128,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // If no wedding details, mark as new user
           const isNewUser = weddingDetails === null;
           console.log("Is new user (from session check):", isNewUser);
-          setUserProfile({ full_name, user_type, is_new_user: isNewUser });
+          setUserProfile({ full_name, user_type, is_new_user: isNewUser, business_name, business_category });
           
           // Only redirect new users if they're not already on the questionnaire page
           // and not on the auth page (to prevent loops)

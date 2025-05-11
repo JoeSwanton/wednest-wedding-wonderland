@@ -1,213 +1,164 @@
 
 import { useState } from "react";
-import VendorLayout from "@/components/vendor/VendorLayout";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Image, ToggleRight, ToggleLeft, ExternalLink, MoreHorizontal, CheckCircle, AlertCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import VendorLayout from "@/components/vendor/VendorLayout";
+import { Eye, MessageSquare } from "lucide-react";
 
-// Mock data for demonstration
 const mockListings = [
   {
-    id: '1',
-    title: 'Premium Wedding Photography',
-    description: 'Full day coverage with two photographers, edited photos, and online gallery.',
-    status: 'live',
-    featured: true,
-    price: '$2,500',
-    category: 'Photography',
-    coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    views: 156,
-    inquiries: 12,
-    instantBooking: true,
+    id: "1",
+    title: "Premium Photography Package",
+    description: "Full-day coverage with 2 photographers, 500+ edited photos, and a premium album.",
+    price: "2,500",
+    status: "published",
+    views: 24,
+    inquiries: 3,
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
   },
   {
-    id: '2',
-    title: 'Engagement Session',
-    description: '2-hour photoshoot at a location of your choice with 50+ edited photos.',
-    status: 'draft',
-    featured: false,
-    price: '$600',
-    category: 'Photography',
-    coverImage: 'https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+    id: "2",
+    title: "Engagement Photography Session",
+    description: "2-hour engagement shoot with 75+ edited photos and online gallery.",
+    price: "450",
+    status: "draft",
     views: 0,
     inquiries: 0,
-    instantBooking: false,
+    image: "https://images.unsplash.com/photo-1529519694362-a4a77b339753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
   },
   {
-    id: '3',
-    title: 'Wedding Video Highlights',
-    description: 'Cinematic 5-8 minute highlight film of your special day.',
-    status: 'pending',
-    featured: false,
-    price: '$1,800',
-    category: 'Videography',
-    coverImage: 'https://images.unsplash.com/photo-1519741347686-c1e0a12d0c1e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    views: 42,
-    inquiries: 3,
-    instantBooking: true,
+    id: "3",
+    title: "Basic Photography Package",
+    description: "6-hour coverage with 300+ edited photos and online gallery.",
+    price: "1,200",
+    status: "published",
+    views: 18,
+    inquiries: 2,
+    image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
   }
 ];
 
 const VendorListings = () => {
-  const [listings] = useState(mockListings);
-  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState("all");
   
-  const filteredListings = activeFilter === "all" 
-    ? listings 
-    : listings.filter(listing => listing.status === activeFilter);
-    
+  const filteredListings = activeTab === "all" 
+    ? mockListings 
+    : mockListings.filter(listing => listing.status === activeTab);
+  
   return (
     <VendorLayout title="My Listings">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <p className="text-gray-600">Manage your service listings and packages</p>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-3xl font-serif text-wednest-brown">Manage Your Listings</h2>
+          <Button className="bg-wednest-sage hover:bg-wednest-sage-dark">
+            Add New Listing
+          </Button>
         </div>
-        <Button className="bg-wednest-sage hover:bg-wednest-sage-dark">
-          <Plus className="mr-2 h-4 w-4" /> Add New Listing
-        </Button>
-      </div>
-      
-      {/* Filters */}
-      <div className="flex gap-2 mb-6">
-        <Button 
-          variant={activeFilter === "all" ? "default" : "outline"}
-          onClick={() => setActiveFilter("all")}
-          className={activeFilter === "all" ? "bg-wednest-sage hover:bg-wednest-sage-dark" : ""}
-        >
-          All ({listings.length})
-        </Button>
-        <Button 
-          variant={activeFilter === "live" ? "default" : "outline"}
-          onClick={() => setActiveFilter("live")}
-          className={activeFilter === "live" ? "bg-wednest-sage hover:bg-wednest-sage-dark" : ""}
-        >
-          Live ({listings.filter(l => l.status === 'live').length})
-        </Button>
-        <Button 
-          variant={activeFilter === "draft" ? "default" : "outline"}
-          onClick={() => setActiveFilter("draft")}
-          className={activeFilter === "draft" ? "bg-wednest-sage hover:bg-wednest-sage-dark" : ""}
-        >
-          Drafts ({listings.filter(l => l.status === 'draft').length})
-        </Button>
-        <Button 
-          variant={activeFilter === "pending" ? "default" : "outline"}
-          onClick={() => setActiveFilter("pending")}
-          className={activeFilter === "pending" ? "bg-wednest-sage hover:bg-wednest-sage-dark" : ""}
-        >
-          Pending ({listings.filter(l => l.status === 'pending').length})
-        </Button>
-      </div>
-      
-      {/* Listings */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredListings.map(listing => (
-          <Card key={listing.id} className="overflow-hidden">
-            <div className="relative h-40">
-              <img 
-                src={listing.coverImage} 
-                alt={listing.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2 right-2 flex gap-2">
-                {listing.status === 'live' && (
-                  <Badge className="bg-green-500">Live</Badge>
-                )}
-                {listing.status === 'draft' && (
-                  <Badge className="bg-gray-500">Draft</Badge>
-                )}
-                {listing.status === 'pending' && (
-                  <Badge className="bg-amber-500">Pending Review</Badge>
-                )}
-                {listing.featured && (
-                  <Badge className="bg-purple-500">Featured</Badge>
-                )}
+        
+        <p className="text-wednest-brown-light max-w-3xl">
+          Create and manage your service listings to attract more couples. Well-described listings with high-quality images get more inquiries.
+        </p>
+        
+        <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="all">All Listings</TabsTrigger>
+            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="draft">Drafts</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all" className="space-y-6">
+            {filteredListings.length === 0 ? (
+              <Card>
+                <CardContent className="py-10 text-center">
+                  <p>No listings found. Create your first listing to get started.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredListings.map(listing => (
+                  <ListingCard key={listing.id} listing={listing} />
+                ))}
               </div>
-            </div>
-            
-            <CardHeader>
-              <div className="flex justify-between">
-                <CardTitle>{listing.title}</CardTitle>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Edit className="mr-2 h-4 w-4" /> Edit Listing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Image className="mr-2 h-4 w-4" /> Manage Photos
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <ExternalLink className="mr-2 h-4 w-4" /> View Public Page
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="published" className="space-y-6">
+            {filteredListings.length === 0 ? (
+              <Card>
+                <CardContent className="py-10 text-center">
+                  <p>No published listings found.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredListings.map(listing => (
+                  <ListingCard key={listing.id} listing={listing} />
+                ))}
               </div>
-              <CardDescription className="flex items-center gap-2">
-                {listing.category}
-                <span className="text-wednest-sage-dark font-medium">{listing.price}</span>
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent>
-              <p className="text-sm text-gray-600">{listing.description}</p>
-              
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">Instant Booking:</span>
-                  {listing.instantBooking ? (
-                    <ToggleRight className="h-5 w-5 text-wednest-sage" />
-                  ) : (
-                    <ToggleLeft className="h-5 w-5 text-gray-400" />
-                  )}
-                </div>
-                
-                <div className="flex gap-4 text-sm">
-                  <div className="flex items-center">
-                    <Eye className="h-4 w-4 mr-1 text-gray-500" /> 
-                    {listing.views}
-                  </div>
-                  <div className="flex items-center">
-                    <MessageSquare className="h-4 w-4 mr-1 text-gray-500" /> 
-                    {listing.inquiries}
-                  </div>
-                </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="draft" className="space-y-6">
+            {filteredListings.length === 0 ? (
+              <Card>
+                <CardContent className="py-10 text-center">
+                  <p>No draft listings found.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredListings.map(listing => (
+                  <ListingCard key={listing.id} listing={listing} />
+                ))}
               </div>
-            </CardContent>
-            
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" size="sm">
-                <Edit className="mr-2 h-4 w-4" /> Edit
-              </Button>
-              
-              {listing.status === 'draft' && (
-                <Button size="sm" className="bg-wednest-sage hover:bg-wednest-sage-dark">
-                  <CheckCircle className="mr-2 h-4 w-4" /> Publish
-                </Button>
-              )}
-              
-              {listing.status === 'pending' && (
-                <Button size="sm" variant="outline" disabled>
-                  <AlertCircle className="mr-2 h-4 w-4" /> Awaiting Approval
-                </Button>
-              )}
-              
-              {listing.status === 'live' && (
-                <Button size="sm" variant="outline">
-                  <ExternalLink className="mr-2 h-4 w-4" /> View Live
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
-        ))}
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </VendorLayout>
+  );
+};
+
+const ListingCard = ({ listing }) => {
+  return (
+    <Card className="overflow-hidden">
+      <div className="h-48 overflow-hidden">
+        <img 
+          src={listing.image} 
+          alt={listing.title} 
+          className="w-full h-full object-cover transition-transform hover:scale-105"
+        />
+      </div>
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-lg">{listing.title}</CardTitle>
+          <span className={`text-xs px-2 py-1 rounded-full uppercase ${
+            listing.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+          }`}>
+            {listing.status}
+          </span>
+        </div>
+        <CardDescription className="line-clamp-2">{listing.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="font-semibold text-wednest-brown">Starting at ${listing.price}</p>
+        <div className="flex gap-3 mt-2">
+          <span className="text-sm flex items-center gap-1 text-gray-600">
+            <Eye size={16} />
+            {listing.views} views
+          </span>
+          <span className="text-sm flex items-center gap-1 text-gray-600">
+            <MessageSquare size={16} />
+            {listing.inquiries} inquiries
+          </span>
+        </div>
+      </CardContent>
+      <CardFooter className="flex gap-2">
+        <Button variant="outline" className="w-full">Edit</Button>
+        <Button variant="outline" className="w-full">{listing.status === 'published' ? 'Unpublish' : 'Publish'}</Button>
+      </CardFooter>
+    </Card>
   );
 };
 

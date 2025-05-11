@@ -2,13 +2,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
-import { Github, UserCheck } from "lucide-react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CoupleSignUpInfo from "./CoupleSignUpInfo";
+import VendorSignUpInfo from "./VendorSignUpInfo";
+import VendorSignUpFields from "./VendorSignUpFields";
+import CommonSignUpFields from "./CommonSignUpFields";
+import AuthFooter from "./AuthFooter";
 
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
@@ -28,24 +29,6 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   // Vendor specific fields
   const [businessName, setBusinessName] = useState("");
   const [businessCategory, setBusinessCategory] = useState("photography");
-
-  const categories = [
-    { value: "photography", label: "Photography" },
-    { value: "videography", label: "Videography" },
-    { value: "catering", label: "Catering" },
-    { value: "venue", label: "Venue" },
-    { value: "music", label: "Music & Entertainment" },
-    { value: "flowers", label: "Flowers & Décor" },
-    { value: "officiant", label: "Celebrant/Officiant" },
-    { value: "planner", label: "Wedding Planner" },
-    { value: "dress", label: "Bridal Wear" },
-    { value: "suit", label: "Suits & Attire" },
-    { value: "bakery", label: "Cake & Bakery" },
-    { value: "transport", label: "Transportation" },
-    { value: "jewelry", label: "Jewelry" },
-    { value: "beauty", label: "Hair & Beauty" },
-    { value: "other", label: "Other Services" }
-  ];
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,165 +127,42 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         </TabsList>
         
         <TabsContent value="couple" className="space-y-4">
-          <div className="bg-wednest-beige/20 p-4 rounded-md mb-2">
-            <h3 className="text-lg font-medium flex items-center gap-2 text-wednest-brown">
-              <UserCheck size={18} />
-              <span>Couple Account Benefits</span>
-            </h3>
-            <ul className="list-disc pl-5 mt-2 text-sm text-wednest-brown-light">
-              <li>Create and manage your wedding planning checklist</li>
-              <li>Build and share your wedding website</li>
-              <li>Track your budget and guest list</li>
-              <li>Find and message vendors directly</li>
-            </ul>
-          </div>
+          <CoupleSignUpInfo />
         </TabsContent>
         
         <TabsContent value="vendor" className="space-y-4">
-          <div className="bg-wednest-beige/20 p-4 rounded-md mb-2">
-            <h3 className="text-lg font-medium flex items-center gap-2 text-wednest-brown">
-              <UserCheck size={18} />
-              <span>Vendor Account Benefits</span>
-            </h3>
-            <ul className="list-disc pl-5 mt-2 text-sm text-wednest-brown-light">
-              <li>Create and manage your business listing</li>
-              <li>Showcase your portfolio and reviews</li>
-              <li>Receive booking inquiries</li>
-              <li>Manage your availability calendar</li>
-              <li>Connect with engaged couples</li>
-            </ul>
-          </div>
+          <VendorSignUpInfo />
         </TabsContent>
       </Tabs>
       
       <form onSubmit={handleSignUp} className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="fullName" className="block text-sm font-medium text-wednest-brown">
-            {userType === "vendor" ? "Your Name" : "Full Name"}
-          </label>
-          <Input 
-            id="fullName"
-            type="text" 
-            placeholder={userType === "vendor" ? "Your Name" : "Your Name"}
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full"
-            required
-          />
-        </div>
+        <CommonSignUpFields 
+          fullName={fullName}
+          setFullName={setFullName}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          userType={userType}
+        />
 
         {userType === "vendor" && (
-          <>
-            <div className="space-y-2">
-              <label htmlFor="businessName" className="block text-sm font-medium text-wednest-brown">Business Name</label>
-              <Input 
-                id="businessName"
-                type="text" 
-                placeholder="Your Business Name"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                className="w-full"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="businessCategory" className="block text-sm font-medium text-wednest-brown">Business Category</label>
-              <select
-                id="businessCategory"
-                value={businessCategory}
-                onChange={(e) => setBusinessCategory(e.target.value)}
-                className="w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wednest-sage focus:border-transparent"
-                required
-              >
-                {categories.map(category => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </>
+          <VendorSignUpFields 
+            businessName={businessName}
+            setBusinessName={setBusinessName}
+            businessCategory={businessCategory}
+            setBusinessCategory={setBusinessCategory}
+          />
         )}
-      
-        <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium text-wednest-brown">Email</label>
-          <Input 
-            id="email"
-            type="email" 
-            placeholder="your.email@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full"
-            required
-          />
-        </div>
         
-        <div className="space-y-2">
-          <label htmlFor="password" className="block text-sm font-medium text-wednest-brown">Password</label>
-          <Input 
-            id="password"
-            type="password" 
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full"
-            required
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-wednest-brown">Confirm Password</label>
-          <Input 
-            id="confirmPassword"
-            type="password" 
-            placeholder="••••••••"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full"
-            required
-          />
-        </div>
-        
-        <Button 
-          type="submit" 
-          className="w-full bg-wednest-sage hover:bg-wednest-sage-dark text-white" 
-          disabled={loading}
-        >
-          {loading ? "Creating account..." : `Register as ${userType === 'vendor' ? 'Vendor' : 'Couple'}`}
-        </Button>
-        
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">or continue with</span>
-          </div>
-        </div>
-        
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex items-center justify-center gap-2"
-          onClick={handleGoogleSignIn}
-        >
-          <Github className="h-4 w-4" />
-          Sign up with Google
-        </Button>
-        
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            Already have an account?{" "}
-            <button
-              type="button"
-              onClick={onSwitchToSignIn}
-              className="text-wednest-sage hover:text-wednest-sage-dark font-medium"
-            >
-              Sign in
-            </button>
-          </p>
-        </div>
+        <AuthFooter 
+          loading={loading}
+          userType={userType}
+          onSwitchToSignIn={onSwitchToSignIn}
+          handleGoogleSignIn={handleGoogleSignIn}
+        />
       </form>
     </div>
   );
