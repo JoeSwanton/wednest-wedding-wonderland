@@ -25,8 +25,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const nonRedirectPaths = ['/questionnaire', '/auth', '/profile'];
 
   useEffect(() => {
     // Set up auth state listener first
@@ -55,7 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             
             // Only redirect new users if they're not already on the questionnaire page
             // and not on the auth page (to prevent loops after initial sign-in)
-            const nonRedirectPaths = ['/questionnaire', '/auth', '/profile'];
             if (isNewUser && 
                 !nonRedirectPaths.includes(location.pathname) &&
                 location.pathname !== '/') {
@@ -104,7 +106,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Only redirect new users if they're not already on the questionnaire page
         // and not on the auth page (to prevent loops)
-        const nonRedirectPaths = ['/questionnaire', '/auth', '/profile'];
         if (isNewUser && 
             !nonRedirectPaths.includes(location.pathname) && 
             location.pathname !== '/') {
@@ -115,6 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       setLoading(false);
+      setInitialCheckDone(true);
     });
 
     return () => {
