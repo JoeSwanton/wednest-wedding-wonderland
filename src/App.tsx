@@ -12,6 +12,10 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Questionnaire from "./pages/Questionnaire";
 import Dashboard from "./pages/Dashboard";
+import Vendors from "./pages/Vendors";
+import PlanningTools from "./pages/PlanningTools";
+import Inspiration from "./pages/Inspiration";
+import Blog from "./pages/Blog";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +36,12 @@ const TitleUpdater = () => {
       document.title = "Wedding Questionnaire - Enosi";
     } else if (location.pathname === "/dashboard") {
       document.title = "Your Dashboard - Enosi";
+    } else if (location.pathname === "/planning-tools") {
+      document.title = "Wedding Planning Tools - Enosi";
+    } else if (location.pathname === "/inspiration") {
+      document.title = "Wedding Inspiration - Enosi";
+    } else if (location.pathname === "/blog") {
+      document.title = "Wedding Blog - Enosi";
     }
   }, [location]);
   
@@ -44,6 +54,10 @@ const AppRoutes = () => (
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/vendors" element={<Vendors />} />
+      <Route path="/planning-tools" element={<PlanningTools />} />
+      <Route path="/inspiration" element={<Inspiration />} />
+      <Route path="/blog" element={<Blog />} />
       
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>

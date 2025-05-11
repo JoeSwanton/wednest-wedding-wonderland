@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -8,7 +9,7 @@ const Hero = () => {
         <div className="text-wednest-sage text-sm md:text-base font-medium tracking-wide mb-2">
           Your Wedding Journey Starts Here
         </div>
-        <h1 className="text-4xl md:text-6xl font-cormorant font-semibold text-wednest-brown mb-6">
+        <h1 className="text-4xl md:text-6xl font-serif font-semibold text-wednest-brown mb-6">
           Plan Your Perfect<br />Wedding Day
         </h1>
         <p className="text-wednest-brown-light text-base md:text-lg mb-8 max-w-xl">
@@ -16,11 +17,18 @@ const Hero = () => {
           memorable celebration with our intelligent planning tools.
         </p>
         <div className="flex flex-wrap gap-4">
-          <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white px-6 py-2 text-base">
-            Get Started
+          <Button 
+            className="bg-wednest-sage hover:bg-wednest-sage-dark text-white px-6 py-2 text-base"
+            asChild
+          >
+            <Link to="/auth">Get Started</Link>
           </Button>
-          <Button variant="outline" className="border-wednest-sage text-wednest-sage hover:bg-wednest-sage hover:text-white px-6 py-2 text-base">
-            Browse Vendors
+          <Button 
+            variant="outline" 
+            className="border-wednest-sage text-wednest-sage hover:bg-wednest-sage hover:text-white px-6 py-2 text-base"
+            asChild
+          >
+            <Link to="/vendors">Browse Vendors</Link>
           </Button>
         </div>
       </div>
