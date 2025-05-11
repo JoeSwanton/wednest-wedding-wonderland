@@ -1,59 +1,52 @@
 
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, Plus, Users, Settings, Heart, Search } from "lucide-react";
-
-const quickActions = [
-  {
-    title: "Add Task",
-    description: "Create a new wedding task",
-    icon: <Plus className="h-4 w-4" />,
-    color: "bg-wednest-sage text-white",
-  },
-  {
-    title: "Guest List",
-    description: "Manage your guest list",
-    icon: <Users className="h-4 w-4" />,
-    color: "bg-white text-wednest-brown border border-wednest-beige",
-  },
-  {
-    title: "Find Vendors",
-    description: "Discover trusted vendors",
-    icon: <Search className="h-4 w-4" />,
-    color: "bg-white text-wednest-brown border border-wednest-beige",
-  },
-  {
-    title: "Timeline",
-    description: "View your wedding timeline",
-    icon: <Calendar className="h-4 w-4" />,
-    color: "bg-white text-wednest-brown border border-wednest-beige",
-  },
-];
+import { Check, CreditCard, FileEdit, List, Settings, User } from 'lucide-react';
 
 const QuickActions = () => {
+  const quickActions = [
+    {
+      title: "Complete Checklist",
+      description: "Tackle your wedding planning checklist",
+      icon: <Check className="h-8 w-8 text-wednest-sage" />,
+      link: "#",
+    },
+    {
+      title: "Edit Guest List",
+      description: "Add or remove guests to your list",
+      icon: <List className="h-8 w-8 text-wednest-sage" />,
+      link: "#",
+    },
+    {
+      title: "Update Budget",
+      description: "Track expenses and manage your budget",
+      icon: <CreditCard className="h-8 w-8 text-wednest-sage" />,
+      link: "#",
+    },
+    {
+      title: "Manage Profile",
+      description: "Update your account settings",
+      icon: <User className="h-8 w-8 text-wednest-sage" />,
+      link: "/profile",
+    },
+  ];
+  
   return (
-    <Card className="border border-wednest-beige shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-wednest-brown text-xl">Quick Actions</CardTitle>
-        <CardDescription className="text-wednest-brown-light">
-          Shortcuts to common wedding planning tasks
-        </CardDescription>
+    <Card>
+      <CardHeader>
+        <CardTitle>Quick Actions</CardTitle>
+        <CardDescription>Easily access key wedding planning features</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {quickActions.map((action, index) => (
-            <Button
-              key={index}
-              className={`h-auto py-4 justify-start ${action.color}`}
-            >
-              <div className="flex items-center text-left">
-                <div className="mr-3">{action.icon}</div>
-                <div>
-                  <p className="font-medium">{action.title}</p>
-                  <p className="text-xs opacity-90">{action.description}</p>
-                </div>
+            <Link to={action.link} key={index} className="no-underline">
+              <div className="border rounded-lg p-4 hover:border-wednest-sage hover:bg-wednest-cream/10 transition-colors cursor-pointer h-full flex flex-col">
+                <div className="mb-3">{action.icon}</div>
+                <h3 className="font-medium text-wednest-brown mb-1">{action.title}</h3>
+                <p className="text-sm text-wednest-brown-light">{action.description}</p>
               </div>
-            </Button>
+            </Link>
           ))}
         </div>
       </CardContent>

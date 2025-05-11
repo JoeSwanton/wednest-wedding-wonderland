@@ -16,6 +16,7 @@ import Vendors from "./pages/Vendors";
 import PlanningTools from "./pages/PlanningTools";
 import Inspiration from "./pages/Inspiration";
 import Blog from "./pages/Blog";
+import UserProfile from "./pages/UserProfile";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,8 @@ const TitleUpdater = () => {
       document.title = "Wedding Inspiration - Enosi";
     } else if (location.pathname === "/blog") {
       document.title = "Wedding Blog - Enosi";
+    } else if (location.pathname === "/profile") {
+      document.title = "Your Profile - Enosi";
     }
   }, [location]);
   
@@ -63,6 +66,7 @@ const AppRoutes = () => (
       <Route element={<ProtectedRoute />}>
         <Route path="/questionnaire" element={<Questionnaire />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Route>
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

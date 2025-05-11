@@ -2,7 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -66,9 +66,10 @@ const Navbar = () => {
       <div className="hidden md:flex items-center gap-3">
         {user ? (
           <div className="flex items-center gap-3">
-            <span className="text-wednest-brown text-sm">
-              {user.email}
-            </span>
+            <Link to="/profile" className="flex items-center gap-2 text-wednest-brown-light hover:text-wednest-brown">
+              <User className="h-4 w-4" />
+              <span className="text-sm">My Profile</span>
+            </Link>
             <Button 
               onClick={handleSignOut} 
               variant="outline" 
@@ -137,7 +138,14 @@ const Navbar = () => {
             
             {user ? (
               <div className="flex flex-col gap-2 mt-4">
-                <span className="text-wednest-brown">{user.email}</span>
+                <Link 
+                  to="/profile" 
+                  className="flex items-center gap-2 text-wednest-brown py-2 border-b"
+                  onClick={toggleMobileMenu}
+                >
+                  <User className="h-4 w-4" />
+                  My Profile
+                </Link>
                 <Button 
                   onClick={() => {
                     handleSignOut();
