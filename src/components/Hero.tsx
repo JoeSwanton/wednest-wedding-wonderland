@@ -24,14 +24,12 @@ const Hero = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full lg:w-1/2 bg-wednest-cream rounded-md h-80 md:h-[450px] flex items-center justify-center">
-        <div className="w-24 h-24 flex items-center justify-center rounded-full bg-white text-wednest-beige">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-            <circle cx="9" cy="9" r="2" />
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-          </svg>
-        </div>
+      <div className="w-full lg:w-1/2 rounded-md h-80 md:h-[450px] overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+          alt="Couple on their wedding day walking hand in hand"
+          className="w-full h-full object-cover"
+        />
       </div>
     </div>
   );

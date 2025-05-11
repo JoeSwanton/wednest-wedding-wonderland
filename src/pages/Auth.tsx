@@ -3,15 +3,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
   
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Image or gradient background */}
-      <div className="hidden lg:block lg:w-1/2 bg-gradient-to-br from-wednest-beige to-wednest-cream relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
+      {/* Left side - Image background */}
+      <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+          alt="Wedding ceremony under floral arch"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30"></div>
         <div className="absolute bottom-16 left-16 text-white max-w-md">
           <p className="text-3xl font-serif italic">
             "Every love story is beautiful, but yours should be unique."

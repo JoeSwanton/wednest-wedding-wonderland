@@ -16,7 +16,8 @@ const mockBusinesses = [
     price: "$$$",
     description: "High-energy DJs who specialize in reading the crowd and creating the perfect dance floor atmosphere.",
     rating: 4.9,
-    tags: ["High Energy", "Dance Floor Experts"]
+    tags: ["High Energy", "Dance Floor Experts"],
+    imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
   },
   {
     id: 2,
@@ -27,7 +28,8 @@ const mockBusinesses = [
     price: "$$$$",
     description: "A beautiful garden estate with indoor and outdoor ceremony options.",
     rating: 4.8,
-    tags: ["Garden", "Outdoor", "Indoor"]
+    tags: ["Garden", "Outdoor", "Indoor"],
+    imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
   },
   {
     id: 3,
@@ -38,7 +40,8 @@ const mockBusinesses = [
     price: "$$",
     description: "Award-winning photography team specializing in candid, natural wedding photos.",
     rating: 4.7,
-    tags: ["Candid", "Natural", "Documentary"]
+    tags: ["Candid", "Natural", "Documentary"],
+    imageUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
   },
   {
     id: 4,
@@ -49,7 +52,8 @@ const mockBusinesses = [
     price: "$$$",
     description: "Bespoke floral arrangements using locally sourced, seasonal blooms.",
     rating: 4.9,
-    tags: ["Sustainable", "Local", "Custom"]
+    tags: ["Sustainable", "Local", "Custom"],
+    imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
   }
 ];
 
@@ -58,19 +62,23 @@ const VendorCards = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {mockBusinesses.map((business) => (
         <Card key={business.id} className="overflow-hidden bg-white border border-wednest-beige rounded-lg">
-          {/* Image placeholder */}
-          <div className="relative h-48 bg-muted flex items-center justify-center">
-            <div className="absolute top-2 left-2 bg-gray-700 text-white px-2 py-1 rounded-md text-xs font-medium">
+          {/* Actual image */}
+          <div className="relative h-48 bg-muted overflow-hidden">
+            <div className="absolute top-2 left-2 bg-gray-700 text-white px-2 py-1 rounded-md text-xs font-medium z-10">
               {business.type}
             </div>
-            <button className="absolute top-2 right-2 p-1 rounded-full bg-white/80 hover:bg-white">
+            <button className="absolute top-2 right-2 p-1 rounded-full bg-white/80 hover:bg-white z-10">
               <Heart className="h-5 w-5 text-gray-500 hover:text-wednest-sage" />
             </button>
-            <div className="absolute bottom-2 right-2 bg-white px-2 py-1 rounded-full flex items-center text-xs">
+            <div className="absolute bottom-2 right-2 bg-white px-2 py-1 rounded-full flex items-center text-xs z-10">
               <Star className="h-4 w-4 text-wednest-gold mr-1 fill-wednest-gold" />
               <span>{business.rating}</span>
             </div>
-            <span className="text-gray-400">Image placeholder</span>
+            <img 
+              src={business.imageUrl} 
+              alt={`${business.name} - ${business.type}`}
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            />
           </div>
           
           {/* Content */}
