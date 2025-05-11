@@ -10,7 +10,8 @@ import {
   PaginationItem, 
   PaginationLink, 
   PaginationNext, 
-  PaginationPrevious 
+  PaginationPrevious,
+  PaginationEllipsis
 } from "@/components/ui/pagination";
 
 // Expanded mock business data
@@ -332,7 +333,7 @@ const VendorCards = ({
                   </PaginationItem>
                   {startPage > 2 && (
                     <PaginationItem>
-                      <PaginationLink disabled>...</PaginationLink>
+                      <PaginationEllipsis />
                     </PaginationItem>
                   )}
                 </>
@@ -353,7 +354,7 @@ const VendorCards = ({
                 <>
                   {endPage < totalPages - 1 && (
                     <PaginationItem>
-                      <PaginationLink disabled>...</PaginationLink>
+                      <PaginationEllipsis />
                     </PaginationItem>
                   )}
                   <PaginationItem>
