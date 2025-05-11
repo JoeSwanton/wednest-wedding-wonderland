@@ -55,9 +55,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             
             // Only redirect new users if they're not already on the questionnaire page
             // and not on the auth page (to prevent loops after initial sign-in)
+            const nonRedirectPaths = ['/questionnaire', '/auth', '/profile'];
             if (isNewUser && 
-                location.pathname !== '/questionnaire' && 
-                location.pathname !== '/auth') {
+                !nonRedirectPaths.includes(location.pathname) &&
+                location.pathname !== '/') {
               // Use setTimeout to avoid rendering issues
               setTimeout(() => navigate('/questionnaire'), 0);
             } else if (!isNewUser && location.pathname === '/auth') {
@@ -103,10 +104,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Only redirect new users if they're not already on the questionnaire page
         // and not on the auth page (to prevent loops)
+        const nonRedirectPaths = ['/questionnaire', '/auth', '/profile'];
         if (isNewUser && 
-            location.pathname !== '/questionnaire' && 
-            location.pathname !== '/auth' &&
-            location.pathname !== '/') {  // Added check for home page
+            !nonRedirectPaths.includes(location.pathname) && 
+            location.pathname !== '/') {
           setTimeout(() => navigate('/questionnaire'), 0);
         }
       } else {
