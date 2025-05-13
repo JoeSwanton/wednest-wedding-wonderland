@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,7 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  const { user, signOut, userProfile, loading } = useAuth();
+  const { user, signOut, userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("account");
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const UserProfile = () => {
       label: "Payment Management",
       icon: <CreditCard className="h-5 w-5" />,
       component: <PaymentManagement />
-    },
+    }
     // Additional tabs could be added here in the future
   ];
 
@@ -51,21 +51,8 @@ const UserProfile = () => {
     }
   };
 
-  // If still loading, show a loading indicator
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <Navbar />
-        <div className="flex-grow flex items-center justify-center">
-          <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  // If no user is found after loading is complete, redirect to auth
-  if (!user && !loading) {
+  // If no user is found, redirect to auth
+  if (!user) {
     navigate("/auth");
     return null;
   }

@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,7 +27,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [initialCheckDone, setInitialCheckDone] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               }
                 
               // If no wedding details, mark as new user
-              const isNewUser = weddingDetails === null;
+              const isNewUser = weddingDetails === null && user_type === 'couple';
               console.log("Is new user:", isNewUser);
               setUserProfile({ full_name, user_type, is_new_user: isNewUser, business_name, business_category });
               
@@ -86,16 +86,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               }
             } catch (error) {
               console.error("Error in auth state change handler:", error);
+              setLoading(false);
             }
           } else {
             setUserProfile({ full_name, user_type, business_name, business_category });
+            setLoading(false);
           }
         } else {
           console.log("No authenticated user");
           setUserProfile(null);
+          setLoading(false);
         }
-        
-        setLoading(false);
         
         if (event === 'SIGNED_OUT') {
           console.log("User signed out, redirecting to /auth");
@@ -119,25 +120,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.log("User metadata from session:", { full_name, user_type, business_name, business_category });
         
         try {
-          // Check if user has completed the questionnaire
-          const { data: weddingDetails, error } = await supabase
-            .from('wedding_details')
-            .select('*')
-            .eq('user_id', currentUser.id)
-            .maybeSingle();
-            
-          if (error) {
-            console.error("Error fetching wedding details:", error);
+          // Check if user has completed the questionnaire for couples only
+          let isNewUser = false;
+          
+          if (user_type === 'couple') {
+            const { data: weddingDetails, error } = await supabase
+              .from('wedding_details')
+              .select('*')
+              .eq('user_id', currentUser.id)
+              .maybeSingle();
+              
+            if (error) {
+              console.error("Error fetching wedding details:", error);
+            }
+              
+            // If no wedding details, mark as new user
+            isNewUser = weddingDetails === null;
           }
-            
-          // If no wedding details, mark as new user
-          const isNewUser = weddingDetails === null;
+          
           console.log("Is new user (from session check):", isNewUser);
           setUserProfile({ full_name, user_type, is_new_user: isNewUser, business_name, business_category });
           
           // Only redirect new users if they're not already on the questionnaire page
           // and not on the auth page (to prevent loops)
           if (isNewUser && 
+              user_type === 'couple' &&
               !nonRedirectPaths.includes(location.pathname) && 
               location.pathname !== '/') {
             console.log("Redirecting new user to questionnaire from session check");
@@ -152,7 +159,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       setLoading(false);
-      setInitialCheckDone(true);
       console.log("Initial auth check complete");
     });
 

@@ -30,7 +30,7 @@ const ProtectedRoute = () => {
     return <Navigate to="/dashboard" replace />;
   }
   
-  // For couple routes, but allow access to profile page for all authenticated users
+  // For couple routes, except profile page which all users can access
   if (!isVendorRoute && !isProfileRoute && userProfile?.user_type === 'vendor') {
     // Redirect vendors to vendor dashboard
     return <Navigate to="/vendor" replace />;
