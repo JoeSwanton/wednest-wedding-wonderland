@@ -21,6 +21,8 @@ import UserProfile from "./pages/UserProfile";
 // Import vendor pages
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import VendorListings from "./pages/vendor/VendorListings";
+import VendorBookings from "./pages/vendor/VendorBookings";
+import VendorMessages from "./pages/vendor/VendorMessages";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,12 @@ const TitleUpdater = () => {
       document.title = "Your Profile - Enosi";
     } else if (location.pathname === "/vendor") {
       document.title = "Vendor Dashboard - Enosi";
+    } else if (location.pathname === "/vendor/listings") {
+      document.title = "Vendor Listings - Enosi";
+    } else if (location.pathname === "/vendor/bookings") {
+      document.title = "Vendor Bookings - Enosi";
+    } else if (location.pathname === "/vendor/messages") {
+      document.title = "Vendor Messages - Enosi";
     } else if (location.pathname.startsWith("/vendor/")) {
       document.title = "Vendor Portal - Enosi";
     }
@@ -81,9 +89,9 @@ const AppRoutes = () => (
       <Route element={<ProtectedRoute />}>
         <Route path="/vendor" element={<VendorDashboard />} />
         <Route path="/vendor/listings" element={<VendorListings />} />
+        <Route path="/vendor/bookings" element={<VendorBookings />} />
+        <Route path="/vendor/messages" element={<VendorMessages />} />
         {/* Add placeholders for other vendor routes */}
-        <Route path="/vendor/bookings" element={<div>Bookings page (Coming Soon)</div>} />
-        <Route path="/vendor/messages" element={<div>Messages page (Coming Soon)</div>} />
         <Route path="/vendor/packages" element={<div>Packages page (Coming Soon)</div>} />
         <Route path="/vendor/earnings" element={<div>Earnings page (Coming Soon)</div>} />
         <Route path="/vendor/reviews" element={<div>Reviews page (Coming Soon)</div>} />
