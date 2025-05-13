@@ -8,6 +8,7 @@ const ProtectedRoute = () => {
   
   // Check if the route is a vendor route
   const isVendorRoute = location.pathname.startsWith('/vendor');
+  const isProfileRoute = location.pathname === '/profile';
   
   // If auth is still loading, show loading indicator
   if (loading) {
@@ -29,8 +30,8 @@ const ProtectedRoute = () => {
     return <Navigate to="/dashboard" replace />;
   }
   
-  // For couple routes, check if user is a couple
-  if (!isVendorRoute && location.pathname !== '/profile' && userProfile?.user_type === 'vendor') {
+  // For couple routes, but allow access to profile page for all authenticated users
+  if (!isVendorRoute && !isProfileRoute && userProfile?.user_type === 'vendor') {
     // Redirect vendors to vendor dashboard
     return <Navigate to="/vendor" replace />;
   }

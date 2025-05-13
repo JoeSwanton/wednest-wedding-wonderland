@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,7 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  const { user, signOut, userProfile } = useAuth();
+  const { user, signOut, userProfile, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("account");
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -51,6 +51,25 @@ const UserProfile = () => {
     }
   };
 
+  // If still loading, show a loading indicator
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navbar />
+        <div className="flex-grow flex items-center justify-center">
+          <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // If no user is found after loading is complete, redirect to auth
+  if (!user && !loading) {
+    navigate("/auth");
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
@@ -79,7 +98,7 @@ const UserProfile = () => {
                     </span>
                   </div>
                   <h3 className="font-medium text-wednest-brown">
-                    {user?.user_metadata?.full_name || "Wedding Planner"}
+                    {userProfile?.full_name || user?.user_metadata?.full_name || "Wedding Planner"}
                   </h3>
                   <p className="text-sm text-wednest-brown-light mt-1">
                     {user?.email || "user@example.com"}
@@ -108,7 +127,7 @@ const UserProfile = () => {
                   </nav>
                 </div>
                 
-                {/* New section for account management */}
+                {/* Account management section */}
                 <div className="mt-6 pt-6 border-t border-wednest-beige">
                   <h4 className="text-xs uppercase text-wednest-brown-light font-medium tracking-wider mb-3 px-2">
                     Account
