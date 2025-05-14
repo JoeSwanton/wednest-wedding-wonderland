@@ -6,7 +6,6 @@ import VendorSearch from "@/components/VendorSearch";
 import VendorCTA from "@/components/VendorCTA";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
-import { useState } from "react";
 
 const Index = () => {
   // Create dummy handlers for VendorSearch props
