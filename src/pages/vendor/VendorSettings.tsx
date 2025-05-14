@@ -40,7 +40,7 @@ const VendorSettings = () => {
   const [profileForm, setProfileForm] = useState({
     businessName: userProfile?.business_name || "Your Business Name",
     contactName: userProfile?.full_name || "",
-    bio: userProfile?.user_metadata?.bio || "", // Using optional chaining to safely access bio if it exists
+    bio: userProfile?.bio || "", // Access bio directly from userProfile since it's defined in the UserProfile interface
     email: user?.email || "",
     phone: "0412 345 678",
     address: "123 Wedding Lane, Sydney NSW 2000",
