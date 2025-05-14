@@ -1,9 +1,18 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const Navbar = () => {
   const {
     user,
@@ -15,6 +24,7 @@ const Navbar = () => {
   const {
     toast
   } = useToast();
+  
   const handleSignOut = async () => {
     try {
       console.log("Navbar: Initiating sign out");
@@ -33,9 +43,11 @@ const Navbar = () => {
       });
     }
   };
+  
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+  
   return <nav className="w-full py-4 px-4 md:px-8 flex items-center justify-between border-b border-wednest-beige">
       <Link to="/" className="flex items-center">
         <h1 className="text-2xl md:text-3xl font-serif font-semibold text-wednest-brown">
@@ -64,17 +76,61 @@ const Navbar = () => {
       
       {/* Authentication Buttons */}
       <div className="hidden md:flex items-center gap-3">
-        {user ? <div className="flex items-center gap-3">
-            <Link to="/profile" className="flex items-center gap-2 text-wednest-brown-light hover:text-wednest-brown">
-              <User className="h-4 w-4" />
-              <span className="text-sm">My Profile</span>
-            </Link>
-            
-          </div> : <Link to="/auth">
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 text-wednest-brown-light hover:text-wednest-brown">
+                <User className="h-4 w-4" />
+                <span className="text-sm">My Profile</span>
+                <ChevronDown className="h-3 w-3 opacity-60" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/listings" className="cursor-pointer">My Listings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/bookings" className="cursor-pointer">Bookings & Inquiries</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/messages" className="cursor-pointer">Messages</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/packages" className="cursor-pointer">Packages & Pricing</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/earnings" className="cursor-pointer">Payments & Earnings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/reviews" className="cursor-pointer">Reviews</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/insights" className="cursor-pointer">Performance & Insights</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/settings" className="cursor-pointer">Account Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/vendor/subscription" className="cursor-pointer">Subscription & Billing</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50">
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link to="/auth">
             <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
               Sign In
             </Button>
-          </Link>}
+          </Link>
+        )}
       </div>
 
       {/* Mobile Menu Button */}
@@ -101,22 +157,55 @@ const Navbar = () => {
               Blog
             </Link>
             
-            {user ? <div className="flex flex-col gap-2 mt-4">
-                <Link to="/profile" className="flex items-center gap-2 text-wednest-brown py-2 border-b" onClick={toggleMobileMenu}>
-                  <User className="h-4 w-4" />
-                  My Profile
+            {user ? (
+              <div className="flex flex-col gap-2 mt-4">
+                <div className="text-wednest-brown font-medium mb-2 pb-2 border-b">My Profile</div>
+                <Link to="/dashboard" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Dashboard
+                </Link>
+                <Link to="/vendor/listings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  My Listings
+                </Link>
+                <Link to="/vendor/bookings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Bookings & Inquiries
+                </Link>
+                <Link to="/vendor/messages" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Messages
+                </Link>
+                <div className="border-t mt-2 pt-2"></div>
+                <Link to="/vendor/packages" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Packages & Pricing
+                </Link>
+                <Link to="/vendor/earnings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Payments & Earnings
+                </Link>
+                <Link to="/vendor/reviews" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Reviews
+                </Link>
+                <Link to="/vendor/insights" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Performance & Insights
+                </Link>
+                <div className="border-t mt-2 pt-2"></div>
+                <Link to="/vendor/settings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Account Settings
+                </Link>
+                <Link to="/vendor/subscription" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                  Subscription & Billing
                 </Link>
                 <Button onClick={() => {
-            handleSignOut();
-            toggleMobileMenu();
-          }} className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
+                  handleSignOut();
+                  toggleMobileMenu();
+                }} className="mt-4 bg-wednest-sage hover:bg-wednest-sage-dark text-white">
                   Sign Out
                 </Button>
-              </div> : <Link to="/auth" onClick={toggleMobileMenu}>
+              </div>
+            ) : (
+              <Link to="/auth" onClick={toggleMobileMenu}>
                 <Button className="w-full mt-4 bg-wednest-sage hover:bg-wednest-sage-dark text-white">
                   Sign In
                 </Button>
-              </Link>}
+              </Link>
+            )}
           </div>
         </div>}
     </nav>;
