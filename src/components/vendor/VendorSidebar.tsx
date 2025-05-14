@@ -77,9 +77,9 @@ const VendorSidebar = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/vendor">
+                  <Link to="/">
                     <Home />
-                    <span>Dashboard</span>
+                    <span>Home</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
