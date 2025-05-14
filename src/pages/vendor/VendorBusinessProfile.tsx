@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +23,7 @@ import {
   Clock,
   Award,
   Calendar,
-  Category,
+  Tags,
   FileText,
   Star,
   Image as ImageIcon,
@@ -235,7 +234,7 @@ const VendorBusinessProfile = () => {
               <span>Highlights</span>
             </TabsTrigger>
             <TabsTrigger value="tags" className="flex items-center gap-2">
-              <Category className="h-4 w-4" />
+              <Tags className="h-4 w-4" />
               <span>Tags & Style</span>
             </TabsTrigger>
             <TabsTrigger value="availability" className="flex items-center gap-2">
