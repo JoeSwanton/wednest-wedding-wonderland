@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +9,7 @@ interface UserProfile {
   is_new_user?: boolean;
   business_name?: string;
   business_category?: string;
+  bio?: string; // Added bio property
 }
 
 interface AuthContextType {
