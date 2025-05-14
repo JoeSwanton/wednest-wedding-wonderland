@@ -31,6 +31,7 @@ import {
   Edit,
   Plus,
   ToggleRight,
+  Building
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -118,6 +119,15 @@ const VendorSidebar = () => {
           <SidebarGroupLabel>Business</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link to="/vendor/business-profile">
+                    <Building />
+                    <span>Business Profile</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/vendor/packages">
