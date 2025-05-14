@@ -38,7 +38,9 @@ const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
           title: "Welcome back!",
           description: "You have successfully signed in.",
         });
-        navigate("/");
+        
+        // We don't need to navigate here - AuthContext will handle it
+        // The onAuthStateChange listener will detect the SIGNED_IN event and redirect
       }
     } catch (error: any) {
       setError(error.message || "An error occurred during sign in");

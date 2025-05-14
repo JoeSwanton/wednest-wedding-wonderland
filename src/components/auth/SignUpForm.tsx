@@ -78,14 +78,11 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
           description: "Please check your email to confirm your account.",
         });
         
-        // Short delay before navigation to ensure Supabase processes are complete
+        // Let the auth state change listener handle the redirection
+        // Setting a small timeout to ensure the toast is visible
         setTimeout(() => {
-          if (userType === 'vendor') {
-            navigate("/vendor");
-          } else {
-            navigate("/");
-          }
-        }, 500);
+          // We don't navigate here anymore - this is handled by the auth context
+        }, 1500);
       }
     } catch (error: any) {
       setError(error.message || "An error occurred during sign up");

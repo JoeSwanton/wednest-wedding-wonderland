@@ -34,23 +34,114 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     console.log("AuthProvider: Setting up auth state listener");
+    
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      (event, currentSession) => {
         console.log("Auth state change event:", event);
-        setSession(currentSession);
-        const currentUser = currentSession?.user ?? null;
-        setUser(currentUser);
         
-        if (currentUser) {
+        // Update the session and user state synchronously
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        
+        // Handle user profile update and redirects asynchronously
+        if (currentSession?.user) {
+          const currentUser = currentSession.user;
           console.log("User is authenticated:", currentUser.id);
+          
           // Extract user metadata
           const { full_name, user_type, business_name, business_category } = currentUser.user_metadata || {};
           console.log("User metadata:", { full_name, user_type, business_name, business_category });
           
-          // Check if user has completed the questionnaire
-          if (event === 'SIGNED_IN') {
+          // Update user profile synchronously with available metadata
+          setUserProfile({ full_name, user_type, business_name, business_category });
+          
+          // Use setTimeout to avoid recursive auth state changes
+          setTimeout(async () => {
             try {
+              // For couples only: check if they've completed the questionnaire
+              if (user_type === 'couple') {
+                const { data: weddingDetails, error } = await supabase
+                  .from('wedding_details')
+                  .select('*')
+                  .eq('user_id', currentUser.id)
+                  .maybeSingle();
+                  
+                if (error) {
+                  console.error("Error fetching wedding details:", error);
+                }
+                  
+                // If no wedding details, mark as new user
+                const isNewUser = weddingDetails === null;
+                console.log("Is new user:", isNewUser);
+                setUserProfile(prev => ({ ...prev, is_new_user: isNewUser }));
+                
+                // Only redirect new users if they're not already on the questionnaire page
+                // and not on the auth page (to prevent loops after initial sign-in)
+                if (isNewUser && 
+                    !nonRedirectPaths.includes(location.pathname) &&
+                    location.pathname !== '/') {
+                  console.log("Redirecting new user to questionnaire");
+                  navigate('/questionnaire');
+                }
+              }
+              
+              // Handle sign-in event specifically
+              if (event === 'SIGNED_IN' && location.pathname === '/auth') {
+                console.log("Signed in, redirecting from auth page");
+                if (user_type === 'vendor') {
+                  navigate('/vendor');
+                } else {
+                  navigate('/dashboard');
+                }
+              }
+            } catch (error) {
+              console.error("Error in auth state change handler:", error);
+            } finally {
+              setLoading(false);
+            }
+          }, 0);
+        } else {
+          console.log("No authenticated user");
+          setUserProfile(null);
+          setLoading(false);
+        }
+        
+        // Handle sign-out event
+        if (event === 'SIGNED_OUT') {
+          console.log("User signed out, redirecting to /auth");
+          navigate('/auth');
+        }
+      }
+    );
+
+    // Then check for existing session
+    console.log("AuthProvider: Checking for existing session");
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      console.log("Session check result:", currentSession ? "Session found" : "No session");
+      
+      // Update the session and user state
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      
+      if (currentSession?.user) {
+        const currentUser = currentSession.user;
+        console.log("User found in session:", currentUser.id);
+        
+        // Extract user metadata
+        const { full_name, user_type, business_name, business_category } = currentUser.user_metadata || {};
+        console.log("User metadata from session:", { full_name, user_type, business_name, business_category });
+        
+        // Update profile with basic info first
+        setUserProfile({ full_name, user_type, business_name, business_category });
+        
+        // Use setTimeout to avoid recursive auth state changes
+        setTimeout(async () => {
+          try {
+            // For couples only: check if they've completed the questionnaire
+            let isNewUser = false;
+            
+            if (user_type === 'couple') {
               const { data: weddingDetails, error } = await supabase
                 .from('wedding_details')
                 .select('*')
@@ -62,111 +153,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               }
                 
               // If no wedding details, mark as new user
-              const isNewUser = weddingDetails === null && user_type === 'couple';
-              console.log("Is new user:", isNewUser);
-              setUserProfile({ full_name, user_type, is_new_user: isNewUser, business_name, business_category });
-              
-              // Only redirect new users if they're not already on the questionnaire page
-              // and not on the auth page (to prevent loops after initial sign-in)
-              if (isNewUser && 
-                  user_type === 'couple' &&
-                  !nonRedirectPaths.includes(location.pathname) &&
-                  location.pathname !== '/') {
-                // Use setTimeout to avoid rendering issues
-                console.log("Redirecting new user to questionnaire");
-                setTimeout(() => navigate('/questionnaire'), 0);
-              } else if (!isNewUser && location.pathname === '/auth') {
-                // Only redirect from auth page to dashboard if user is not new
-                console.log("Redirecting existing user to dashboard");
-                if (user_type === 'vendor') {
-                  navigate('/vendor');
-                } else {
-                  navigate('/dashboard');
-                }
-              }
-            } catch (error) {
-              console.error("Error in auth state change handler:", error);
-              setLoading(false);
+              isNewUser = weddingDetails === null;
             }
-          } else {
-            setUserProfile({ full_name, user_type, business_name, business_category });
+            
+            console.log("Is new user (from session check):", isNewUser);
+            setUserProfile(prev => ({ ...prev, is_new_user: isNewUser }));
+            
+            // Only redirect new couple users if not on excepted paths
+            if (isNewUser && 
+                user_type === 'couple' &&
+                !nonRedirectPaths.includes(location.pathname) && 
+                location.pathname !== '/') {
+              console.log("Redirecting new user to questionnaire from session check");
+              navigate('/questionnaire');
+            }
+          } catch (error) {
+            console.error("Error in getSession handler:", error);
+          } finally {
             setLoading(false);
           }
-        } else {
-          console.log("No authenticated user");
-          setUserProfile(null);
-          setLoading(false);
-        }
-        
-        if (event === 'SIGNED_OUT') {
-          console.log("User signed out, redirecting to /auth");
-          navigate('/auth');
-        }
-      }
-    );
-
-    // Then check for existing session
-    console.log("AuthProvider: Checking for existing session");
-    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
-      console.log("Session check result:", currentSession ? "Session found" : "No session");
-      setSession(currentSession);
-      const currentUser = currentSession?.user ?? null;
-      setUser(currentUser);
-      
-      if (currentUser) {
-        console.log("User found in session:", currentUser.id);
-        // Extract user metadata
-        const { full_name, user_type, business_name, business_category } = currentUser.user_metadata || {};
-        console.log("User metadata from session:", { full_name, user_type, business_name, business_category });
-        
-        try {
-          // Check if user has completed the questionnaire for couples only
-          let isNewUser = false;
-          
-          if (user_type === 'couple') {
-            const { data: weddingDetails, error } = await supabase
-              .from('wedding_details')
-              .select('*')
-              .eq('user_id', currentUser.id)
-              .maybeSingle();
-              
-            if (error) {
-              console.error("Error fetching wedding details:", error);
-            }
-              
-            // If no wedding details, mark as new user
-            isNewUser = weddingDetails === null;
-          }
-          
-          console.log("Is new user (from session check):", isNewUser);
-          setUserProfile({ full_name, user_type, is_new_user: isNewUser, business_name, business_category });
-          
-          // Only redirect new users if they're not already on the questionnaire page
-          // and not on the auth page (to prevent loops)
-          if (isNewUser && 
-              user_type === 'couple' &&
-              !nonRedirectPaths.includes(location.pathname) && 
-              location.pathname !== '/') {
-            console.log("Redirecting new user to questionnaire from session check");
-            setTimeout(() => navigate('/questionnaire'), 0);
-          }
-        } catch (error) {
-          console.error("Error in getSession handler:", error);
-        }
+        }, 0);
       } else {
         console.log("No user in session");
         setUserProfile(null);
+        setLoading(false);
       }
-      
-      setLoading(false);
-      console.log("Initial auth check complete");
     });
 
     return () => {
       console.log("Unsubscribing from auth state changes");
       subscription.unsubscribe();
     };
-  }, [navigate, location.pathname]); // Added location.pathname to dependencies
+  }, [navigate, location.pathname]);
 
   const signOut = async () => {
     try {

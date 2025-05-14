@@ -5,16 +5,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AccountSettings from "@/components/profile/AccountSettings";
 import PaymentManagement from "@/components/profile/PaymentManagement";
-import { Settings, CreditCard, Bell, Lock, LogOut } from "lucide-react";
+import { Settings, CreditCard, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  const { user, signOut, userProfile } = useAuth();
+  const { user, signOut, userProfile, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("account");
   const { toast } = useToast();
-  const navigate = useNavigate();
   
   const tabs = [
     {
@@ -51,10 +49,25 @@ const UserProfile = () => {
     }
   };
 
-  // If no user is found, redirect to auth
+  // Display loading state while authentication is being checked
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+          <p className="mt-4 text-wednest-brown">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If no user is found, display a message instead of redirecting (redirection is handled by ProtectedRoute)
   if (!user) {
-    navigate("/auth");
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-wednest-brown">Please log in to view your profile.</p>
+      </div>
+    );
   }
 
   return (

@@ -15,6 +15,7 @@ const ProtectedRoute = () => {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+        <p className="ml-3 text-wednest-brown">Loading your profile...</p>
       </div>
     );
   }
