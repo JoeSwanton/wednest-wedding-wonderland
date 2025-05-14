@@ -22,6 +22,13 @@ import UserProfile from "./pages/UserProfile";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import VendorListings from "./pages/vendor/VendorListings";
 import VendorMessages from "./pages/vendor/VendorMessages";
+import VendorPackages from "./pages/vendor/VendorPackages";
+import VendorEarnings from "./pages/vendor/VendorEarnings";
+import VendorReviews from "./pages/vendor/VendorReviews";
+import VendorInsights from "./pages/vendor/VendorInsights";
+import VendorSettings from "./pages/vendor/VendorSettings";
+import VendorSubscription from "./pages/vendor/VendorSubscription";
+import VendorBookings from "./pages/vendor/VendorBookings";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +63,20 @@ const TitleUpdater = () => {
       document.title = "Vendor Listings - Enosi";
     } else if (location.pathname === "/vendor/messages") {
       document.title = "Vendor Messages - Enosi";
+    } else if (location.pathname === "/vendor/packages") {
+      document.title = "Packages & Pricing - Enosi";
+    } else if (location.pathname === "/vendor/earnings") {
+      document.title = "Payments & Earnings - Enosi";
+    } else if (location.pathname === "/vendor/reviews") {
+      document.title = "Reviews - Enosi";
+    } else if (location.pathname === "/vendor/insights") {
+      document.title = "Performance & Insights - Enosi";
+    } else if (location.pathname === "/vendor/settings") {
+      document.title = "Account Settings - Enosi";
+    } else if (location.pathname === "/vendor/subscription") {
+      document.title = "Subscription & Billing - Enosi";
+    } else if (location.pathname === "/vendor/bookings") {
+      document.title = "Bookings & Inquiries - Enosi";
     } else if (location.pathname.startsWith("/vendor/")) {
       document.title = "Vendor Portal - Enosi";
     }
@@ -86,14 +107,14 @@ const AppRoutes = () => (
       <Route element={<ProtectedRoute />}>
         <Route path="/vendor" element={<VendorDashboard />} />
         <Route path="/vendor/listings" element={<VendorListings />} />
+        <Route path="/vendor/bookings" element={<VendorBookings />} />
         <Route path="/vendor/messages" element={<VendorMessages />} />
-        {/* Add placeholders for other vendor routes */}
-        <Route path="/vendor/packages" element={<div>Packages page (Coming Soon)</div>} />
-        <Route path="/vendor/earnings" element={<div>Earnings page (Coming Soon)</div>} />
-        <Route path="/vendor/reviews" element={<div>Reviews page (Coming Soon)</div>} />
-        <Route path="/vendor/insights" element={<div>Insights page (Coming Soon)</div>} />
-        <Route path="/vendor/settings" element={<div>Settings page (Coming Soon)</div>} />
-        <Route path="/vendor/subscription" element={<div>Subscription page (Coming Soon)</div>} />
+        <Route path="/vendor/packages" element={<VendorPackages />} />
+        <Route path="/vendor/earnings" element={<VendorEarnings />} />
+        <Route path="/vendor/reviews" element={<VendorReviews />} />
+        <Route path="/vendor/insights" element={<VendorInsights />} />
+        <Route path="/vendor/settings" element={<VendorSettings />} />
+        <Route path="/vendor/subscription" element={<VendorSubscription />} />
       </Route>
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
