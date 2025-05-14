@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Card, 
@@ -40,7 +39,7 @@ const VendorSettings = () => {
   // Profile form state
   const [profileForm, setProfileForm] = useState({
     businessName: userProfile?.business_name || "Your Business Name",
-    contactName: userProfile?.display_name || "",
+    contactName: userProfile?.full_name || "",
     bio: userProfile?.bio || "",
     email: user?.email || "",
     phone: "0412 345 678",
