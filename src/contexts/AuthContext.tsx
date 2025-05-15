@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,11 +5,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 interface UserProfile {
   full_name?: string;
-  user_type?: "couple" | "vendor";
+  user_role: "couple" | "vendor"; // Changed from user_type to user_role and made it required
   is_new_user?: boolean;
   business_name?: string;
   business_category?: string;
-  bio?: string; // Added bio property
+  bio?: string;
 }
 
 interface AuthContextType {
@@ -55,7 +54,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           console.log("User metadata:", { full_name, user_type, business_name, business_category });
           
           // Update user profile synchronously with available metadata
-          setUserProfile({ full_name, user_type, business_name, business_category });
+          // Convert user_type to user_role for consistency with our interface
+          setUserProfile({ full_name, user_role: user_type as "couple" | "vendor", business_name, business_category });
           
           // Use setTimeout to avoid recursive auth state changes
           setTimeout(async () => {
@@ -133,8 +133,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const { full_name, user_type, business_name, business_category } = currentUser.user_metadata || {};
         console.log("User metadata from session:", { full_name, user_type, business_name, business_category });
         
-        // Update profile with basic info first
-        setUserProfile({ full_name, user_type, business_name, business_category });
+        // Update profile with basic info first - convert user_type to user_role
+        setUserProfile({ full_name, user_role: user_type as "couple" | "vendor", business_name, business_category });
         
         // Use setTimeout to avoid recursive auth state changes
         setTimeout(async () => {

@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Upload } from "lucide-react";
+import { VendorOnboardingData } from "@/types/vendor"; // Import the type
 
 interface BusinessBasicsStepProps {
   onNext: () => void;

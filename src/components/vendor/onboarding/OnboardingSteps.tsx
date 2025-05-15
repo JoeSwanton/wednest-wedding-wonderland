@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import BusinessBasicsStep from "./steps/BusinessBasicsStep";
 import ContactLocationStep from "./steps/ContactLocationStep";
@@ -6,7 +5,7 @@ import BusinessDescriptionStep from "./steps/BusinessDescriptionStep";
 import PortfolioStep from "./steps/PortfolioStep";
 import ServicePackagesStep from "./steps/ServicePackagesStep";
 import PreviewPublishStep from "./steps/PreviewPublishStep";
-import { VendorOnboardingData } from "@/types/vendor";
+import { VendorOnboardingData } from "@/types/vendor"; // Import the type from the correct path
 
 interface OnboardingStepsProps {
   currentStep: number;

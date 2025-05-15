@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Loader2, Trash2, Upload } from "lucide-react";
+import { VendorOnboardingData } from "@/types/vendor"; // Import the type
 
 interface PortfolioStepProps {
   onNext: () => void;
