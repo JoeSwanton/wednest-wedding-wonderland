@@ -14,11 +14,12 @@ const ProtectedRoute = () => {
   const isVendorRoute = location.pathname.startsWith('/vendor');
   const isProfileRoute = location.pathname === '/profile';
   const isOnboardingRoute = location.pathname === '/vendor/onboarding';
+  const isAuthRoute = location.pathname === '/auth';
   
   // Check if vendor has completed onboarding
   useEffect(() => {
     const checkVendorOnboarding = async () => {
-      if (user && userProfile?.user_role === 'vendor' && !isOnboardingRoute) {
+      if (user && userProfile?.user_role === 'vendor' && !isOnboardingRoute && !isAuthRoute) {
         setCheckingOnboarding(true);
         try {
           const { data, error } = await supabase
@@ -43,7 +44,7 @@ const ProtectedRoute = () => {
     };
     
     checkVendorOnboarding();
-  }, [user, userProfile, isOnboardingRoute]);
+  }, [user, userProfile, isOnboardingRoute, isAuthRoute]);
   
   // If auth is still loading, show loading indicator
   if (loading || checkingOnboarding) {
@@ -61,9 +62,11 @@ const ProtectedRoute = () => {
   }
   
   // Redirect vendor to onboarding if they haven't completed it
+  // Only for vendor routes, not for the auth page
   if (userProfile?.user_role === 'vendor' && 
       vendorOnboarded === false && 
-      !isOnboardingRoute) {
+      !isOnboardingRoute &&
+      isVendorRoute) {
     return <Navigate to="/vendor/onboarding" replace />;
   }
   

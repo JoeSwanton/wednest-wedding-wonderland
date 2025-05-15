@@ -1,12 +1,36 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
+  const { user, userProfile, loading } = useAuth();
+  const navigate = useNavigate();
+  
+  // Prevent authenticated users from accessing the auth page
+  useEffect(() => {
+    if (!loading && user) {
+      // Navigate based on user role, but don't auto-redirect to onboarding here
+      if (userProfile?.user_role === 'vendor') {
+        navigate('/vendor/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+    }
+  }, [user, userProfile, loading, navigate]);
+  
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen flex">

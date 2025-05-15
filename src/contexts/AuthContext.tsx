@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 interface UserProfile {
   full_name?: string;
-  user_role: "couple" | "vendor"; // Changed from user_type to user_role and made it required
+  user_role: "couple" | "vendor"; 
   is_new_user?: boolean;
   business_name?: string;
   business_category?: string;
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const nonRedirectPaths = ['/questionnaire', '/auth', '/profile'];
+  const nonRedirectPaths = ['/questionnaire', '/auth', '/profile', '/vendor/onboarding'];
 
   useEffect(() => {
     console.log("AuthProvider: Setting up auth state listener");
@@ -60,6 +61,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Use setTimeout to avoid recursive auth state changes
           setTimeout(async () => {
             try {
+              // Handle newly signed in vendors
+              if (user_type === 'vendor' && event === 'SIGNED_IN') {
+                const { data: vendorProfile, error } = await supabase
+                  .from('vendor_profiles')
+                  .select('onboarding_completed')
+                  .eq('user_id', currentUser.id)
+                  .maybeSingle();
+                
+                if (error) {
+                  console.error("Error checking vendor onboarding status:", error);
+                }
+                
+                // Only redirect to onboarding if:
+                // 1. This is a vendor
+                // 2. We're on the auth page (just signed in)
+                // 3. Onboarding is not completed or no vendor profile exists
+                if (location.pathname === '/auth' && (!vendorProfile || !vendorProfile.onboarding_completed)) {
+                  console.log("Vendor needs onboarding, redirecting");
+                  navigate('/vendor/onboarding');
+                  setLoading(false);
+                  return;
+                }
+              }
+              
               // For couples only: check if they've completed the questionnaire
               if (user_type === 'couple') {
                 const { data: weddingDetails, error } = await supabase
@@ -139,6 +164,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Use setTimeout to avoid recursive auth state changes
         setTimeout(async () => {
           try {
+            // Check if vendor has completed onboarding
+            if (user_type === 'vendor' && location.pathname !== '/vendor/onboarding') {
+              const { data: vendorProfile, error } = await supabase
+                .from('vendor_profiles')
+                .select('onboarding_completed')
+                .eq('user_id', currentUser.id)
+                .maybeSingle();
+              
+              if (error) {
+                console.error("Error checking vendor onboarding status:", error);
+              }
+              
+              // Only redirect to onboarding if:
+              // 1. Not already on the onboarding page
+              // 2. Not on the auth page
+              // 3. Onboarding is not completed or no vendor profile exists
+              if (location.pathname !== '/auth' && 
+                  location.pathname !== '/vendor/onboarding' &&
+                  (!vendorProfile || !vendorProfile.onboarding_completed)) {
+                console.log("Vendor needs onboarding, redirecting");
+                navigate('/vendor/onboarding');
+                setLoading(false);
+                return;
+              }
+            }
+            
             // For couples only: check if they've completed the questionnaire
             let isNewUser = false;
             
