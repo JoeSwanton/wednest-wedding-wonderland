@@ -1,12 +1,13 @@
 
 import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import BusinessBasicsStep from "./steps/BusinessBasicsStep";
 import ContactLocationStep from "./steps/ContactLocationStep";
 import BusinessDescriptionStep from "./steps/BusinessDescriptionStep";
 import PortfolioStep from "./steps/PortfolioStep";
 import ServicePackagesStep from "./steps/ServicePackagesStep";
 import PreviewPublishStep from "./steps/PreviewPublishStep";
-import { VendorOnboardingData } from "@/types/vendor"; // Import the type from the correct path
+import { VendorOnboardingData } from "@/types/vendor"; 
 
 interface OnboardingStepsProps {
   currentStep: number;
@@ -65,7 +66,6 @@ const OnboardingSteps = ({
   // For debugging in development
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      // Using window with proper TypeScript declaration
       (window as any).VendorOnboardingData = formData;
     }
   }, [formData]);
@@ -73,6 +73,23 @@ const OnboardingSteps = ({
   // Handle the completion of the onboarding process
   const handleComplete = () => {
     onComplete(formData);
+  };
+  
+  // Animation variants for step transitions
+  const stepVariants = {
+    enter: {
+      opacity: 0,
+      x: 20
+    },
+    center: {
+      opacity: 1,
+      x: 0
+    },
+    exit: {
+      opacity: 0,
+      x: -20,
+      transition: { duration: 0.2 }
+    }
   };
   
   // Render the current step
@@ -137,7 +154,18 @@ const OnboardingSteps = ({
   
   return (
     <div className="min-h-[400px]">
-      {renderStep()}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          variants={stepVariants}
+          transition={{ duration: 0.3 }}
+        >
+          {renderStep()}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

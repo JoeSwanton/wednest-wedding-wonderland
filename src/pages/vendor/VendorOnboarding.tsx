@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import OnboardingSteps from "@/components/vendor/onboarding/OnboardingSteps";
 import OnboardingProgress from "@/components/vendor/onboarding/OnboardingProgress";
-import OnboardingHeader from "@/components/vendor/onboarding/OnboardingHeader";
-import OnboardingSupport from "@/components/vendor/onboarding/OnboardingSupport";
+import { Loader2 } from "lucide-react";
 
 const VendorOnboarding = () => {
   const { user, userProfile } = useAuth();
@@ -119,9 +118,9 @@ const VendorOnboarding = () => {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center">
-          <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+          <Loader2 className="h-8 w-8 text-wednest-sage animate-spin" />
           <p className="mt-4 text-wednest-brown">Loading your onboarding experience...</p>
         </div>
       </div>
@@ -129,22 +128,43 @@ const VendorOnboarding = () => {
   }
   
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <OnboardingHeader />
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Header - Simplified */}
+      <header className="bg-white border-b border-gray-100 py-4">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <h1 className="text-xl font-serif text-wednest-brown">Vendor Onboarding</h1>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/auth")}
+            >
+              Exit
+            </Button>
+          </div>
+        </div>
+      </header>
       
-      <div className="flex-grow flex flex-col items-center px-4 py-8">
-        <div className="w-full max-w-4xl">
+      <div className="flex-grow container mx-auto px-4 py-8 max-w-4xl">
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <OnboardingProgress currentStep={currentStep} />
           
-          <div className="mt-8 bg-white rounded-lg shadow-sm border border-wednest-beige p-6">
+          <div className="mt-6">
             <OnboardingSteps 
               currentStep={currentStep} 
               setCurrentStep={setCurrentStep} 
               onComplete={handleComplete}
             />
           </div>
-          
-          <OnboardingSupport />
+        </div>
+        
+        {/* Support section - Simplified */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-wednest-brown-light">
+            Need help with your onboarding? <a href="#" className="text-wednest-sage hover:underline">Contact our support team</a>
+          </p>
         </div>
       </div>
     </div>
