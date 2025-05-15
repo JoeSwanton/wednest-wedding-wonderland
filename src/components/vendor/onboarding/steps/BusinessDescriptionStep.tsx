@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { VendorOnboardingData } from "@/types/vendor";
 
 interface BusinessDescriptionStepProps {
   onNext: () => void;

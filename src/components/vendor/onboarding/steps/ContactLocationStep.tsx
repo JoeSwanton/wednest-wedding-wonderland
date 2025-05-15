@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Check } from "lucide-react";
+import { VendorOnboardingData } from "@/types/vendor";
 
 interface ContactLocationStepProps {
   onNext: () => void;

@@ -13,20 +13,13 @@ import {
   CardDescription
 } from "@/components/ui/card";
 import { Plus, Trash2 } from "lucide-react";
+import { VendorOnboardingData, ServicePackage } from "@/types/vendor";
 
 interface ServicePackagesStepProps {
   onNext: () => void;
   onBack: () => void;
   formData: VendorOnboardingData;
   updateFormData: (data: Partial<VendorOnboardingData>) => void;
-}
-
-interface ServicePackage {
-  id: string;
-  name: string;
-  priceRange: string;
-  description: string;
-  features: string[];
 }
 
 const ServicePackagesStep = ({ onNext, onBack, formData, updateFormData }: ServicePackagesStepProps) => {
