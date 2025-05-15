@@ -12,10 +12,16 @@ const Auth = () => {
   const navigate = useNavigate();
   
   // Prevent authenticated users from accessing the auth page
+  // But don't force redirects that would create loops
   useEffect(() => {
     if (!loading && user) {
-      // Navigate based on user role, but don't auto-redirect to onboarding here
+      // Only redirect if user is fully loaded and present
+      console.log("Auth page: User is authenticated, checking if redirect needed");
+      
+      // Don't automatically redirect to onboarding here
+      // Only perform normal role-based navigation
       if (userProfile?.user_role === 'vendor') {
+        // Only redirect to dashboard, not onboarding
         navigate('/vendor/dashboard');
       } else {
         navigate('/dashboard');

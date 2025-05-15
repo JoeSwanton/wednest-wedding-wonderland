@@ -61,6 +61,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Use setTimeout to avoid recursive auth state changes
           setTimeout(async () => {
             try {
+              // Skip any redirects if we're already on the auth page
+              if (location.pathname === '/auth') {
+                setLoading(false);
+                return;
+              }
+              
               // Handle newly signed in vendors
               if (user_type === 'vendor' && event === 'SIGNED_IN') {
                 const { data: vendorProfile, error } = await supabase
@@ -112,7 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 }
               }
               
-              // Handle sign-in event specifically
+              // Handle sign-in event specifically - but only if not already on auth page
               if (event === 'SIGNED_IN' && location.pathname === '/auth') {
                 console.log("Signed in, redirecting from auth page");
                 if (user_type === 'vendor') {
@@ -160,6 +166,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Update profile with basic info first - convert user_type to user_role
         setUserProfile({ full_name, user_role: user_type as "couple" | "vendor", business_name, business_category });
+        
+        // CRITICAL: Don't perform redirects if on the auth page
+        if (location.pathname === '/auth') {
+          setLoading(false);
+          return; 
+        }
         
         // Use setTimeout to avoid recursive auth state changes
         setTimeout(async () => {
