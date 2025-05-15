@@ -27,6 +27,7 @@ import VendorInsights from "./pages/vendor/VendorInsights";
 import VendorSettings from "./pages/vendor/VendorSettings";
 import VendorSubscription from "./pages/vendor/VendorSubscription";
 import VendorBusinessProfile from "./pages/vendor/VendorBusinessProfile";
+import VendorOnboarding from "./pages/vendor/VendorOnboarding";
 
 // ProtectedRoute
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -66,6 +67,7 @@ function App() {
               <Route path="/vendor/settings" element={<VendorSettings />} />
               <Route path="/vendor/subscription" element={<VendorSubscription />} />
               <Route path="/vendor/business-profile" element={<VendorBusinessProfile />} />
+              <Route path="/vendor/onboarding" element={<VendorOnboarding />} />
             </Route>
             
             {/* 404 route */}
