@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, CheckIcon, Image, InfoIcon, Loader2 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { VendorOnboardingData } from "@/types/vendor";
 
 interface PreviewPublishStepProps {
   onBack: () => void;
@@ -38,8 +38,7 @@ const PreviewPublishStep = ({ onBack, onComplete, formData }: PreviewPublishStep
     setIsLoading(true);
     try {
       // Save to vendor profiles table
-      const { error: profileError } = await supabase
-        .from('vendor_profiles')
+      const { error: profileError } = await supabase.from('vendor_profiles')
         .insert({
           user_id: user.id,
           business_name: formData.businessName,

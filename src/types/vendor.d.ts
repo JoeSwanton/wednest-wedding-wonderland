@@ -1,11 +1,10 @@
-
-interface PortfolioImage {
+export interface PortfolioImage {
   url: string;
   path: string;
   caption: string;
 }
 
-interface ServicePackage {
+export interface ServicePackage {
   id: string;
   name: string;
   priceRange: string;
@@ -13,7 +12,7 @@ interface ServicePackage {
   features: string[];
 }
 
-interface VendorOnboardingData {
+export interface VendorOnboardingData {
   // Business Basics
   businessName: string;
   businessCategory: string;

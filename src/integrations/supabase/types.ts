@@ -51,6 +51,195 @@ export type Database = {
           },
         ]
       }
+      vendor_packages: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: string[] | null
+          id: string
+          name: string
+          price_range: string
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: string[] | null
+          id?: string
+          name: string
+          price_range: string
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: string[] | null
+          id?: string
+          name?: string
+          price_range?: string
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_packages_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_packages_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_portfolio: {
+        Row: {
+          caption: string | null
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          storage_path: string
+          vendor_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          display_order: number
+          id?: string
+          image_url: string
+          storage_path: string
+          vendor_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          storage_path?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_portfolio_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_portfolio_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_profiles: {
+        Row: {
+          abn: string | null
+          address: string | null
+          bio: string
+          business_category: string
+          business_email: string
+          business_name: string
+          city: string
+          created_at: string
+          facebook: string | null
+          instagram: string | null
+          instagram_feed: string | null
+          is_published: boolean | null
+          logo_url: string | null
+          onboarding_completed: boolean | null
+          phone: string
+          postcode: string | null
+          service_radius: number | null
+          specialties: string[] | null
+          state: string
+          tagline: string | null
+          updated_at: string
+          user_id: string
+          website: string | null
+          years_in_business: number | null
+        }
+        Insert: {
+          abn?: string | null
+          address?: string | null
+          bio: string
+          business_category: string
+          business_email: string
+          business_name: string
+          city: string
+          created_at?: string
+          facebook?: string | null
+          instagram?: string | null
+          instagram_feed?: string | null
+          is_published?: boolean | null
+          logo_url?: string | null
+          onboarding_completed?: boolean | null
+          phone: string
+          postcode?: string | null
+          service_radius?: number | null
+          specialties?: string[] | null
+          state: string
+          tagline?: string | null
+          updated_at?: string
+          user_id: string
+          website?: string | null
+          years_in_business?: number | null
+        }
+        Update: {
+          abn?: string | null
+          address?: string | null
+          bio?: string
+          business_category?: string
+          business_email?: string
+          business_name?: string
+          city?: string
+          created_at?: string
+          facebook?: string | null
+          instagram?: string | null
+          instagram_feed?: string | null
+          is_published?: boolean | null
+          logo_url?: string | null
+          onboarding_completed?: boolean | null
+          phone?: string
+          postcode?: string | null
+          service_radius?: number | null
+          specialties?: string[] | null
+          state?: string
+          tagline?: string | null
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+          years_in_business?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wedding_details: {
         Row: {
           created_at: string

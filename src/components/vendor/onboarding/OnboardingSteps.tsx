@@ -6,54 +6,7 @@ import BusinessDescriptionStep from "./steps/BusinessDescriptionStep";
 import PortfolioStep from "./steps/PortfolioStep";
 import ServicePackagesStep from "./steps/ServicePackagesStep";
 import PreviewPublishStep from "./steps/PreviewPublishStep";
-
-// Define the type for onboarding form data
-interface PortfolioImage {
-  url: string;
-  path: string;
-  caption: string;
-}
-
-interface ServicePackage {
-  id: string;
-  name: string;
-  priceRange: string;
-  description: string;
-  features: string[];
-}
-
-interface VendorOnboardingData {
-  // Business Basics
-  businessName: string;
-  businessCategory: string;
-  abn: string;
-  yearsInBusiness: string;
-  logoUrl: string;
-  
-  // Contact & Location
-  phone: string;
-  businessEmail: string;
-  website: string;
-  instagram: string;
-  facebook: string;
-  address: string;
-  city: string;
-  state: string;
-  postcode: string;
-  serviceRadius: string;
-  
-  // Business Description
-  bio: string;
-  tagline: string;
-  specialties: string[];
-  
-  // Portfolio
-  portfolioImages: PortfolioImage[];
-  instagramFeed: string;
-  
-  // Service Packages
-  servicePackages: ServicePackage[];
-}
+import { VendorOnboardingData } from "@/types/vendor";
 
 interface OnboardingStepsProps {
   currentStep: number;
@@ -108,18 +61,12 @@ const OnboardingSteps = ({
   // Navigation functions
   const goToNext = () => setCurrentStep(currentStep + 1);
   const goToBack = () => setCurrentStep(currentStep - 1);
-
-  // For TypeScript
-  declare global {
-    interface Window {
-      VendorOnboardingData: VendorOnboardingData;
-    }
-  }
   
   // For debugging in development
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      window.VendorOnboardingData = formData;
+      // Using window with proper TypeScript declaration
+      (window as any).VendorOnboardingData = formData;
     }
   }, [formData]);
   
