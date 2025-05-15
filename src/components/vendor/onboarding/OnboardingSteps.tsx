@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import BusinessBasicsStep from "./steps/BusinessBasicsStep";
 import ContactLocationStep from "./steps/ContactLocationStep";
@@ -10,7 +11,7 @@ import { VendorOnboardingData } from "@/types/vendor"; // Import the type from t
 interface OnboardingStepsProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
-  onComplete: () => void;
+  onComplete: (formData: VendorOnboardingData) => void;
 }
 
 const OnboardingSteps = ({ 
@@ -69,6 +70,11 @@ const OnboardingSteps = ({
     }
   }, [formData]);
   
+  // Handle the completion of the onboarding process
+  const handleComplete = () => {
+    onComplete(formData);
+  };
+  
   // Render the current step
   const renderStep = () => {
     switch (currentStep) {
@@ -120,7 +126,7 @@ const OnboardingSteps = ({
         return (
           <PreviewPublishStep
             onBack={goToBack}
-            onComplete={onComplete}
+            onComplete={handleComplete}
             formData={formData}
           />
         );

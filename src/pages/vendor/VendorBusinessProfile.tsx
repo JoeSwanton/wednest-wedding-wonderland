@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import VendorLayout from "@/components/vendor/VendorLayout";
@@ -35,15 +35,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -73,13 +64,48 @@ const VendorBusinessProfile = () => {
   const { user, userProfile } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("basic-info");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [vendorProfile, setVendorProfile] = useState<any>(null);
   
-  // Form states for different sections
+  // Fetch vendor profile data from Supabase
+  useEffect(() => {
+    const fetchVendorProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('vendor_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+          
+        if (error) {
+          throw error;
+        }
+        
+        if (data) {
+          setVendorProfile(data);
+        }
+      } catch (error) {
+        console.error("Error fetching vendor profile:", error);
+        toast({
+          title: "Error",
+          description: "Could not load your business profile data",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchVendorProfile();
+  }, [user, toast]);
+  
+  // Form states for different sections using actual data
   const [basicInfo, setBasicInfo] = useState({
-    businessName: userProfile?.business_name || "",
+    businessName: "",
     businessCategory: "",
-    businessDescription: userProfile?.bio || "",
+    businessDescription: "",
     yearsInBusiness: "",
     abn: ""
   });
@@ -102,6 +128,38 @@ const VendorBusinessProfile = () => {
     youtube: ""
   });
   
+  // Update form data when vendor profile is loaded
+  useEffect(() => {
+    if (vendorProfile) {
+      setBasicInfo({
+        businessName: vendorProfile.business_name || "",
+        businessCategory: vendorProfile.business_category || "",
+        businessDescription: vendorProfile.bio || "",
+        yearsInBusiness: vendorProfile.years_in_business?.toString() || "",
+        abn: vendorProfile.abn || ""
+      });
+      
+      setLocationInfo({
+        businessAddress: `${vendorProfile.address || ""}, ${vendorProfile.city || ""}, ${vendorProfile.state || ""}, ${vendorProfile.postcode || ""}`.replace(/, ,/g, ",").replace(/^, |, $/g, ""),
+        primaryServiceAreas: vendorProfile.service_radius ? `${vendorProfile.service_radius}km radius around ${vendorProfile.city || ""}` : "",
+        willingToTravel: !!vendorProfile.service_radius,
+        travelFeeInfo: ""
+      });
+      
+      setContactInfo({
+        phoneNumber: vendorProfile.phone || "",
+        emailAddress: vendorProfile.business_email || user?.email || "",
+        websiteUrl: vendorProfile.website || "",
+        instagram: vendorProfile.instagram || "",
+        facebook: vendorProfile.facebook || "",
+        tiktok: "",
+        pinterest: "",
+        youtube: ""
+      });
+    }
+  }, [vendorProfile, user]);
+  
+  // Keep all the existing state
   const [mediaInfo, setMediaInfo] = useState({
     hasLogo: false,
     hasCoverPhoto: false,
@@ -118,9 +176,19 @@ const VendorBusinessProfile = () => {
   
   const [tagsInfo, setTagsInfo] = useState({
     stylesTags: "",
-    specialties: "",
+    specialties: vendorProfile?.specialties?.join(", ") || "",
     eventTypes: ""
   });
+  
+  // Update specialties when vendorProfile changes
+  useEffect(() => {
+    if (vendorProfile?.specialties) {
+      setTagsInfo(prev => ({
+        ...prev,
+        specialties: vendorProfile.specialties.join(", ")
+      }));
+    }
+  }, [vendorProfile]);
   
   const [availabilityInfo, setAvailabilityInfo] = useState({
     operatingHours: "",
@@ -134,6 +202,7 @@ const VendorBusinessProfile = () => {
     preferredContactMethod: "email"
   });
   
+  // Update form handlers
   const handleBasicInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setBasicInfo(prev => ({ ...prev, [name]: value }));
@@ -175,29 +244,67 @@ const VendorBusinessProfile = () => {
     setAvailabilityInfo(prev => ({ ...prev, [name]: value }));
   };
   
+  // Save profile changes to Supabase
   const handleSaveProfile = async () => {
     if (!user) return;
     
     setIsLoading(true);
     try {
-      // Update user data in Supabase
-      const { error } = await supabase.auth.updateUser({
-        data: { 
-          business_name: basicInfo.businessName,
-          bio: basicInfo.businessDescription
-        }
-      });
+      // Format the specialties as an array from the comma-separated string
+      const specialties = tagsInfo.specialties
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
       
+      // Parse the years in business to an integer if provided
+      const yearsInBusiness = basicInfo.yearsInBusiness ? parseInt(basicInfo.yearsInBusiness) : null;
+      
+      // Update the vendor profile in Supabase
+      const { error } = await supabase
+        .from('vendor_profiles')
+        .update({
+          business_name: basicInfo.businessName,
+          business_category: basicInfo.businessCategory,
+          bio: basicInfo.businessDescription,
+          years_in_business: yearsInBusiness,
+          abn: basicInfo.abn,
+          phone: contactInfo.phoneNumber,
+          business_email: contactInfo.emailAddress,
+          website: contactInfo.websiteUrl,
+          instagram: contactInfo.instagram,
+          facebook: contactInfo.facebook,
+          specialties: specialties,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', user.id);
+        
       if (error) throw error;
       
-      // Add update to the business profile in a real implementation 
-      // (would need to create business_profiles table in Supabase)
+      // Also update the user metadata
+      await supabase.auth.updateUser({
+        data: { 
+          business_name: basicInfo.businessName
+        }
+      });
       
       toast({
         title: "Profile updated",
         description: "Your business profile has been updated successfully.",
       });
+      
+      // Refresh the vendor profile data
+      const { data: refreshedData } = await supabase
+        .from('vendor_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+        
+      if (refreshedData) {
+        setVendorProfile(refreshedData);
+      }
+      
     } catch (error: any) {
+      console.error("Error updating business profile:", error);
       toast({
         title: "Update failed",
         description: error.message || "Failed to update business profile.",
@@ -207,6 +314,50 @@ const VendorBusinessProfile = () => {
       setIsLoading(false);
     }
   };
+  
+  // Loading state
+  if (isLoading) {
+    return (
+      <VendorLayout title="Business Profile">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center">
+            <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+            <p className="mt-4 text-wednest-brown">Loading your business profile...</p>
+          </div>
+        </div>
+      </VendorLayout>
+    );
+  }
+
+  // Calculate profile completeness
+  const calculateProfileCompleteness = () => {
+    let completed = 0;
+    let total = 0;
+    
+    // Basic info checks
+    if (basicInfo.businessName) completed++;
+    if (basicInfo.businessCategory) completed++;
+    if (basicInfo.businessDescription) completed++;
+    total += 3;
+    
+    // Contact info checks
+    if (contactInfo.phoneNumber) completed++;
+    if (contactInfo.emailAddress) completed++;
+    if (contactInfo.websiteUrl || contactInfo.instagram || contactInfo.facebook) completed++;
+    total += 3;
+    
+    // Location info
+    if (locationInfo.businessAddress) completed++;
+    total += 1;
+    
+    // Tags info
+    if (tagsInfo.specialties) completed++;
+    total += 1;
+    
+    return Math.round((completed / total) * 100);
+  };
+
+  const profileCompleteness = calculateProfileCompleteness();
 
   return (
     <VendorLayout title="Business Profile">
@@ -353,7 +504,7 @@ const VendorBusinessProfile = () => {
                   disabled={isLoading}
                   className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"
                 >
-                  Save Basic Information
+                  {isLoading ? "Saving..." : "Save Basic Information"}
                 </Button>
               </CardFooter>
             </Card>
@@ -432,8 +583,12 @@ const VendorBusinessProfile = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
-                  Save Location Information
+                <Button 
+                  onClick={handleSaveProfile}
+                  disabled={isLoading} 
+                  className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"
+                >
+                  {isLoading ? "Saving..." : "Save Location Information"}
                 </Button>
               </CardFooter>
             </Card>
@@ -531,14 +686,18 @@ const VendorBusinessProfile = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
-                  Save Contact Information
+                <Button 
+                  onClick={handleSaveProfile}
+                  disabled={isLoading} 
+                  className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"
+                >
+                  {isLoading ? "Saving..." : "Save Contact Information"}
                 </Button>
               </CardFooter>
             </Card>
           </TabsContent>
           
-          {/* Media Gallery */}
+          {/* Media Gallery Tab */}
           <TabsContent value="media">
             <Card>
               <CardHeader>
@@ -615,7 +774,7 @@ const VendorBusinessProfile = () => {
             </Card>
           </TabsContent>
           
-          {/* Highlights & Accreditations */}
+          {/* Highlights & Accreditations Tab */}
           <TabsContent value="highlights">
             <Card>
               <CardHeader>
@@ -679,7 +838,7 @@ const VendorBusinessProfile = () => {
             </Card>
           </TabsContent>
           
-          {/* Service Tags & Styles */}
+          {/* Service Tags & Styles Tab */}
           <TabsContent value="tags">
             <Card>
               <CardHeader>
@@ -732,14 +891,18 @@ const VendorBusinessProfile = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
-                  Save Tags
+                <Button 
+                  onClick={handleSaveProfile}
+                  disabled={isLoading} 
+                  className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"
+                >
+                  {isLoading ? "Saving..." : "Save Tags"}
                 </Button>
               </CardFooter>
             </Card>
           </TabsContent>
           
-          {/* Availability & Booking Options */}
+          {/* Availability & Booking Options Tab */}
           <TabsContent value="availability">
             <Card>
               <CardHeader>
@@ -812,7 +975,7 @@ const VendorBusinessProfile = () => {
             </Card>
           </TabsContent>
           
-          {/* Admin & Preferences */}
+          {/* Admin & Preferences Tab */}
           <TabsContent value="admin">
             <Card>
               <CardHeader>
@@ -867,8 +1030,12 @@ const VendorBusinessProfile = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
-                  Save Preferences
+                <Button 
+                  onClick={handleSaveProfile}
+                  disabled={isLoading} 
+                  className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"
+                >
+                  {isLoading ? "Saving..." : "Save Preferences"}
                 </Button>
               </CardFooter>
             </Card>
@@ -880,10 +1047,10 @@ const VendorBusinessProfile = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-wednest-sage h-2.5 rounded-full" style={{ width: '30%' }}></div>
+                    <div className="bg-wednest-sage h-2.5 rounded-full" style={{ width: `${profileCompleteness}%` }}></div>
                   </div>
                   <p className="text-sm text-wednest-brown">
-                    Your profile is 30% complete. Complete all sections to increase visibility.
+                    Your profile is {profileCompleteness}% complete. Complete all sections to increase visibility.
                   </p>
                   <Button variant="outline" className="w-full mt-2">
                     Preview Profile

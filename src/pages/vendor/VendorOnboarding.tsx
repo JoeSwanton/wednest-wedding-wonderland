@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,7 +29,7 @@ const VendorOnboarding = () => {
           .from('vendor_profiles')
           .select('onboarding_completed')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
           
         if (error) throw error;
         
@@ -53,17 +54,50 @@ const VendorOnboarding = () => {
     }
   }, [userProfile, navigate]);
   
-  const handleComplete = async () => {
+  const handleComplete = async (formData: any) => {
     if (!user) return;
     
     setIsLoading(true);
     try {
+      // Save the onboarding data to Supabase
+      const vendorData = {
+        user_id: user.id,
+        business_name: formData.businessName,
+        business_category: formData.businessCategory,
+        abn: formData.abn,
+        years_in_business: formData.yearsInBusiness ? parseInt(formData.yearsInBusiness) : null,
+        phone: formData.phone,
+        business_email: formData.businessEmail,
+        website: formData.website,
+        instagram: formData.instagram,
+        facebook: formData.facebook,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postcode: formData.postcode,
+        service_radius: formData.serviceRadius ? parseInt(formData.serviceRadius) : null,
+        bio: formData.bio,
+        tagline: formData.tagline,
+        specialties: formData.specialties,
+        logo_url: formData.logoUrl,
+        instagram_feed: formData.instagramFeed,
+        onboarding_completed: true
+      };
+      
+      // Update the vendor profile
       const { error } = await supabase
         .from('vendor_profiles')
-        .update({ onboarding_completed: true })
-        .eq('user_id', user.id);
+        .upsert(vendorData, { onConflict: 'user_id' });
       
       if (error) throw error;
+      
+      // Update user metadata
+      await supabase.auth.updateUser({
+        data: { 
+          business_name: formData.businessName,
+          bio: formData.bio
+        }
+      });
       
       toast({
         title: "Onboarding Complete",
