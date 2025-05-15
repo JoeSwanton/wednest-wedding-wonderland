@@ -18,7 +18,7 @@ const VendorLayout = ({ children, title }: VendorLayoutProps) => {
   
   // Protect vendor routes - redirect non-vendors away
   useEffect(() => {
-    if (!loading && (!user || userProfile?.user_type !== 'vendor')) {
+    if (!loading && (!user || userProfile?.user_role !== 'vendor')) {
       navigate('/auth');
     }
   }, [user, userProfile, loading, navigate]);
@@ -33,7 +33,7 @@ const VendorLayout = ({ children, title }: VendorLayoutProps) => {
   }
   
   // If not logged in or not a vendor, don't render anything (redirect will handle it)
-  if (!user || userProfile?.user_type !== 'vendor') {
+  if (!user || userProfile?.user_role !== 'vendor') {
     return null;
   }
 

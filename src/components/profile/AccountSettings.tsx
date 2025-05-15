@@ -86,7 +86,7 @@ const AccountSettings = () => {
         <div className="space-y-2">
           <Label htmlFor="userType">Account Type</Label>
           <div className="p-3 bg-gray-50 rounded border border-gray-100">
-            {userProfile?.user_type === 'vendor' ? 'Wedding Vendor' : 'Couple Planning a Wedding'}
+            {userProfile?.user_role === 'vendor' ? 'Wedding Vendor' : 'Couple Planning a Wedding'}
           </div>
           <p className="text-xs text-wednest-brown-light">
             This is the account type you selected during registration.
