@@ -49,16 +49,19 @@ export const useAuthentication = () => {
         // Use setTimeout to avoid recursive auth state changes
         setTimeout(async () => {
           try {
-            await handleAuthRedirection(
-              currentSession?.user ?? null,
-              currentSession?.user ? {
-                full_name: currentSession.user.user_metadata?.full_name,
-                user_role: currentSession.user.user_metadata?.user_type as "couple" | "vendor",
-                business_name: currentSession.user.user_metadata?.business_name,
-                business_category: currentSession.user.user_metadata?.business_category
-              } : null,
-              event
-            );
+            // Only call handleAuthRedirection if we have session info
+            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+              await handleAuthRedirection(
+                currentSession?.user ?? null,
+                currentSession?.user ? {
+                  full_name: currentSession.user.user_metadata?.full_name,
+                  user_role: currentSession.user.user_metadata?.user_type as "couple" | "vendor",
+                  business_name: currentSession.user.user_metadata?.business_name,
+                  business_category: currentSession.user.user_metadata?.business_category
+                } : null,
+                event
+              );
+            }
           } catch (error) {
             console.error("Error in auth state change handler:", error);
           } finally {
@@ -79,7 +82,9 @@ export const useAuthentication = () => {
       
       setTimeout(async () => {
         try {
-          if (currentSession?.user) {
+          // Don't trigger redirects on initial page load for the auth page
+          const pathname = window.location.pathname;
+          if (pathname !== '/auth' && currentSession?.user) {
             await handleAuthRedirection(
               currentSession.user,
               {

@@ -15,8 +15,17 @@ export const useAuthRedirection = () => {
     userProfile: UserProfile | null,
     event?: string
   ) => {
-    // Skip any redirects if we're already on the auth page
+    // Skip all redirects if we're on the auth page
     if (location.pathname === '/auth') {
+      // Only redirect if explicitly signing in from auth page
+      if (event === 'SIGNED_IN' && user && userProfile) {
+        console.log("Signed in from auth page, redirecting to dashboard");
+        if (userProfile.user_role === 'vendor') {
+          navigate('/vendor/dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+      }
       return;
     }
     
@@ -60,16 +69,6 @@ export const useAuthRedirection = () => {
         console.log("Redirecting new user to questionnaire");
         navigate('/questionnaire');
         return;
-      }
-    }
-    
-    // Handle sign-in event specifically
-    if (event === 'SIGNED_IN' && location.pathname === '/auth') {
-      console.log("Signed in, redirecting from auth page");
-      if (userProfile.user_role === 'vendor') {
-        navigate('/vendor');
-      } else {
-        navigate('/dashboard');
       }
     }
   };
