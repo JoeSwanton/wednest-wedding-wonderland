@@ -1,10 +1,12 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
@@ -29,6 +31,20 @@ const Auth = () => {
   
   return (
     <div className="min-h-screen flex">
+      {/* Back button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-4 left-4 z-10"
+        onClick={() => navigate('/')}
+        asChild
+      >
+        <Link to="/">
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back to home</span>
+        </Link>
+      </Button>
+
       {/* Left side - Image background */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <img
