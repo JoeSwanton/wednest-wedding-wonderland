@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,6 +20,19 @@ const VendorOnboarding = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
   
+  // Added a timeout to prevent infinite loading
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
+      if (isLoading) {
+        console.log("Loading timeout reached, forcing loading state to complete");
+        setIsLoading(false);
+        setCheckedOnboarding(true);
+      }
+    }, 5000); // 5 second timeout
+
+    return () => clearTimeout(loadingTimeout);
+  }, [isLoading]);
+  
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       if (!user) {
@@ -27,6 +41,7 @@ const VendorOnboarding = () => {
       }
 
       try {
+        console.log("Checking onboarding status for user:", user.id);
         const { data, error } = await supabase
           .from('vendor_profiles')
           .select('onboarding_completed')
@@ -35,9 +50,12 @@ const VendorOnboarding = () => {
 
         if (error) throw error;
 
+        console.log("Vendor profile data:", data);
         const isDashboard = location.pathname === '/vendor/dashboard';
 
-        if (data?.onboarding_completed && !isDashboard) {
+        // Only redirect if we're on dashboard and have completed onboarding
+        if (data?.onboarding_completed && isDashboard) {
+          console.log("Onboarding completed, redirecting to dashboard");
           navigate("/vendor/dashboard");
         }
 
@@ -45,20 +63,25 @@ const VendorOnboarding = () => {
       } catch (error) {
         console.error("Error checking onboarding status:", error);
       } finally {
+        console.log("Setting loading to false");
         setIsLoading(false);
         setCheckedOnboarding(true);
       }
     };
 
-    checkOnboardingStatus();
-  }, [user, navigate, location]);
+    if (user && !checkedOnboarding) {
+      checkOnboardingStatus();
+    } else if (!user) {
+      setIsLoading(false);
+    }
+  }, [user, navigate, location, checkedOnboarding]);
 
   useEffect(() => {
-    if (userProfile && userProfile.user_role !== 'vendor') {
+    if (userProfile && userProfile.user_role !== 'vendor' && checkedOnboarding) {
+      console.log("User is not a vendor, redirecting to dashboard");
       navigate("/dashboard");
-      setCheckedOnboarding(true);
     }
-  }, [userProfile, navigate]);
+  }, [userProfile, navigate, checkedOnboarding]);
 
   const handleComplete = async (formData: any) => {
     if (!user) return;
@@ -122,7 +145,7 @@ const VendorOnboarding = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && !checkedOnboarding) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center">

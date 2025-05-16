@@ -8,6 +8,7 @@ export const useAuthRedirection = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // Pages that shouldn't trigger automatic redirects
   const nonRedirectPaths = ['/questionnaire', '/auth', '/profile', '/vendor/onboarding'];
 
   const handleAuthRedirection = async (
@@ -52,8 +53,8 @@ export const useAuthRedirection = () => {
       return;
     }
 
-    // Handle vendor onboarding
-    if (userProfile.user_role === 'vendor') {
+    // Handle vendor onboarding - but only if not already on onboarding page
+    if (userProfile.user_role === 'vendor' && location.pathname !== '/vendor/onboarding') {
       try {
         const { data: vendorProfile, error } = await supabase
           .from('vendor_profiles')
