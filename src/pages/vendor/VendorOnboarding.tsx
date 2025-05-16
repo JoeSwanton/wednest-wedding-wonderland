@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import { Loader2 } from "lucide-react";
 const VendorOnboarding = () => {
   const { user, userProfile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   
   const [currentStep, setCurrentStep] = useState(0);
@@ -19,60 +19,58 @@ const VendorOnboarding = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
   
-  // Check if the user has already completed onboarding
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      if (!user) return;
-      
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('vendor_profiles')
           .select('onboarding_completed')
           .eq('user_id', user.id)
           .maybeSingle();
-          
+
         if (error) throw error;
-        
-        // Only redirect if onboarding is completed and we haven't redirected yet
-        if (data && data.onboarding_completed && !checkedOnboarding) {
-          console.log("Vendor has completed onboarding, redirecting to dashboard");
-          setHasCompletedOnboarding(true);
+
+        const isDashboard = location.pathname === '/vendor/dashboard';
+
+        if (data?.onboarding_completed && !isDashboard) {
           navigate("/vendor/dashboard");
         }
-        
-        setCheckedOnboarding(true);
+
+        setHasCompletedOnboarding(data?.onboarding_completed ?? false);
       } catch (error) {
         console.error("Error checking onboarding status:", error);
       } finally {
         setIsLoading(false);
+        setCheckedOnboarding(true);
       }
     };
-    
+
     checkOnboardingStatus();
-  }, [user, navigate, checkedOnboarding]);
-  
-  // Skip onboarding check for non-vendor users, but avoid loops
+  }, [user, navigate, location]);
+
   useEffect(() => {
-    // Only check once and only redirect if we're on the onboarding page
-    if (userProfile && userProfile.user_role !== 'vendor' && !checkedOnboarding) {
-      console.log("Non-vendor user attempting to access vendor onboarding, redirecting to dashboard");
+    if (userProfile && userProfile.user_role !== 'vendor') {
       navigate("/dashboard");
       setCheckedOnboarding(true);
     }
-  }, [userProfile, navigate, checkedOnboarding]);
-  
+  }, [userProfile, navigate]);
+
   const handleComplete = async (formData: any) => {
     if (!user) return;
-    
+
     setIsLoading(true);
     try {
-      // Save the onboarding data to Supabase
       const vendorData = {
         user_id: user.id,
         business_name: formData.businessName,
         business_category: formData.businessCategory,
         abn: formData.abn,
-        years_in_business: formData.yearsInBusiness ? parseInt(formData.yearsInBusiness) : null,
+        years_in_business: parseInt(formData.yearsInBusiness || "0"),
         phone: formData.phone,
         business_email: formData.businessEmail,
         website: formData.website,
@@ -82,7 +80,7 @@ const VendorOnboarding = () => {
         city: formData.city,
         state: formData.state,
         postcode: formData.postcode,
-        service_radius: formData.serviceRadius ? parseInt(formData.serviceRadius) : null,
+        service_radius: parseInt(formData.serviceRadius || "0"),
         bio: formData.bio,
         tagline: formData.tagline,
         specialties: formData.specialties,
@@ -92,29 +90,25 @@ const VendorOnboarding = () => {
         application_status: 'pending_review',
         willing_to_travel: formData.willingToTravel || false
       };
-      
-      // Update the vendor profile
+
       const { error } = await supabase
         .from('vendor_profiles')
         .upsert(vendorData, { onConflict: 'user_id' });
-      
+
       if (error) throw error;
-      
-      // Update user metadata
+
       await supabase.auth.updateUser({
         data: { 
           business_name: formData.businessName,
           bio: formData.bio
         }
       });
-      
+
       toast({
         title: "Onboarding Complete",
-        description: "Your vendor profile has been submitted for review. We'll notify you when it's approved!"
+        description: "Your profile has been submitted for review."
       });
-      
-      // Set flag to avoid multiple redirects
-      setCheckedOnboarding(true); 
+
       navigate("/vendor/dashboard");
     } catch (error: any) {
       console.error("Error completing onboarding:", error);
@@ -127,7 +121,7 @@ const VendorOnboarding = () => {
       setIsLoading(false);
     }
   };
-  
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -138,31 +132,21 @@ const VendorOnboarding = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header - Simplified */}
       <header className="bg-white border-b border-gray-100 py-4">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <h1 className="text-xl font-serif text-wednest-brown">Join Enosi as a Vendor</h1>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/auth")}
-            >
-              Exit
-            </Button>
-          </div>
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <h1 className="text-xl font-serif text-wednest-brown">Join Enosi as a Vendor</h1>
+          <Button variant="outline" size="sm" onClick={() => navigate("/auth")}>
+            Exit
+          </Button>
         </div>
       </header>
-      
+
       <div className="flex-grow container mx-auto px-4 py-8 max-w-4xl">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <OnboardingProgress currentStep={currentStep} />
-          
           <div className="mt-6">
             <OnboardingSteps 
               currentStep={currentStep} 
@@ -170,13 +154,6 @@ const VendorOnboarding = () => {
               onComplete={handleComplete}
             />
           </div>
-        </div>
-        
-        {/* Support section - Simplified */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-wednest-brown-light">
-            Need help with your onboarding? <a href="#" className="text-wednest-sage hover:underline">Contact our support team</a>
-          </p>
         </div>
       </div>
     </div>
