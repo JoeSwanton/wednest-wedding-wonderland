@@ -148,6 +148,7 @@ export type Database = {
         Row: {
           abn: string | null
           address: string | null
+          application_status: string | null
           bio: string
           business_category: string
           business_email: string
@@ -155,6 +156,7 @@ export type Database = {
           city: string
           created_at: string
           facebook: string | null
+          feedback: string | null
           instagram: string | null
           instagram_feed: string | null
           is_published: boolean | null
@@ -162,6 +164,7 @@ export type Database = {
           onboarding_completed: boolean | null
           phone: string
           postcode: string | null
+          required_actions: string[] | null
           service_radius: number | null
           specialties: string[] | null
           state: string
@@ -174,6 +177,7 @@ export type Database = {
         Insert: {
           abn?: string | null
           address?: string | null
+          application_status?: string | null
           bio: string
           business_category: string
           business_email: string
@@ -181,6 +185,7 @@ export type Database = {
           city: string
           created_at?: string
           facebook?: string | null
+          feedback?: string | null
           instagram?: string | null
           instagram_feed?: string | null
           is_published?: boolean | null
@@ -188,6 +193,7 @@ export type Database = {
           onboarding_completed?: boolean | null
           phone: string
           postcode?: string | null
+          required_actions?: string[] | null
           service_radius?: number | null
           specialties?: string[] | null
           state: string
@@ -200,6 +206,7 @@ export type Database = {
         Update: {
           abn?: string | null
           address?: string | null
+          application_status?: string | null
           bio?: string
           business_category?: string
           business_email?: string
@@ -207,6 +214,7 @@ export type Database = {
           city?: string
           created_at?: string
           facebook?: string | null
+          feedback?: string | null
           instagram?: string | null
           instagram_feed?: string | null
           is_published?: boolean | null
@@ -214,6 +222,7 @@ export type Database = {
           onboarding_completed?: boolean | null
           phone?: string
           postcode?: string | null
+          required_actions?: string[] | null
           service_radius?: number | null
           specialties?: string[] | null
           state?: string

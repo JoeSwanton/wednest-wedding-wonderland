@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import BusinessBasicsStep from "./steps/BusinessBasicsStep";
@@ -8,11 +7,13 @@ import PortfolioStep from "./steps/PortfolioStep";
 import ServicePackagesStep from "./steps/ServicePackagesStep";
 import SubmitReviewStep from "./steps/SubmitReviewStep";
 import { VendorOnboardingData } from "@/types/vendor"; 
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 interface OnboardingStepsProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
-  onComplete: (formData: VendorOnboardingData) => void;
+  onComplete: (formData: VendorOnboardingData) => Promise<void>;
 }
 
 const OnboardingSteps = ({ 

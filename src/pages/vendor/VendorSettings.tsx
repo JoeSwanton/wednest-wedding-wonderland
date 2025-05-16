@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { 
   Card, 
@@ -11,7 +12,7 @@ import VendorLayout from "@/components/vendor/VendorLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Settings, 
@@ -30,6 +31,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import ApplicationStatus from "@/components/vendor/settings/ApplicationStatus";
 
 const VendorSettings = () => {
   const { toast } = useToast();
@@ -40,7 +42,7 @@ const VendorSettings = () => {
   const [profileForm, setProfileForm] = useState({
     businessName: userProfile?.business_name || "Your Business Name",
     contactName: userProfile?.full_name || "",
-    bio: userProfile?.bio || "", // Access bio directly from userProfile since it's defined in the UserProfile interface
+    bio: userProfile?.bio || "", 
     email: user?.email || "",
     phone: "0412 345 678",
     address: "123 Wedding Lane, Sydney NSW 2000",
@@ -107,6 +109,10 @@ const VendorSettings = () => {
           
           {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
+            {/* Application Status card - Added at the top of profile tab */}
+            <ApplicationStatus />
+
+            {/* Business Profile card */}
             <Card>
               <form onSubmit={handleProfileSubmit}>
                 <CardHeader>

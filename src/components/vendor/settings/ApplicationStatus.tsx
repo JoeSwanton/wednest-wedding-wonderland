@@ -2,7 +2,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ApplicationStatus } from "@/types/vendor";
+import type { ApplicationStatus as ApplicationStatusType } from "@/types/vendor";
 import { AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,7 @@ const ApplicationStatus = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [status, setStatus] = useState<{
-    status: ApplicationStatus;
+    status: ApplicationStatusType;
     message?: string;
     updatedAt?: string;
     feedback?: string;
@@ -34,7 +34,7 @@ const ApplicationStatus = () => {
         
         if (data) {
           setStatus({
-            status: data.application_status as ApplicationStatus || 'pending_review',
+            status: data.application_status as ApplicationStatusType || 'pending_review',
             updatedAt: data.updated_at,
             feedback: data.feedback,
             requiredActions: data.required_actions
@@ -58,15 +58,15 @@ const ApplicationStatus = () => {
   const getStatusIcon = () => {
     switch (status?.status) {
       case 'approved':
-        return <CheckCircle size={24} className="text-green-500" />;
+        return <CheckCircle className="text-green-500" />;
       case 'rejected':
-        return <XCircle size={24} className="text-red-500" />;
+        return <XCircle className="text-red-500" />;
       case 'changes_requested':
-        return <AlertCircle size={24} className="text-amber-500" />;
+        return <AlertCircle className="text-amber-500" />;
       case 'verification_in_progress':
       case 'pending_review':
       default:
-        return <Clock size={24} className="text-wednest-sage" />;
+        return <Clock className="text-wednest-sage" />;
     }
   };
 
