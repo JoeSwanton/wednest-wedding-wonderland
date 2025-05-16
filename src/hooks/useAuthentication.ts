@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,17 +27,13 @@ export const useAuthentication = () => {
   };
 
   useEffect(() => {
-    console.log("Setting up authentication subscription");
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
-        console.log("Auth state changed:", event);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
 
-        // Redirect only on explicit sign-in/out events
         if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
           const userMetadata = currentSession?.user?.user_metadata;
-          // Use setTimeout to ensure this runs after state updates
           setTimeout(async () => {
             await handleAuthRedirection(
               currentSession?.user ?? null,
@@ -57,24 +52,13 @@ export const useAuthentication = () => {
       }
     );
 
-    // Initial session load – no redirection
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      console.log("Initial session loaded:", currentSession ? "logged in" : "not logged in");
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
-      setLoading(false);
+      setLoading(false); // No redirect here to avoid loops
     });
 
-    // Add a timeout to make sure we don't get stuck in loading forever
-    const loadingTimeout = setTimeout(() => {
-      if (loading) {
-        console.log("Loading timeout reached in useAuthentication, forcing loading to false");
-        setLoading(false);
-      }
-    }, 5000);
-
     return () => {
-      clearTimeout(loadingTimeout);
       subscription.unsubscribe();
     };
   }, []);
