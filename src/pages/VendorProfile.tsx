@@ -26,8 +26,8 @@ const VendorProfile = () => {
         
         // In a real implementation, this would fetch from the API
         // For now, we'll use the mock data based on ID
-        const { data: mockVendors } = await import("@/data/mockVendors");
-        const foundVendor = mockVendors.mockBusinesses.find(v => v.id.toString() === vendorId);
+        const { mockBusinesses } = await import("@/data/mockVendors");
+        const foundVendor = mockBusinesses.find(v => v.id.toString() === vendorId);
         
         if (foundVendor) {
           setVendor(foundVendor);
