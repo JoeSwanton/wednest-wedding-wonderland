@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Loader2, Trash2 } from "lucide-react";
-import { VendorOnboardingData } from "@/types/vendor";
+import { PortfolioImage, VendorOnboardingData } from "@/types/vendor";
 
 interface PortfolioStepProps {
   onNext: () => void;
@@ -50,7 +51,7 @@ const PortfolioStep = ({
 
     setIsUploading(true);
 
-    const newImages: string[] = [];
+    const newImages: PortfolioImage[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -75,7 +76,12 @@ const PortfolioStep = ({
           .from("vendor-assets")
           .getPublicUrl(data.path).data.publicUrl;
 
-        newImages.push(publicUrl);
+        // Create a proper PortfolioImage object
+        newImages.push({
+          url: publicUrl,
+          path: data.path,
+          caption: ""
+        });
       }
     }
 
@@ -143,10 +149,10 @@ const PortfolioStep = ({
         <div>
           <Label>Uploaded Images</Label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
-            {localFormData.portfolioImages.map((url, index) => (
+            {localFormData.portfolioImages.map((image, index) => (
               <div key={index} className="relative border rounded">
                 <img
-                  src={url}
+                  src={image.url}
                   alt={`portfolio-${index}`}
                   className="object-cover w-full h-32 rounded"
                 />
