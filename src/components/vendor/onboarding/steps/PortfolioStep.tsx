@@ -6,11 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Loader2, Trash2 } from "lucide-react";
-import { VendorOnboardingData } from "@/types/vendor";
-
-interface PortfolioImage {
-  url: string;
-}
+import { VendorOnboardingData, PortfolioImage } from "@/types/vendor";
 
 interface PortfolioStepProps {
   onNext: () => void;
@@ -81,7 +77,11 @@ const PortfolioStep = ({
           .from("vendor-assets")
           .getPublicUrl(data.path).data.publicUrl;
 
-        newImages.push({ url: publicUrl });
+        newImages.push({
+          url: publicUrl,
+          path: data.path,
+          caption: "" // Optional, you can make this user-editable later
+        });
       }
     }
 
