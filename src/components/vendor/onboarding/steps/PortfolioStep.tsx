@@ -20,6 +20,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
   const { user } = useAuth();
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [localFormData, setLocalFormData] = useState({
     portfolioImages: formData.portfolioImages || [],
     instagramFeed: formData.instagramFeed || ""
@@ -27,7 +28,6 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
   
   // Add effect to sync local state with parent form data
   useEffect(() => {
-    // This ensures we're always displaying the most up-to-date data
     setLocalFormData({
       portfolioImages: formData.portfolioImages || [],
       instagramFeed: formData.instagramFeed || ""
@@ -37,6 +37,9 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLocalFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Also update parent form data
+    updateFormData({ [name]: value });
   };
   
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,32 +56,61 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
     }
     
     setIsUploading(true);
+    setUploadProgress(0);
     
     try {
       const newImages = [...localFormData.portfolioImages];
+      const totalFiles = files.length;
       
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+          toast({
+            title: "File too large",
+            description: `${file.name} exceeds the 5MB size limit.`,
+            variant: "destructive"
+          });
+          continue;
+        }
+        
         const fileExt = file.name.split('.').pop();
-        const filePath = `${user.id}/portfolio-${Date.now()}-${i}.${fileExt}`;
+        const fileName = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        const filePath = `${user.id}/portfolio-${fileName}.${fileExt}`;
         
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError, data } = await supabase.storage
           .from('vendor-assets')
-          .upload(filePath, file);
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
           
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          toast({
+            title: "Upload failed",
+            description: uploadError.message || "Failed to upload image",
+            variant: "destructive"
+          });
+          continue;
+        }
         
-        const { data } = supabase.storage
+        // Get public URL for the uploaded file
+        const { data: publicUrlData } = supabase.storage
           .from('vendor-assets')
           .getPublicUrl(filePath);
           
-        if (data?.publicUrl) {
+        if (publicUrlData?.publicUrl) {
           newImages.push({
-            url: data.publicUrl,
+            url: publicUrlData.publicUrl,
             path: filePath,
             caption: ""
           });
         }
+        
+        // Update progress
+        setUploadProgress(Math.round(((i + 1) / totalFiles) * 100));
       }
       
       // Update local state
@@ -89,7 +121,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       
       toast({
         title: "Images uploaded",
-        description: `Successfully uploaded ${files.length} image(s).`
+        description: `Successfully uploaded images to your portfolio.`
       });
     } catch (error: any) {
       console.error("Error uploading portfolio images:", error);
@@ -100,6 +132,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       });
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
       // Reset the file input
       e.target.value = "";
     }
@@ -116,7 +149,10 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
         .from('vendor-assets')
         .remove([imageToRemove.path]);
         
-      if (error) throw error;
+      if (error) {
+        console.error("Error removing file:", error);
+        throw error;
+      }
       
       // Update local state
       const updatedImages = localFormData.portfolioImages.filter((_, i) => i !== index);
@@ -169,6 +205,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
   
   // Calculate how many images can still be uploaded
   const remainingSlots = 10 - localFormData.portfolioImages.length;
+  const hasUploadedMinimumImages = localFormData.portfolioImages.length > 0;
   
   return (
     <div className="space-y-6">
@@ -214,7 +251,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
                   {isUploading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Uploading...
+                      Uploading... {uploadProgress}%
                     </>
                   ) : (
                     <>Select Images</>
@@ -273,7 +310,6 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
             value={localFormData.instagramFeed}
             onChange={handleChange}
             placeholder="E.g. @yourbusinessname"
-            onBlur={() => updateFormData({ instagramFeed: localFormData.instagramFeed })}
           />
           <p className="text-xs text-wednest-brown-light">
             Add your Instagram handle to display your Instagram feed on your profile.

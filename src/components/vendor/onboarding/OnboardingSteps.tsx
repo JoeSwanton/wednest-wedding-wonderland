@@ -64,6 +64,10 @@ const OnboardingSteps = ({
       // For debugging in dev mode
       if (process.env.NODE_ENV === 'development') {
         console.log('Form data updated:', updated);
+        // Log specifically when portfolioImages are updated
+        if (data.portfolioImages) {
+          console.log('Portfolio images updated:', data.portfolioImages.length, 'images');
+        }
       }
       return updated;
     });
@@ -112,7 +116,10 @@ const OnboardingSteps = ({
       case 2: // Business Description
         return Boolean(formData.bio);
       case 3: // Portfolio
-        return formData.portfolioImages.length > 0;
+        // Portfolio validation - at least one image required
+        const hasPortfolioImages = Array.isArray(formData.portfolioImages) && formData.portfolioImages.length > 0;
+        console.log("Portfolio validation check:", hasPortfolioImages, formData.portfolioImages);
+        return hasPortfolioImages;
       case 4: // Service Packages
         return formData.servicePackages.length > 0;
       default:
