@@ -63,12 +63,12 @@ const OnboardingSteps = ({
       const updated = { ...prev, ...data };
       
       // For debugging in dev mode
-      console.log('Form data updated:', updated);
+      console.log('[OnboardingSteps] Form data updated:', updated);
       
       // Log specifically when portfolioImages are updated
       if (data.portfolioImages) {
-        console.log('Portfolio images updated:', data.portfolioImages.length, 'images');
-        console.log('Portfolio images data:', data.portfolioImages);
+        console.log('[OnboardingSteps] Portfolio images updated:', data.portfolioImages.length, 'images');
+        console.log('[OnboardingSteps] Portfolio images data:', data.portfolioImages);
       }
       
       return updated;
@@ -82,8 +82,8 @@ const OnboardingSteps = ({
       
       // Debug log for portfolio images
       if (currentStep === 3) {
-        console.log('Current portfolio images:', formData.portfolioImages);
-        console.log('Portfolio images count:', formData.portfolioImages?.length || 0);
+        console.log('[OnboardingSteps] Current portfolio images:', formData.portfolioImages);
+        console.log('[OnboardingSteps] Portfolio images count:', formData.portfolioImages?.length || 0);
       }
     }
   }, [formData, currentStep]);
@@ -126,7 +126,8 @@ const OnboardingSteps = ({
       case 3: // Portfolio
         // Portfolio validation - at least one image required
         const hasPortfolioImages = Array.isArray(formData.portfolioImages) && formData.portfolioImages.length > 0;
-        console.log("Portfolio validation check:", hasPortfolioImages, formData.portfolioImages);
+        console.log("[OnboardingSteps] Portfolio validation check:", hasPortfolioImages);
+        console.log("[OnboardingSteps] Portfolio images in validation:", formData.portfolioImages);
         return hasPortfolioImages;
       case 4: // Service Packages
         return formData.servicePackages.length > 0;
