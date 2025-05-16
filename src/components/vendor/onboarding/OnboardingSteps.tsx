@@ -61,15 +61,16 @@ const OnboardingSteps = ({
   const updateFormData = (data: Partial<VendorOnboardingData>) => {
     setFormData(prev => {
       const updated = { ...prev, ...data };
+      
       // For debugging in dev mode
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Form data updated:', updated);
-        // Log specifically when portfolioImages are updated
-        if (data.portfolioImages) {
-          console.log('Portfolio images updated:', data.portfolioImages.length, 'images');
-          console.log('Portfolio images data:', data.portfolioImages);
-        }
+      console.log('Form data updated:', updated);
+      
+      // Log specifically when portfolioImages are updated
+      if (data.portfolioImages) {
+        console.log('Portfolio images updated:', data.portfolioImages.length, 'images');
+        console.log('Portfolio images data:', data.portfolioImages);
       }
+      
       return updated;
     });
   };
