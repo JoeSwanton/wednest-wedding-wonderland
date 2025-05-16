@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -24,6 +24,15 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
     portfolioImages: formData.portfolioImages || [],
     instagramFeed: formData.instagramFeed || ""
   });
+  
+  // Add effect to sync local state with parent form data
+  useEffect(() => {
+    // This ensures we're always displaying the most up-to-date data
+    setLocalFormData({
+      portfolioImages: formData.portfolioImages || [],
+      instagramFeed: formData.instagramFeed || ""
+    });
+  }, [formData]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,8 +81,10 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
         }
       }
       
+      // Update local state
       setLocalFormData(prev => ({ ...prev, portfolioImages: newImages }));
-      // Also update the parent form data right after uploading
+      
+      // Also update the parent form data immediately
       updateFormData({ portfolioImages: newImages });
       
       toast({
@@ -89,6 +100,8 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       });
     } finally {
       setIsUploading(false);
+      // Reset the file input
+      e.target.value = "";
     }
   };
   
@@ -108,7 +121,8 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       // Update local state
       const updatedImages = localFormData.portfolioImages.filter((_, i) => i !== index);
       setLocalFormData(prev => ({ ...prev, portfolioImages: updatedImages }));
-      // Also update the parent form data after removing
+      
+      // Also update the parent form data immediately
       updateFormData({ portfolioImages: updatedImages });
       
       toast({
@@ -129,6 +143,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
     const updatedImages = [...localFormData.portfolioImages];
     updatedImages[index].caption = caption;
     setLocalFormData(prev => ({ ...prev, portfolioImages: updatedImages }));
+    
     // Also update the parent form data when caption changes
     updateFormData({ portfolioImages: updatedImages });
   };
@@ -145,9 +160,15 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
     }
     
     // Update form data and proceed to next step
-    updateFormData(localFormData);
+    updateFormData({
+      portfolioImages: localFormData.portfolioImages,
+      instagramFeed: localFormData.instagramFeed
+    });
     onNext();
   };
+  
+  // Calculate how many images can still be uploaded
+  const remainingSlots = 10 - localFormData.portfolioImages.length;
   
   return (
     <div className="space-y-6">
@@ -170,7 +191,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
                 type="file"
                 accept="image/*"
                 multiple
-                disabled={isUploading}
+                disabled={isUploading || remainingSlots <= 0}
                 onChange={handleFileUpload}
                 className="cursor-pointer opacity-0 absolute inset-0 w-full h-full"
               />
@@ -180,13 +201,15 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
                   Drag & drop or click to upload images
                 </p>
                 <p className="text-wednest-brown-light text-sm mt-1">
-                  Upload up to 10 high-quality images (Max 5MB each)
+                  {remainingSlots > 0 
+                    ? `Upload up to ${remainingSlots} more image${remainingSlots !== 1 ? 's' : ''} (Max 5MB each)`
+                    : "Maximum number of images reached (10/10)"}
                 </p>
                 <Button 
                   type="button" 
                   variant="outline" 
                   className="mt-4 border-wednest-sage text-wednest-sage hover:bg-wednest-sage/10"
-                  disabled={isUploading}
+                  disabled={isUploading || remainingSlots <= 0}
                 >
                   {isUploading ? (
                     <>
@@ -230,6 +253,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
                       size="sm"
                       className="w-full"
                       onClick={() => handleRemoveImage(index)}
+                      disabled={isUploading}
                     >
                       <Trash2 size={16} className="mr-2" />
                       Remove
@@ -249,6 +273,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
             value={localFormData.instagramFeed}
             onChange={handleChange}
             placeholder="E.g. @yourbusinessname"
+            onBlur={() => updateFormData({ instagramFeed: localFormData.instagramFeed })}
           />
           <p className="text-xs text-wednest-brown-light">
             Add your Instagram handle to display your Instagram feed on your profile.

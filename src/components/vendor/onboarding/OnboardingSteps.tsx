@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import BusinessBasicsStep from "./steps/BusinessBasicsStep";
@@ -58,12 +59,15 @@ const OnboardingSteps = ({
   
   // Function to update form data
   const updateFormData = (data: Partial<VendorOnboardingData>) => {
-    setFormData(prev => ({ ...prev, ...data }));
+    setFormData(prev => {
+      const updated = { ...prev, ...data };
+      // For debugging in dev mode
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Form data updated:', updated);
+      }
+      return updated;
+    });
   };
-  
-  // Navigation functions
-  const goToNext = () => setCurrentStep(currentStep + 1);
-  const goToBack = () => setCurrentStep(currentStep - 1);
   
   // For debugging in development
   useEffect(() => {
@@ -71,6 +75,10 @@ const OnboardingSteps = ({
       (window as any).VendorOnboardingData = formData;
     }
   }, [formData]);
+  
+  // Navigation functions
+  const goToNext = () => setCurrentStep(currentStep + 1);
+  const goToBack = () => setCurrentStep(currentStep - 1);
   
   // Handle the completion of the onboarding process
   const handleComplete = () => {
@@ -91,6 +99,24 @@ const OnboardingSteps = ({
       opacity: 0,
       x: -20,
       transition: { duration: 0.2 }
+    }
+  };
+  
+  // Debug function to check validation status for current step
+  const getStepValidationStatus = () => {
+    switch (currentStep) {
+      case 0: // Business Basics
+        return Boolean(formData.businessName && formData.businessCategory);
+      case 1: // Contact & Location
+        return Boolean(formData.phone && formData.businessEmail && formData.city && formData.state);
+      case 2: // Business Description
+        return Boolean(formData.bio);
+      case 3: // Portfolio
+        return formData.portfolioImages.length > 0;
+      case 4: // Service Packages
+        return formData.servicePackages.length > 0;
+      default:
+        return true;
     }
   };
   
