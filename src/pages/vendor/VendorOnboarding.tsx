@@ -80,7 +80,9 @@ const VendorOnboarding = () => {
         specialties: formData.specialties,
         logo_url: formData.logoUrl,
         instagram_feed: formData.instagramFeed,
-        onboarding_completed: true
+        onboarding_completed: true,
+        application_status: 'pending_review',
+        willing_to_travel: formData.willingToTravel || false
       };
       
       // Update the vendor profile
@@ -100,7 +102,7 @@ const VendorOnboarding = () => {
       
       toast({
         title: "Onboarding Complete",
-        description: "Your vendor profile is now set up. Welcome to WedNest!"
+        description: "Your vendor profile has been submitted for review. We'll notify you when it's approved!"
       });
       
       navigate("/vendor/dashboard");
@@ -134,7 +136,7 @@ const VendorOnboarding = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <h1 className="text-xl font-serif text-wednest-brown">Vendor Onboarding</h1>
+              <h1 className="text-xl font-serif text-wednest-brown">Join Enosi as a Vendor</h1>
             </div>
             <Button
               variant="outline"

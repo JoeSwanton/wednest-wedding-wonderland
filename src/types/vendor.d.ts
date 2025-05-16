@@ -32,6 +32,7 @@ export interface VendorOnboardingData {
   state: string;
   postcode: string;
   serviceRadius: string;
+  willingToTravel?: boolean;
   
   // Business Description
   bio: string;
@@ -44,4 +45,14 @@ export interface VendorOnboardingData {
   
   // Service Packages
   servicePackages: ServicePackage[];
+}
+
+export type ApplicationStatus = 'pending_review' | 'verification_in_progress' | 'approved' | 'rejected' | 'changes_requested';
+
+export interface VendorApplicationStatus {
+  status: ApplicationStatus;
+  message?: string;
+  updatedAt?: string;
+  feedback?: string;
+  requiredActions?: string[];
 }

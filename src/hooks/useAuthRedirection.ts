@@ -1,3 +1,4 @@
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,7 +44,7 @@ export const useAuthRedirection = () => {
     if (userProfile.user_role === 'vendor') {
       const { data: vendorProfile, error } = await supabase
         .from('vendor_profiles')
-        .select('onboarding_completed')
+        .select('onboarding_completed, application_status')
         .eq('user_id', user.id)
         .maybeSingle();
       

@@ -6,7 +6,7 @@ import ContactLocationStep from "./steps/ContactLocationStep";
 import BusinessDescriptionStep from "./steps/BusinessDescriptionStep";
 import PortfolioStep from "./steps/PortfolioStep";
 import ServicePackagesStep from "./steps/ServicePackagesStep";
-import PreviewPublishStep from "./steps/PreviewPublishStep";
+import SubmitReviewStep from "./steps/SubmitReviewStep";
 import { VendorOnboardingData } from "@/types/vendor"; 
 
 interface OnboardingStepsProps {
@@ -40,6 +40,7 @@ const OnboardingSteps = ({
     state: "",
     postcode: "",
     serviceRadius: "",
+    willingToTravel: false,
     
     // Business Description
     bio: "",
@@ -141,7 +142,7 @@ const OnboardingSteps = ({
         );
       case 5:
         return (
-          <PreviewPublishStep
+          <SubmitReviewStep
             onBack={goToBack}
             onComplete={handleComplete}
             formData={formData}

@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Check } from "lucide-react";
 import { VendorOnboardingData } from "@/types/vendor";
 
@@ -45,6 +46,7 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
     state: formData.state || "",
     postcode: formData.postcode || "",
     serviceRadius: formData.serviceRadius || "",
+    willingToTravel: formData.willingToTravel || false,
   });
 
   const [emailVerified, setEmailVerified] = useState(false);
@@ -61,6 +63,10 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
   
   const handleSelectChange = (name: string, value: string) => {
     setLocalFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSwitchChange = (checked: boolean) => {
+    setLocalFormData(prev => ({ ...prev, willingToTravel: checked }));
   };
   
   const verifyEmail = () => {
@@ -112,6 +118,15 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
       });
       return;
     }
+
+    if (!localFormData.instagram && !localFormData.facebook) {
+      toast({
+        title: "Social media required",
+        description: "Please provide at least one social media profile (Instagram or Facebook).",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Update form data and proceed to next step
     updateFormData(localFormData);
@@ -121,7 +136,7 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-serif text-wednest-brown">Contact & Location</h2>
+        <h2 className="text-2xl font-serif text-wednest-brown">Contact & Presence</h2>
         <p className="text-wednest-brown-light">
           Share how couples can contact you and where your services are available.
         </p>
@@ -145,7 +160,7 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
           
           <div className="space-y-2">
             <Label htmlFor="businessEmail">
-              Business Email <span className="text-red-500">*</span>
+              Public Email <span className="text-red-500">*</span>
             </Label>
             <div className="flex gap-2">
               <Input
@@ -183,7 +198,7 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="website">Website</Label>
+          <Label htmlFor="website">Website (Optional)</Label>
           <Input
             id="website"
             name="website"
@@ -195,7 +210,10 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="instagram">Instagram</Label>
+            <Label htmlFor="instagram">
+              Instagram <span className="text-red-500">*</span>
+              <span className="text-wednest-brown-light text-xs ml-2">(At least one social required)</span>
+            </Label>
             <Input
               id="instagram"
               name="instagram"
@@ -206,7 +224,10 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="facebook">Facebook</Label>
+            <Label htmlFor="facebook">
+              Facebook <span className="text-red-500">*</span>
+              <span className="text-wednest-brown-light text-xs ml-2">(At least one social required)</span>
+            </Label>
             <Input
               id="facebook"
               name="facebook"
@@ -218,11 +239,11 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
         </div>
         
         <div className="pt-2 border-t border-wednest-beige">
-          <h3 className="text-lg font-medium text-wednest-brown mb-3">Business Location</h3>
+          <h3 className="text-lg font-medium text-wednest-brown mb-3">Service Location</h3>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="address">Street Address</Label>
+              <Label htmlFor="address">Street Address (Optional)</Label>
               <Input
                 id="address"
                 name="address"
@@ -293,6 +314,17 @@ const ContactLocationStep = ({ onNext, onBack, formData, updateFormData }: Conta
                   placeholder="E.g. 50"
                 />
               </div>
+            </div>
+
+            <div className="flex items-center space-x-2 pt-2">
+              <Switch 
+                id="willing-to-travel" 
+                checked={localFormData.willingToTravel}
+                onCheckedChange={handleSwitchChange}
+              />
+              <Label htmlFor="willing-to-travel" className="cursor-pointer">
+                Willing to travel outside your service area
+              </Label>
             </div>
           </div>
         </div>

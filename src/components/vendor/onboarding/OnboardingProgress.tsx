@@ -8,11 +8,11 @@ interface OnboardingProgressProps {
 const OnboardingProgress = ({ currentStep }: OnboardingProgressProps) => {
   const steps = [
     "Business Basics",
-    "Contact & Location",
+    "Contact & Presence",
     "Business Description",
     "Portfolio",
-    "Service Packages",
-    "Preview & Publish"
+    "Packages",
+    "Submit for Review"
   ];
   
   return (
