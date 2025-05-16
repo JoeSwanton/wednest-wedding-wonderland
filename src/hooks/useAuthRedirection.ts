@@ -17,6 +17,12 @@ export const useAuthRedirection = () => {
   ) => {
     console.log("Auth redirection called with path:", location.pathname, "event:", event);
     
+    // Skip redirect on token refresh events to prevent loops
+    if (event === 'TOKEN_REFRESHED') {
+      console.log("Skipping redirection for TOKEN_REFRESHED event");
+      return;
+    }
+    
     // If on the auth page, only redirect on explicit sign-in event
     if (location.pathname === '/auth') {
       if (user && userProfile && event === 'SIGNED_IN') {
@@ -28,6 +34,12 @@ export const useAuthRedirection = () => {
         }
       }
       // Otherwise, don't redirect from auth page
+      return;
+    }
+    
+    // Skip redirections for all non-redirect paths unless it's an explicit sign-out
+    if (nonRedirectPaths.includes(location.pathname) && event !== 'SIGNED_OUT') {
+      console.log(`Skipping redirection for protected path: ${location.pathname}`);
       return;
     }
     
@@ -56,7 +68,7 @@ export const useAuthRedirection = () => {
         
         // Redirect to onboarding if needed and not already there
         if (!vendorProfile || !vendorProfile.onboarding_completed) {
-          if (location.pathname !== '/vendor/onboarding') {
+          if (location.pathname !== '/vendor/onboarding' && !nonRedirectPaths.includes(location.pathname)) {
             console.log("Vendor needs onboarding, redirecting");
             navigate('/vendor/onboarding');
             return;

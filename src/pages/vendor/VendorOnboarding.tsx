@@ -17,6 +17,7 @@ const VendorOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [checkedOnboarding, setCheckedOnboarding] = useState(false);
   
   // Check if the user has already completed onboarding
   useEffect(() => {
@@ -32,10 +33,14 @@ const VendorOnboarding = () => {
           
         if (error) throw error;
         
-        if (data && data.onboarding_completed) {
+        // Only redirect if onboarding is completed and we haven't redirected yet
+        if (data && data.onboarding_completed && !checkedOnboarding) {
+          console.log("Vendor has completed onboarding, redirecting to dashboard");
           setHasCompletedOnboarding(true);
           navigate("/vendor/dashboard");
         }
+        
+        setCheckedOnboarding(true);
       } catch (error) {
         console.error("Error checking onboarding status:", error);
       } finally {
@@ -44,14 +49,17 @@ const VendorOnboarding = () => {
     };
     
     checkOnboardingStatus();
-  }, [user, navigate]);
+  }, [user, navigate, checkedOnboarding]);
   
-  // Skip onboarding check for non-vendor users
+  // Skip onboarding check for non-vendor users, but avoid loops
   useEffect(() => {
-    if (userProfile && userProfile.user_role !== 'vendor') {
+    // Only check once and only redirect if we're on the onboarding page
+    if (userProfile && userProfile.user_role !== 'vendor' && !checkedOnboarding) {
+      console.log("Non-vendor user attempting to access vendor onboarding, redirecting to dashboard");
       navigate("/dashboard");
+      setCheckedOnboarding(true);
     }
-  }, [userProfile, navigate]);
+  }, [userProfile, navigate, checkedOnboarding]);
   
   const handleComplete = async (formData: any) => {
     if (!user) return;
@@ -105,6 +113,8 @@ const VendorOnboarding = () => {
         description: "Your vendor profile has been submitted for review. We'll notify you when it's approved!"
       });
       
+      // Set flag to avoid multiple redirects
+      setCheckedOnboarding(true); 
       navigate("/vendor/dashboard");
     } catch (error: any) {
       console.error("Error completing onboarding:", error);

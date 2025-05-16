@@ -49,8 +49,8 @@ export const useAuthentication = () => {
         // Use setTimeout to avoid recursive auth state changes
         setTimeout(async () => {
           try {
-            // Only call handleAuthRedirection if we have session info
-            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+            // Only call handleAuthRedirection for SIGNED_IN and SIGNED_OUT events
+            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
               const userMetadata = currentSession?.user?.user_metadata;
               await handleAuthRedirection(
                 currentSession?.user ?? null,
@@ -83,9 +83,11 @@ export const useAuthentication = () => {
       
       setTimeout(async () => {
         try {
-          // Don't trigger redirects on initial page load for the auth page
+          // Don't trigger redirects on initial page load for non-redirect paths
           const pathname = window.location.pathname;
-          if (pathname !== '/auth' && currentSession?.user) {
+          if (!pathname.startsWith('/auth') && 
+              !pathname.startsWith('/vendor/onboarding') && 
+              currentSession?.user) {
             const userMetadata = currentSession.user.user_metadata;
             await handleAuthRedirection(
               currentSession.user,

@@ -18,8 +18,14 @@ const ProtectedRoute = () => {
   
   // Check if vendor has completed onboarding
   useEffect(() => {
+    // Skip this check for non-protected routes
+    if (isAuthRoute) {
+      return;
+    }
+    
     const checkVendorOnboarding = async () => {
       if (user && userProfile?.user_role === 'vendor' && !isOnboardingRoute && !isAuthRoute) {
+        console.log("Checking vendor onboarding status for protected route");
         setCheckingOnboarding(true);
         try {
           const { data, error } = await supabase
@@ -40,6 +46,9 @@ const ProtectedRoute = () => {
         } finally {
           setCheckingOnboarding(false);
         }
+      } else {
+        // Not a vendor or already on onboarding page, no need to check
+        setCheckingOnboarding(false);
       }
     };
     
@@ -56,8 +65,14 @@ const ProtectedRoute = () => {
     );
   }
   
+  // Special case: Auth route is always accessible, even when logged in
+  if (isAuthRoute) {
+    return <Outlet />;
+  }
+  
   // If user is not authenticated, redirect to auth page
   if (!user) {
+    console.log("User not authenticated, redirecting to auth page");
     return <Navigate to="/auth" replace />;
   }
   
@@ -67,19 +82,22 @@ const ProtectedRoute = () => {
       vendorOnboarded === false && 
       !isOnboardingRoute &&
       isVendorRoute) {
+    console.log("Vendor hasn't completed onboarding, redirecting to onboarding page");
     return <Navigate to="/vendor/onboarding" replace />;
   }
   
   // For vendor routes, check if user is a vendor
   if (isVendorRoute && userProfile?.user_role !== 'vendor') {
     // Redirect non-vendors away from vendor routes
+    console.log("Non-vendor user attempting to access vendor route, redirecting to dashboard");
     return <Navigate to="/dashboard" replace />;
   }
   
   // For couple routes, except profile page which all users can access
   if (!isVendorRoute && !isProfileRoute && userProfile?.user_role === 'vendor') {
     // Redirect vendors to vendor dashboard
-    return <Navigate to="/vendor" replace />;
+    console.log("Vendor attempting to access couple route, redirecting to vendor dashboard");
+    return <Navigate to="/vendor/dashboard" replace />;
   }
   
   // If user is authenticated and has proper permissions, render the child routes
