@@ -35,12 +35,15 @@ const VendorOnboarding = () => {
 
         if (error) throw error;
 
-        const isDashboard = location.pathname === "/vendor/dashboard";
-        if (data?.onboarding_completed && !isDashboard) {
+        if (!data) {
+          console.log("No vendor profile found. Starting onboarding.");
+          setHasCompletedOnboarding(false);
+        } else if (data.onboarding_completed && location.pathname !== "/vendor/dashboard") {
           navigate("/vendor/dashboard");
+          return;
+        } else {
+          setHasCompletedOnboarding(false);
         }
-
-        setHasCompletedOnboarding(data?.onboarding_completed ?? false);
       } catch (error) {
         console.error("Error checking onboarding status:", error);
       } finally {
@@ -105,7 +108,7 @@ const VendorOnboarding = () => {
 
       toast({
         title: "Onboarding Complete",
-        description: "Your profile has been submitted for review.",
+        description: "Your vendor profile has been submitted for review.",
       });
 
       navigate("/vendor/dashboard");

@@ -25,19 +25,21 @@ const ProtectedRoute = () => {
         !isAuthRoute
       ) {
         setCheckingOnboarding(true);
-
         try {
           const { data, error } = await supabase
             .from("vendor_profiles")
             .select("onboarding_completed")
             .eq("user_id", user.id)
-            .single();
+            .maybeSingle();
 
           if (error) {
             console.error("Error checking onboarding:", error);
             setVendorOnboarded(false);
+          } else if (!data) {
+            console.log("No vendor profile found — assuming onboarding not complete.");
+            setVendorOnboarded(false);
           } else {
-            setVendorOnboarded(data?.onboarding_completed || false);
+            setVendorOnboarded(data.onboarding_completed || false);
           }
         } catch (err) {
           console.error("Failed to check vendor onboarding:", err);
@@ -51,7 +53,6 @@ const ProtectedRoute = () => {
     checkVendorOnboarding();
   }, [user, userProfile, isVendorRoute, isOnboardingRoute, isAuthRoute]);
 
-  // Still loading user or checking onboarding status
   if (loading || checkingOnboarding || vendorOnboarded === null) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -61,17 +62,9 @@ const ProtectedRoute = () => {
     );
   }
 
-  // Allow access to auth route
-  if (isAuthRoute) {
-    return <Outlet />;
-  }
+  if (isAuthRoute) return <Outlet />;
+  if (!user) return <Navigate to="/auth" replace />;
 
-  // User not authenticated
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  // Vendor hasn't completed onboarding yet
   if (
     userProfile?.user_role === "vendor" &&
     vendorOnboarded === false &&
@@ -81,17 +74,11 @@ const ProtectedRoute = () => {
     return <Navigate to="/vendor/onboarding" replace />;
   }
 
-  // Non-vendor trying to access vendor route
   if (isVendorRoute && userProfile?.user_role !== "vendor") {
     return <Navigate to="/dashboard" replace />;
   }
 
-  // Vendor trying to access couple-only routes (except profile)
-  if (
-    !isVendorRoute &&
-    !isProfileRoute &&
-    userProfile?.user_role === "vendor"
-  ) {
+  if (!isVendorRoute && !isProfileRoute && userProfile?.user_role === "vendor") {
     return <Navigate to="/vendor/dashboard" replace />;
   }
 
