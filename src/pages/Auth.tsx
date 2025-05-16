@@ -11,14 +11,9 @@ const Auth = () => {
   const { user, userProfile, loading } = useAuth();
   const navigate = useNavigate();
   
-  // We'll modify this effect to be more selective about redirects
-  useEffect(() => {
-    // Only redirect if explicitly requested
-    // The auth state change handler in useAuthentication will
-    // handle redirects when signing in
-    
-    // We only show loading state, but don't automatically redirect
-  }, []);
+  // We'll completely remove the effect that was causing the redirect
+  // The auth state change handler in useAuthentication will
+  // handle redirects when signing in
   
   // Show loading state
   if (loading) {
@@ -28,6 +23,9 @@ const Auth = () => {
       </div>
     );
   }
+  
+  // If already authenticated and trying to access the auth page,
+  // we won't auto-redirect. Let the user choose to navigate away manually.
   
   return (
     <div className="min-h-screen flex">

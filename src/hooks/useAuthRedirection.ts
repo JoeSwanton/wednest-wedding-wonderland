@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,17 +14,19 @@ export const useAuthRedirection = () => {
     userProfile: UserProfile | null,
     event?: string
   ) => {
-    // Skip all redirects if we're on the auth page
+    console.log("Auth redirection called with path:", location.pathname, "event:", event);
+    
+    // If on the auth page, only redirect on explicit sign-in event
     if (location.pathname === '/auth') {
-      // Only redirect if explicitly signing in from auth page
-      if (event === 'SIGNED_IN' && user && userProfile) {
-        console.log("Signed in from auth page, redirecting to dashboard");
+      if (user && userProfile && event === 'SIGNED_IN') {
+        console.log("Signed in from auth page, redirecting based on role");
         if (userProfile.user_role === 'vendor') {
           navigate('/vendor/dashboard');
         } else {
           navigate('/dashboard');
         }
       }
+      // Otherwise, don't redirect from auth page
       return;
     }
     

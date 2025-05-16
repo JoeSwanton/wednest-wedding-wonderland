@@ -51,13 +51,14 @@ export const useAuthentication = () => {
           try {
             // Only call handleAuthRedirection if we have session info
             if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+              const userMetadata = currentSession?.user?.user_metadata;
               await handleAuthRedirection(
                 currentSession?.user ?? null,
                 currentSession?.user ? {
-                  full_name: currentSession.user.user_metadata?.full_name,
-                  user_role: currentSession.user.user_metadata?.user_type as "couple" | "vendor",
-                  business_name: currentSession.user.user_metadata?.business_name,
-                  business_category: currentSession.user.user_metadata?.business_category
+                  full_name: userMetadata?.full_name,
+                  user_role: userMetadata?.user_type as "couple" | "vendor",
+                  business_name: userMetadata?.business_name,
+                  business_category: userMetadata?.business_category
                 } : null,
                 event
               );
@@ -85,13 +86,14 @@ export const useAuthentication = () => {
           // Don't trigger redirects on initial page load for the auth page
           const pathname = window.location.pathname;
           if (pathname !== '/auth' && currentSession?.user) {
+            const userMetadata = currentSession.user.user_metadata;
             await handleAuthRedirection(
               currentSession.user,
               {
-                full_name: currentSession.user.user_metadata?.full_name,
-                user_role: currentSession.user.user_metadata?.user_type as "couple" | "vendor",
-                business_name: currentSession.user.user_metadata?.business_name,
-                business_category: currentSession.user.user_metadata?.business_category
+                full_name: userMetadata?.full_name,
+                user_role: userMetadata?.user_type as "couple" | "vendor",
+                business_name: userMetadata?.business_name,
+                business_category: userMetadata?.business_category
               }
             );
           }
