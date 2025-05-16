@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, Trash2, Upload } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { VendorOnboardingData } from "@/types/vendor";
 
 interface PortfolioStepProps {
@@ -15,7 +15,12 @@ interface PortfolioStepProps {
   updateFormData: (data: Partial<VendorOnboardingData>) => void;
 }
 
-const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioStepProps) => {
+const PortfolioStep = ({
+  onNext,
+  onBack,
+  formData,
+  updateFormData
+}: PortfolioStepProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
@@ -32,12 +37,12 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0 || !user) return;
+    if (!files || !user) return;
 
     if (localFormData.portfolioImages.length + files.length > 10) {
       toast({
         title: "Maximum images reached",
-        description: "You can only upload up to 10 portfolio images.",
+        description: "You can upload up to 10 portfolio images.",
         variant: "destructive"
       });
       return;
@@ -65,12 +70,12 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
           variant: "destructive"
         });
       } else {
-        const publicURL = supabase
+        const publicUrl = supabase
           .storage
           .from("vendor-assets")
           .getPublicUrl(data.path).data.publicUrl;
 
-        newImages.push(publicURL);
+        newImages.push(publicUrl);
       }
     }
 
@@ -83,12 +88,16 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = [...localFormData.portfolioImages];
-    updatedImages.splice(index, 1);
-    setLocalFormData(prev => ({ ...prev, portfolioImages: updatedImages }));
+    const updated = [...localFormData.portfolioImages];
+    updated.splice(index, 1);
+    setLocalFormData(prev => ({
+      ...prev,
+      portfolioImages: updated
+    }));
   };
 
   const handleSubmit = () => {
+    // ✅ Validate using live state
     if (localFormData.portfolioImages.length === 0) {
       toast({
         title: "Upload Required",
@@ -98,7 +107,13 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       return;
     }
 
-    updateFormData(localFormData);
+    // ✅ Sync to global form state
+    updateFormData({
+      portfolioImages: localFormData.portfolioImages,
+      instagramFeed: localFormData.instagramFeed
+    });
+
+    // ✅ Continue to next onboarding step
     onNext();
   };
 
@@ -113,7 +128,9 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
           multiple
           onChange={handleFileUpload}
         />
-        <p className="text-xs text-wednest-brown-light">You can upload up to 10 images (JPG, PNG).</p>
+        <p className="text-xs text-wednest-brown-light">
+          You can upload up to 10 images (JPG, PNG).
+        </p>
       </div>
 
       {isUploading && (
