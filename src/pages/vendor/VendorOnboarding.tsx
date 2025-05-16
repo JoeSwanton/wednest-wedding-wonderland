@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,18 +7,21 @@ import { useToast } from "@/hooks/use-toast";
 import OnboardingSteps from "@/components/vendor/onboarding/OnboardingSteps";
 import OnboardingProgress from "@/components/vendor/onboarding/OnboardingProgress";
 import { Loader2 } from "lucide-react";
-
 const VendorOnboarding = () => {
-  const { user, userProfile } = useAuth();
+  const {
+    user,
+    userProfile
+  } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
-  
+
   // Added a timeout to prevent infinite loading
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
@@ -32,24 +34,19 @@ const VendorOnboarding = () => {
 
     return () => clearTimeout(loadingTimeout);
   }, [isLoading]);
-  
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       if (!user) {
         setIsLoading(false);
         return;
       }
-
       try {
         console.log("Checking onboarding status for user:", user.id);
-        const { data, error } = await supabase
-          .from('vendor_profiles')
-          .select('onboarding_completed')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
+        const {
+          data,
+          error
+        } = await supabase.from('vendor_profiles').select('onboarding_completed').eq('user_id', user.id).maybeSingle();
         if (error) throw error;
-
         console.log("Vendor profile data:", data);
         const isDashboard = location.pathname === '/vendor/dashboard';
 
@@ -58,7 +55,6 @@ const VendorOnboarding = () => {
           console.log("Onboarding completed, redirecting to dashboard");
           navigate("/vendor/dashboard");
         }
-
         setHasCompletedOnboarding(data?.onboarding_completed ?? false);
       } catch (error) {
         console.error("Error checking onboarding status:", error);
@@ -68,24 +64,20 @@ const VendorOnboarding = () => {
         setCheckedOnboarding(true);
       }
     };
-
     if (user && !checkedOnboarding) {
       checkOnboardingStatus();
     } else if (!user) {
       setIsLoading(false);
     }
   }, [user, navigate, location, checkedOnboarding]);
-
   useEffect(() => {
     if (userProfile && userProfile.user_role !== 'vendor' && checkedOnboarding) {
       console.log("User is not a vendor, redirecting to dashboard");
       navigate("/dashboard");
     }
   }, [userProfile, navigate, checkedOnboarding]);
-
   const handleComplete = async (formData: any) => {
     if (!user) return;
-
     setIsLoading(true);
     try {
       const vendorData = {
@@ -113,25 +105,22 @@ const VendorOnboarding = () => {
         application_status: 'pending_review',
         willing_to_travel: formData.willingToTravel || false
       };
-
-      const { error } = await supabase
-        .from('vendor_profiles')
-        .upsert(vendorData, { onConflict: 'user_id' });
-
+      const {
+        error
+      } = await supabase.from('vendor_profiles').upsert(vendorData, {
+        onConflict: 'user_id'
+      });
       if (error) throw error;
-
       await supabase.auth.updateUser({
-        data: { 
+        data: {
           business_name: formData.businessName,
           bio: formData.bio
         }
       });
-
       toast({
         title: "Onboarding Complete",
         description: "Your profile has been submitted for review."
       });
-
       navigate("/vendor/dashboard");
     } catch (error: any) {
       console.error("Error completing onboarding:", error);
@@ -144,23 +133,18 @@ const VendorOnboarding = () => {
       setIsLoading(false);
     }
   };
-
   if (isLoading && !checkedOnboarding) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+    return <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center">
           <Loader2 className="h-8 w-8 text-wednest-sage animate-spin" />
           <p className="mt-4 text-wednest-brown">Loading your onboarding experience...</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+  return <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-white border-b border-gray-100 py-4">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-xl font-serif text-wednest-brown">Join Enosi as a Vendor</h1>
+          <h1 className="text-xl font-serif text-wednest-brown">Enosi</h1>
           <Button variant="outline" size="sm" onClick={() => navigate("/auth")}>
             Exit
           </Button>
@@ -171,16 +155,10 @@ const VendorOnboarding = () => {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <OnboardingProgress currentStep={currentStep} />
           <div className="mt-6">
-            <OnboardingSteps 
-              currentStep={currentStep} 
-              setCurrentStep={setCurrentStep} 
-              onComplete={handleComplete}
-            />
+            <OnboardingSteps currentStep={currentStep} setCurrentStep={setCurrentStep} onComplete={handleComplete} />
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default VendorOnboarding;
