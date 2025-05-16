@@ -24,6 +24,12 @@ export const useAuthRedirection = () => {
       return;
     }
     
+    // If currently on the onboarding page, don't redirect regardless of event
+    if (location.pathname === '/vendor/onboarding') {
+      console.log("Currently on onboarding page, skipping redirection");
+      return;
+    }
+    
     // If on the auth page, only redirect on explicit sign-in event
     if (location.pathname === '/auth') {
       if (user && userProfile && event === 'SIGNED_IN') {
@@ -56,6 +62,12 @@ export const useAuthRedirection = () => {
     // Handle vendor onboarding - but only if not already on onboarding page
     if (userProfile.user_role === 'vendor' && location.pathname !== '/vendor/onboarding') {
       try {
+        // Skip this check if already on a non-redirect path to prevent loops
+        if (nonRedirectPaths.includes(location.pathname)) {
+          console.log("On non-redirect path, skipping vendor onboarding check");
+          return;
+        }
+        
         const { data: vendorProfile, error } = await supabase
           .from('vendor_profiles')
           .select('onboarding_completed, application_status')
@@ -69,7 +81,7 @@ export const useAuthRedirection = () => {
         
         // Redirect to onboarding if needed and not already there
         if (!vendorProfile || !vendorProfile.onboarding_completed) {
-          if (location.pathname !== '/vendor/onboarding' && !nonRedirectPaths.includes(location.pathname)) {
+          if (location.pathname !== '/vendor/onboarding') {
             console.log("Vendor needs onboarding, redirecting");
             navigate('/vendor/onboarding');
             return;

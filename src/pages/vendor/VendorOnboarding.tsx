@@ -18,15 +18,39 @@ const VendorOnboarding = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
+  const [checkAttempts, setCheckAttempts] = useState(0);
+
+  useEffect(() => {
+    // If still loading after 3 seconds, force proceed to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (isLoading) {
+        console.log("Forcing onboarding to proceed after timeout");
+        setIsLoading(false);
+      }
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [isLoading]);
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
+      // Safety check - only make 3 attempts maximum
+      if (checkAttempts >= 3) {
+        console.log("Maximum check attempts reached, proceeding with onboarding");
+        setIsLoading(false);
+        setCheckedOnboarding(true);
+        return;
+      }
+
       if (!user) {
-        navigate("/auth");
+        // Don't redirect here, let ProtectedRoute handle authentication
+        setIsLoading(false);
         return;
       }
 
       try {
+        setCheckAttempts(prev => prev + 1);
+        
         const { data, error } = await supabase
           .from("vendor_profiles")
           .select("onboarding_completed")
@@ -39,6 +63,7 @@ const VendorOnboarding = () => {
           console.log("No vendor profile found. Starting onboarding.");
           setHasCompletedOnboarding(false);
         } else if (data.onboarding_completed && location.pathname !== "/vendor/dashboard") {
+          // Only redirect if explicitly completed onboarding
           navigate("/vendor/dashboard");
           return;
         } else {
@@ -52,15 +77,22 @@ const VendorOnboarding = () => {
       }
     };
 
-    checkOnboardingStatus();
-  }, [user, navigate, location]);
+    // Only check if we have a user and haven't already checked
+    if (user && !checkedOnboarding && isLoading) {
+      checkOnboardingStatus();
+    } else if (!user) {
+      // If no user, don't keep loading
+      setIsLoading(false);
+    }
+  }, [user, navigate, location, checkedOnboarding, checkAttempts]);
 
   useEffect(() => {
+    // Skip role check - this is handled by ProtectedRoute
     if (userProfile && userProfile.user_role !== "vendor") {
-      navigate("/dashboard");
+      setIsLoading(false);
       setCheckedOnboarding(true);
     }
-  }, [userProfile, navigate]);
+  }, [userProfile]);
 
   const handleComplete = async (formData: any) => {
     if (!user) return;
@@ -124,7 +156,7 @@ const VendorOnboarding = () => {
     }
   };
 
-  if (isLoading || !user) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center">
