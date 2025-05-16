@@ -42,7 +42,7 @@ const Vendors = () => {
 
   // Handle style filter
   const handleStyleChange = (styles: string[]) => {
-    setStyleFilter(styles);
+    setStyleFilter(styles || []);
   };
 
   // Handle availability filter
@@ -99,14 +99,14 @@ const Vendors = () => {
             selectedCategory={selectedCategory}
             selectedLocation={selectedLocation}
             priceFilter={priceFilter}
-            styleFilter={styleFilter}
+            styleFilter={styleFilter || []}
             availabilityFilter={availabilityFilter}
             ratingFilter={ratingFilter}
             onClearSearch={() => setSearchQuery("")}
             onClearCategory={() => setSelectedCategory("")}
             onClearLocation={() => setSelectedLocation("")}
             onClearPrice={() => setPriceFilter("")}
-            onClearStyle={(style) => setStyleFilter(styleFilter.filter(s => s !== style))}
+            onClearStyle={(style) => setStyleFilter((styleFilter || []).filter(s => s !== style))}
             onClearAvailability={() => setAvailabilityFilter("")}
             onClearRating={() => setRatingFilter(0)}
             onClearAll={clearAllFilters}

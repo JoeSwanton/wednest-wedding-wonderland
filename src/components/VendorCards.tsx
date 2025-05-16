@@ -33,12 +33,12 @@ const VendorCards = ({
     itemsPerPage,
     handlePageChange
   } = useVendorFiltering({
-    vendors: mockBusinesses,
+    vendors: mockBusinesses || [],
     searchQuery,
     selectedCategory,
     selectedLocation,
     priceFilter,
-    styleFilter,
+    styleFilter: styleFilter || [],
     availabilityFilter,
     ratingFilter
   });
@@ -46,7 +46,7 @@ const VendorCards = ({
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {paginatedVendors.length > 0 ? (
+        {(paginatedVendors && paginatedVendors.length > 0) ? (
           paginatedVendors.map((vendor) => (
             <VendorCard key={vendor.id} vendor={vendor} />
           ))
@@ -58,7 +58,7 @@ const VendorCards = ({
       </div>
 
       {/* Pagination controls */}
-      {filteredVendors.length > itemsPerPage && (
+      {filteredVendors && filteredVendors.length > itemsPerPage && (
         <div className="mt-8">
           <VendorPagination 
             currentPage={currentPage}
@@ -70,7 +70,7 @@ const VendorCards = ({
 
       {/* Results count */}
       <div className="mt-4 text-sm text-center text-wednest-brown-light">
-        Showing {filteredVendors.length > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of {filteredVendors.length} vendors
+        Showing {filteredVendors && filteredVendors.length > 0 ? startIndex + 1 : 0} - {filteredVendors ? Math.min(startIndex + itemsPerPage, filteredVendors.length) : 0} of {filteredVendors ? filteredVendors.length : 0} vendors
       </div>
     </div>
   );

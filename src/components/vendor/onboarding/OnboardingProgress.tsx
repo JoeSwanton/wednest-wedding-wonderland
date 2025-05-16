@@ -37,7 +37,7 @@ const OnboardingProgress = ({ currentStep }: OnboardingProgressProps) => {
       
       {/* Step indicators - simplified to dots with hover labels */}
       <div className="hidden md:flex justify-between items-center px-2">
-        {steps.map((step, index) => (
+        {Array.isArray(steps) && steps.map((step, index) => (
           <div key={index} className="flex flex-col items-center group relative">
             <div 
               className={`w-7 h-7 rounded-full flex items-center justify-center transition-all 

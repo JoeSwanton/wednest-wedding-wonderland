@@ -5,11 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Search, Filter, Map, Grid, ChevronDown, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const locations = [
   "Any Location",
@@ -99,7 +97,7 @@ const VendorSearch = ({
     onCategoryChange(selectedCategory);
     onLocationChange(selectedLocation);
     onPriceChange(priceRange);
-    onStyleChange(selectedStyles);
+    onStyleChange(selectedStyles || []);
     onAvailabilityChange(availabilityFilter);
     onRatingChange(ratingFilter);
   };
@@ -110,10 +108,11 @@ const VendorSearch = ({
   };
 
   const handleStyleSelect = (style: string) => {
-    if (selectedStyles.includes(style)) {
-      setSelectedStyles(selectedStyles.filter(s => s !== style));
+    const currentStyles = selectedStyles || [];
+    if (currentStyles.includes(style)) {
+      setSelectedStyles(currentStyles.filter(s => s !== style));
     } else {
-      setSelectedStyles([...selectedStyles, style]);
+      setSelectedStyles([...currentStyles, style]);
     }
   };
 
@@ -194,7 +193,7 @@ const VendorSearch = ({
                         <CommandEmpty>No location found.</CommandEmpty>
                         <CommandGroup>
                           <ScrollArea className="h-64">
-                            {locations.map((location) => (
+                            {locations && locations.map((location) => (
                               <CommandItem
                                 key={location}
                                 value={location}
@@ -291,20 +290,20 @@ const VendorSearch = ({
                     <div className="col-span-1 md:col-span-2">
                       <h4 className="text-sm font-medium text-wednest-brown mb-2">Styles</h4>
                       <div className="flex flex-wrap gap-2">
-                        {styles.map((style) => (
+                        {styles && styles.map((style) => (
                           <Button
                             key={style}
-                            variant={selectedStyles.includes(style) ? "default" : "outline"}
+                            variant={selectedStyles?.includes(style) ? "default" : "outline"}
                             size="sm"
                             className={`text-xs py-1 px-3 ${
-                              selectedStyles.includes(style) 
+                              selectedStyles?.includes(style) 
                                 ? "bg-wednest-sage text-white" 
                                 : "border-wednest-beige text-wednest-brown-light"
                             }`}
                             onClick={() => handleStyleSelect(style)}
                           >
                             {style}
-                            {selectedStyles.includes(style) && <X className="ml-1.5 h-3 w-3" />}
+                            {selectedStyles?.includes(style) && <X className="ml-1.5 h-3 w-3" />}
                           </Button>
                         ))}
                       </div>
@@ -374,7 +373,7 @@ const VendorSearch = ({
                 Browse by Category
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {categories.slice(1).map((category) => (
+                {categories && categories.slice(1).map((category) => (
                   <Button 
                     key={category.value} 
                     variant="outline" 
@@ -397,7 +396,7 @@ const VendorSearch = ({
                   Popular Locations
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {locations.slice(1, 13).map((location) => (
+                  {locations && locations.slice(1, 13).map((location) => (
                     <Button 
                       key={location} 
                       variant="outline" 
@@ -421,7 +420,7 @@ const VendorSearch = ({
                   Popular Styles
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {styles.slice(0, 8).map((style) => (
+                  {styles && styles.slice(0, 8).map((style) => (
                     <Button 
                       key={style} 
                       variant="outline" 
