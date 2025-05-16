@@ -73,6 +73,9 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       }
       
       setLocalFormData(prev => ({ ...prev, portfolioImages: newImages }));
+      // Also update the parent form data right after uploading
+      updateFormData({ portfolioImages: newImages });
+      
       toast({
         title: "Images uploaded",
         description: `Successfully uploaded ${files.length} image(s).`
@@ -105,6 +108,8 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
       // Update local state
       const updatedImages = localFormData.portfolioImages.filter((_, i) => i !== index);
       setLocalFormData(prev => ({ ...prev, portfolioImages: updatedImages }));
+      // Also update the parent form data after removing
+      updateFormData({ portfolioImages: updatedImages });
       
       toast({
         title: "Image removed",
@@ -124,6 +129,8 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
     const updatedImages = [...localFormData.portfolioImages];
     updatedImages[index].caption = caption;
     setLocalFormData(prev => ({ ...prev, portfolioImages: updatedImages }));
+    // Also update the parent form data when caption changes
+    updateFormData({ portfolioImages: updatedImages });
   };
   
   const handleSubmit = () => {
@@ -165,22 +172,32 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
                 multiple
                 disabled={isUploading}
                 onChange={handleFileUpload}
-                className="cursor-pointer"
+                className="cursor-pointer opacity-0 absolute inset-0 w-full h-full"
               />
-              {isUploading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-lg">
-                  <Loader2 className="h-6 w-6 animate-spin text-wednest-sage" />
-                </div>
-              )}
-            </div>
-            <div className="mt-3 flex items-center justify-center flex-col">
-              <Upload className="h-8 w-8 text-wednest-brown-light mb-2" />
-              <p className="text-wednest-brown">
-                Drag & drop or click to upload images
-              </p>
-              <p className="text-wednest-brown-light text-sm mt-1">
-                Upload up to 10 high-quality images (Max 5MB each)
-              </p>
+              <div className="mt-3 flex items-center justify-center flex-col">
+                <Upload className="h-8 w-8 text-wednest-brown-light mb-2" />
+                <p className="text-wednest-brown">
+                  Drag & drop or click to upload images
+                </p>
+                <p className="text-wednest-brown-light text-sm mt-1">
+                  Upload up to 10 high-quality images (Max 5MB each)
+                </p>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="mt-4 border-wednest-sage text-wednest-sage hover:bg-wednest-sage/10"
+                  disabled={isUploading}
+                >
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>Select Images</>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -193,7 +210,7 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {localFormData.portfolioImages.map((image, index) => (
-                <div key={index} className="border rounded-md overflow-hidden bg-white">
+                <div key={index} className="border rounded-md overflow-hidden bg-white shadow-sm">
                   <div className="aspect-[4/3] overflow-hidden">
                     <img 
                       src={image.url} 
@@ -251,8 +268,10 @@ const PortfolioStep = ({ onNext, onBack, formData, updateFormData }: PortfolioSt
           type="button" 
           onClick={handleSubmit}
           className="bg-wednest-sage hover:bg-wednest-sage-dark"
+          disabled={isUploading || localFormData.portfolioImages.length === 0}
         >
-          Continue
+          {localFormData.portfolioImages.length === 0 ? 
+            "Upload Images to Continue" : "Continue"}
         </Button>
       </div>
     </div>
