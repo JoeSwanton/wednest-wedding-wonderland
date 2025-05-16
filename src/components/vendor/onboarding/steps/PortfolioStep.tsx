@@ -1,12 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, Trash2, Check, AlertCircle } from "lucide-react";
-import { PortfolioImage, VendorOnboardingData } from "@/types/vendor";
+import { Loader2, Trash2 } from "lucide-react";
+import { VendorOnboardingData } from "@/types/vendor";
+
+interface PortfolioImage {
+  url: string;
+}
 
 interface PortfolioStepProps {
   onNext: () => void;
@@ -24,56 +28,14 @@ const PortfolioStep = ({
   const { user } = useAuth();
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
 
-  // Initialize with the existing portfolio images from parent formData
-  const [localFormData, setLocalFormData] = useState({
+  const [localFormData, setLocalFormData] = useState<{
+    portfolioImages: PortfolioImage[];
+    instagramFeed: string;
+  }>({
     portfolioImages: formData.portfolioImages || [],
     instagramFeed: formData.instagramFeed || ""
   });
-
-  // Log initial state for debugging
-  useEffect(() => {
-    console.log("[PortfolioStep] Initial formData from parent:", formData);
-    console.log("[PortfolioStep] Initial portfolioImages:", formData.portfolioImages);
-    console.log("[PortfolioStep] Initial localFormData:", localFormData);
-  }, []);
-
-  // Keep parent formData in sync with local state
-  useEffect(() => {
-    console.log("[PortfolioStep] Syncing with parent, localFormData:", localFormData);
-    
-    // Ensure we have a clean array of PortfolioImage objects
-    if (localFormData.portfolioImages && localFormData.portfolioImages.length > 0) {
-      // Clear validation errors if we have images
-      setValidationError(null);
-      setUploadSuccess(true);
-      
-      updateFormData({
-        portfolioImages: localFormData.portfolioImages,
-        instagramFeed: localFormData.instagramFeed
-      });
-      
-      console.log("[PortfolioStep] Updated parent with images count:", localFormData.portfolioImages.length);
-    }
-  }, [localFormData]);
-
-  // Additional effect to track parent formData changes
-  useEffect(() => {
-    // This ensures we get updates when the parent's formData changes
-    console.log("[PortfolioStep] Parent formData changed:", formData);
-    console.log("[PortfolioStep] Parent portfolioImages count:", formData.portfolioImages?.length || 0);
-    
-    // Update local state if parent data changes and there's a difference
-    if (JSON.stringify(formData.portfolioImages) !== JSON.stringify(localFormData.portfolioImages)) {
-      setLocalFormData(prev => ({
-        ...prev,
-        portfolioImages: formData.portfolioImages || []
-      }));
-    }
-  }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -94,141 +56,68 @@ const PortfolioStep = ({
     }
 
     setIsUploading(true);
-    setUploadError(null);
-    setValidationError(null);
-    
     const newImages: PortfolioImage[] = [];
 
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const filePath = `${user.id}/${Date.now()}-${file.name}`;
-  
-        const { data, error } = await supabase.storage
-          .from("vendor-assets")
-          .upload(filePath, file, {
-            cacheControl: "3600",
-            upsert: false
-          });
-  
-        if (error) {
-          console.error("[PortfolioStep] Upload error:", error);
-          throw error;
-        }
-        
-        console.log("[PortfolioStep] Upload successful:", data.path);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const filePath = `${user.id}/${Date.now()}-${file.name}`;
+
+      const { data, error } = await supabase.storage
+        .from("vendor-assets")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false
+        });
+
+      if (error) {
+        toast({
+          title: "Upload failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
         const publicUrl = supabase
           .storage
           .from("vendor-assets")
           .getPublicUrl(data.path).data.publicUrl;
-  
-        // Create a proper PortfolioImage object
-        newImages.push({
-          url: publicUrl,
-          path: data.path,
-          caption: ""
-        });
+
+        newImages.push({ url: publicUrl });
       }
-  
-      const updatedImages = [...localFormData.portfolioImages, ...newImages];
-      console.log("[PortfolioStep] Updated images array:", updatedImages);
-      
-      // Update local state
-      setLocalFormData(prev => ({
-        ...prev,
-        portfolioImages: updatedImages
-      }));
-      
-      // Immediately update parent state as well
-      updateFormData({
-        portfolioImages: updatedImages
-      });
-      
-      setUploadSuccess(true);
-      
-      toast({
-        title: "Upload complete",
-        description: `${newImages.length} image(s) uploaded successfully.`,
-        variant: "default"
-      });
-    } catch (err) {
-      console.error("[PortfolioStep] Unexpected upload error:", err);
-      setUploadError("An error occurred during upload. Please try again.");
-      toast({
-        title: "Upload error",
-        description: "An unexpected error occurred during upload.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsUploading(false);
     }
+
+    setLocalFormData(prev => ({
+      ...prev,
+      portfolioImages: [...prev.portfolioImages, ...newImages]
+    }));
+
+    setIsUploading(false);
   };
 
   const handleRemoveImage = (index: number) => {
     const updated = [...localFormData.portfolioImages];
     updated.splice(index, 1);
-    
-    console.log("[PortfolioStep] Images after removal:", updated);
-    
-    // Update local state
     setLocalFormData(prev => ({
       ...prev,
       portfolioImages: updated
     }));
-    
-    // Immediately update parent state as well
-    updateFormData({
-      portfolioImages: updated
-    });
-    
-    if (updated.length === 0) {
-      setUploadSuccess(false);
-    }
   };
 
   const handleSubmit = () => {
-    // Log debug info
-    console.log("[PortfolioStep] Submit clicked");
-    console.log("[PortfolioStep] Local portfolio images:", localFormData.portfolioImages);
-    console.log("[PortfolioStep] Local image count:", localFormData.portfolioImages.length);
-    console.log("[PortfolioStep] Parent formData images:", formData.portfolioImages);
-    console.log("[PortfolioStep] Parent image count:", formData.portfolioImages?.length || 0);
-    
-    // Clear any previous error
-    setUploadError(null);
-    setValidationError(null);
-    
-    // Validate using both local and parent state to ensure alignment
     if (localFormData.portfolioImages.length === 0) {
-      const errorMsg = "Please upload at least one image to continue.";
-      setValidationError(errorMsg);
       toast({
         title: "Upload Required",
-        description: errorMsg,
+        description: "Please upload at least one image to continue.",
         variant: "destructive"
       });
       return;
     }
 
-    // Verify that images exist in parent state too
-    if (!formData.portfolioImages || formData.portfolioImages.length === 0) {
-      console.log("[PortfolioStep] WARNING: Images in local state but not in parent state");
-      
-      // Force sync to global form state one more time to be sure
-      updateFormData({
-        portfolioImages: localFormData.portfolioImages,
-        instagramFeed: localFormData.instagramFeed
-      });
-      
-      // Check if we need to delay to let state update
-      setTimeout(() => {
-        // Continue to next onboarding step
-        onNext();
-      }, 100);
-    } else {
-      // Continue to next onboarding step
-      onNext();
-    }
+    updateFormData({
+      portfolioImages: localFormData.portfolioImages,
+      instagramFeed: localFormData.instagramFeed
+    });
+
+    onNext();
   };
 
   return (
@@ -241,10 +130,9 @@ const PortfolioStep = ({
           accept="image/*"
           multiple
           onChange={handleFileUpload}
-          disabled={isUploading}
         />
-        <p className="text-xs text-wednest-brown-light mt-1">
-          You can upload up to 10 images (JPG, PNG). At least one image is required.
+        <p className="text-xs text-wednest-brown-light">
+          You can upload up to 10 images (JPG, PNG).
         </p>
       </div>
 
@@ -254,21 +142,9 @@ const PortfolioStep = ({
         </div>
       )}
 
-      {(uploadError || validationError) && (
-        <div className="flex items-center gap-2 text-red-500 bg-red-50 p-3 rounded-md">
-          <AlertCircle size={18} />
-          <span className="text-sm">{uploadError || validationError}</span>
-        </div>
-      )}
-
-      {uploadSuccess && localFormData.portfolioImages.length > 0 && (
+      {localFormData.portfolioImages.length > 0 && (
         <div>
-          <div className="flex items-center gap-2 mb-2 text-wednest-sage">
-            <Check size={18} />
-            <span className="text-sm">
-              {localFormData.portfolioImages.length} image(s) uploaded
-            </span>
-          </div>
+          <Label>Uploaded Images</Label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
             {localFormData.portfolioImages.map((image, index) => (
               <div key={index} className="relative border rounded">
