@@ -1,5 +1,6 @@
 
 import { toast } from "@/hooks/use-toast";
+import { logOnboardingStep } from "@/services/onboardingTracker";
 
 /**
  * Validates if the file is of an accepted image type
@@ -12,6 +13,14 @@ export const validateFileType = (file: File): boolean => {
       description: "Please upload only JPG, PNG or WebP images",
       variant: "destructive"
     });
+    
+    // Log validation error for analytics
+    logOnboardingStep('PortfolioUpload', {
+      validationType: 'fileType',
+      rejectedType: file.type,
+      fileName: file.name
+    }, 'error').catch(console.error);
+    
     return false;
   }
   return true;
@@ -29,6 +38,15 @@ export const validateFileSize = (file: File): boolean => {
       description: "Please upload images smaller than 5MB",
       variant: "destructive"
     });
+    
+    // Log validation error for analytics
+    logOnboardingStep('PortfolioUpload', {
+      validationType: 'fileSize',
+      rejectedSize: file.size,
+      fileName: file.name,
+      maxSize: maxSize
+    }, 'error').catch(console.error);
+    
     return false;
   }
   return true;

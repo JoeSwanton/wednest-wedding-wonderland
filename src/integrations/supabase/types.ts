@@ -9,6 +9,81 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_users_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_users_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_logs: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          step_data: Json
+          step_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status: string
+          step_data: Json
+          step_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          step_data?: Json
+          step_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "onboarding_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           bio: string | null
@@ -336,7 +411,10 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: { uid: string }
+        Returns: boolean
+      }
     }
     Enums: {
       user_role: "couple" | "vendor"

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,6 +8,7 @@ import OnboardingSteps from "@/components/vendor/onboarding/OnboardingSteps";
 import OnboardingProgress from "@/components/vendor/onboarding/OnboardingProgress";
 import { CircleCheck, Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { logOnboardingStep } from "@/services/onboardingTracker";
 
 const VendorOnboarding = () => {
   const { user, userProfile } = useAuth();
@@ -22,6 +22,18 @@ const VendorOnboarding = () => {
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
   const [checkAttempts, setCheckAttempts] = useState(0);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [sessionId, setSessionId] = useState<string>(`session-${Date.now()}`);
+
+  // Track page load for analytics
+  useEffect(() => {
+    if (user) {
+      logOnboardingStep('OnboardingPageView', {
+        sessionId: sessionId,
+        path: location.pathname,
+        timestamp: new Date().toISOString()
+      }, 'started').catch(console.error);
+    }
+  }, [user, sessionId, location.pathname]);
 
   // Handle loading timeout and show progress bar for better UX
   useEffect(() => {
@@ -44,6 +56,14 @@ const VendorOnboarding = () => {
           setIsLoading(false);
           setLoadingProgress(100);
           setCheckedOnboarding(true);
+          
+          // Log timeout event
+          if (user) {
+            logOnboardingStep('OnboardingLoadTimeout', {
+              sessionId: sessionId,
+              checkAttempts: checkAttempts
+            }, 'error').catch(console.error);
+          }
         }
       }, 2000); // Reduced from 3s to 2s for better responsiveness
     } else {
@@ -55,7 +75,7 @@ const VendorOnboarding = () => {
       clearTimeout(timer);
       clearInterval(progressTimer);
     };
-  }, [isLoading]);
+  }, [isLoading, sessionId, checkAttempts, user]);
 
   useEffect(() => {
     // Skip check if already completed or on another page
@@ -67,6 +87,13 @@ const VendorOnboarding = () => {
         console.log("Maximum check attempts reached, proceeding with onboarding");
         setIsLoading(false);
         setCheckedOnboarding(true);
+        
+        // Log the max attempts reached
+        if (user) {
+          logOnboardingStep('OnboardingCheckMaxAttempts', {
+            sessionId: sessionId
+          }, 'error').catch(console.error);
+        }
         return;
       }
       
@@ -84,17 +111,48 @@ const VendorOnboarding = () => {
           .eq("user_id", user.id)
           .maybeSingle();
           
-        if (error) throw error;
+        if (error) {
+          // Log the error for analytics
+          logOnboardingStep('OnboardingStatusCheck', {
+            sessionId: sessionId,
+            error: error.message,
+            attempt: checkAttempts
+          }, 'error').catch(console.error);
+          
+          throw error;
+        }
         
         if (!data) {
           console.log("No vendor profile found. Starting onboarding.");
           setHasCompletedOnboarding(false);
+          
+          // Log for analytics
+          logOnboardingStep('OnboardingStatusCheck', {
+            sessionId: sessionId,
+            status: 'new_vendor',
+            attempt: checkAttempts
+          }, 'started').catch(console.error);
         } else if (data.onboarding_completed && location.pathname !== "/vendor/dashboard") {
           // Only redirect if explicitly completed onboarding
+          
+          // Log for analytics before redirecting
+          logOnboardingStep('OnboardingStatusCheck', {
+            sessionId: sessionId,
+            status: 'completed_redirecting',
+            attempt: checkAttempts
+          }, 'completed').catch(console.error);
+          
           navigate("/vendor/dashboard");
           return;
         } else {
           setHasCompletedOnboarding(false);
+          
+          // Log for analytics
+          logOnboardingStep('OnboardingStatusCheck', {
+            sessionId: sessionId,
+            status: 'in_progress',
+            attempt: checkAttempts
+          }, 'started').catch(console.error);
         }
       } catch (error) {
         console.error("Error checking onboarding status:", error);
@@ -111,21 +169,40 @@ const VendorOnboarding = () => {
       // If no user, don't keep loading
       setIsLoading(false);
     }
-  }, [user, navigate, location, checkedOnboarding, checkAttempts]);
+  }, [user, navigate, location, checkedOnboarding, checkAttempts, sessionId]);
 
   useEffect(() => {
     // Skip role check - this is handled by ProtectedRoute
     if (userProfile && userProfile.user_role !== "vendor") {
       setIsLoading(false);
       setCheckedOnboarding(true);
+      
+      // Log incorrect role access for analytics
+      if (user) {
+        logOnboardingStep('IncorrectRoleAccess', {
+          sessionId: sessionId,
+          actualRole: userProfile.user_role
+        }, 'error').catch(console.error);
+      }
     }
-  }, [userProfile]);
+  }, [userProfile, sessionId, user]);
 
   const handleComplete = async (formData: any) => {
     if (!user) return;
     setIsLoading(true);
     
     try {
+      // Log submission attempt
+      await logOnboardingStep('OnboardingSubmission', {
+        sessionId: sessionId,
+        dataCompleteness: {
+          hasBusinessData: !!formData.businessName && !!formData.businessCategory,
+          hasContactInfo: !!formData.phone && !!formData.businessEmail,
+          hasPortfolio: formData.portfolioImages?.length > 0,
+          hasPackages: formData.servicePackages?.length > 0,
+        }
+      }, 'started');
+      
       const vendorData = {
         user_id: user.id,
         business_name: formData.businessName,
@@ -156,7 +233,15 @@ const VendorOnboarding = () => {
         .from("vendor_profiles")
         .upsert(vendorData, { onConflict: "user_id" });
         
-      if (error) throw error;
+      if (error) {
+        // Log error for analytics
+        await logOnboardingStep('OnboardingSubmission', {
+          sessionId: sessionId,
+          error: error.message
+        }, 'error');
+        
+        throw error;
+      }
       
       await supabase.auth.updateUser({
         data: {
@@ -164,6 +249,12 @@ const VendorOnboarding = () => {
           bio: formData.bio
         }
       });
+      
+      // Log successful completion
+      await logOnboardingStep('OnboardingSubmission', {
+        sessionId: sessionId,
+        status: 'success'
+      }, 'completed');
       
       toast({
         title: "Onboarding Complete",
@@ -219,7 +310,13 @@ const VendorOnboarding = () => {
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => navigate("/auth")}
+            onClick={() => {
+              logOnboardingStep('ExitOnboarding', {
+                sessionId: sessionId,
+                currentStep: currentStep
+              }, 'skipped').catch(console.error);
+              navigate("/auth");
+            }}
             className="hover:bg-wednest-beige/10 text-wednest-brown"
           >
             Exit
