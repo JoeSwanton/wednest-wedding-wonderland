@@ -1,12 +1,11 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, Check } from "lucide-react";
 import { PortfolioImage, VendorOnboardingData } from "@/types/vendor";
 
 interface PortfolioStepProps {
@@ -26,10 +25,19 @@ const PortfolioStep = ({
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
+  // Initialize with the existing portfolio images from parent formData
   const [localFormData, setLocalFormData] = useState({
     portfolioImages: formData.portfolioImages || [],
     instagramFeed: formData.instagramFeed || ""
   });
+
+  // Keep parent formData in sync with local state
+  useEffect(() => {
+    updateFormData({
+      portfolioImages: localFormData.portfolioImages,
+      instagramFeed: localFormData.instagramFeed
+    });
+  }, [localFormData, updateFormData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,38 +65,63 @@ const PortfolioStep = ({
       const file = files[i];
       const filePath = `${user.id}/${Date.now()}-${file.name}`;
 
-      const { data, error } = await supabase.storage
-        .from("vendor-assets")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false
-        });
-
-      if (error) {
-        toast({
-          title: "Upload failed",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
-        const publicUrl = supabase
-          .storage
+      try {
+        const { data, error } = await supabase.storage
           .from("vendor-assets")
-          .getPublicUrl(data.path).data.publicUrl;
+          .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: false
+          });
 
-        // Create a proper PortfolioImage object
-        newImages.push({
-          url: publicUrl,
-          path: data.path,
-          caption: ""
+        if (error) {
+          toast({
+            title: "Upload failed",
+            description: error.message,
+            variant: "destructive"
+          });
+          console.error("Upload error:", error);
+        } else {
+          console.log("Upload successful:", data.path);
+          const publicUrl = supabase
+            .storage
+            .from("vendor-assets")
+            .getPublicUrl(data.path).data.publicUrl;
+
+          // Create a proper PortfolioImage object
+          newImages.push({
+            url: publicUrl,
+            path: data.path,
+            caption: ""
+          });
+        }
+      } catch (err) {
+        console.error("Unexpected upload error:", err);
+        toast({
+          title: "Upload error",
+          description: "An unexpected error occurred during upload.",
+          variant: "destructive"
         });
       }
     }
 
-    setLocalFormData(prev => ({
-      ...prev,
-      portfolioImages: [...prev.portfolioImages, ...newImages]
-    }));
+    if (newImages.length > 0) {
+      const updatedImages = [...localFormData.portfolioImages, ...newImages];
+      setLocalFormData(prev => ({
+        ...prev,
+        portfolioImages: updatedImages
+      }));
+      
+      // Immediately update parent state as well
+      updateFormData({
+        portfolioImages: updatedImages
+      });
+      
+      toast({
+        title: "Upload complete",
+        description: `${newImages.length} image(s) uploaded successfully.`,
+        variant: "default"
+      });
+    }
 
     setIsUploading(false);
   };
@@ -100,10 +133,19 @@ const PortfolioStep = ({
       ...prev,
       portfolioImages: updated
     }));
+    
+    // Immediately update parent state as well
+    updateFormData({
+      portfolioImages: updated
+    });
   };
 
   const handleSubmit = () => {
-    // ✅ Validate using live state
+    // Log debug info
+    console.log("Submit clicked, portfolio images:", localFormData.portfolioImages);
+    console.log("Image count:", localFormData.portfolioImages.length);
+    
+    // ✅ Validate using both local and parent state to ensure alignment
     if (localFormData.portfolioImages.length === 0) {
       toast({
         title: "Upload Required",
@@ -147,7 +189,10 @@ const PortfolioStep = ({
 
       {localFormData.portfolioImages.length > 0 && (
         <div>
-          <Label>Uploaded Images</Label>
+          <div className="flex items-center gap-2 mb-2 text-wednest-sage">
+            <Check size={18} />
+            <span className="text-sm">{localFormData.portfolioImages.length} image(s) uploaded</span>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
             {localFormData.portfolioImages.map((image, index) => (
               <div key={index} className="relative border rounded">

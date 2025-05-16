@@ -67,6 +67,7 @@ const OnboardingSteps = ({
         // Log specifically when portfolioImages are updated
         if (data.portfolioImages) {
           console.log('Portfolio images updated:', data.portfolioImages.length, 'images');
+          console.log('Portfolio images data:', data.portfolioImages);
         }
       }
       return updated;
@@ -77,8 +78,14 @@ const OnboardingSteps = ({
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       (window as any).VendorOnboardingData = formData;
+      
+      // Debug log for portfolio images
+      if (currentStep === 3) {
+        console.log('Current portfolio images:', formData.portfolioImages);
+        console.log('Portfolio images count:', formData.portfolioImages?.length || 0);
+      }
     }
-  }, [formData]);
+  }, [formData, currentStep]);
   
   // Navigation functions
   const goToNext = () => setCurrentStep(currentStep + 1);
