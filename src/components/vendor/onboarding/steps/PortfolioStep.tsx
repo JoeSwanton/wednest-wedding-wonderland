@@ -129,6 +129,10 @@ const PortfolioStep = ({
     }
   };
 
+  const createPreviewUrl = (file: File): string => {
+    return URL.createObjectURL(file);
+  };
+
   const handleFileUpload = async (files: FileList) => {
     if (!user) return;
     
@@ -136,12 +140,41 @@ const PortfolioStep = ({
     let hasErrors = false;
 
     try {
+      // First, create previews immediately and add them to state
+      const tempPreviews = [...localFormData.portfolioImages];
+      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         
         // Validate file type and size
         if (!validateFileType(file) || !validateFileSize(file)) {
           hasErrors = true;
+          continue;
+        }
+        
+        // Create a temporary preview URL
+        const previewUrl = createPreviewUrl(file);
+        
+        // Add a temporary preview image to state
+        tempPreviews.push({
+          url: previewUrl,
+          path: `temp-${Date.now()}-${i}`,
+          caption: ""
+        });
+      }
+      
+      // Update state immediately with temporary previews
+      setLocalFormData(prev => ({
+        ...prev,
+        portfolioImages: tempPreviews
+      }));
+      
+      // Now actually upload the files to Supabase
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        // Skip invalid files
+        if (!validateFileType(file) || !validateFileSize(file)) {
           continue;
         }
         
@@ -178,9 +211,12 @@ const PortfolioStep = ({
         }
       }
 
-      // Update local state with new images
+      // After all uploads are complete, replace the temporary previews with actual uploaded images
       if (newImages.length > 0) {
-        const updatedImages = [...localFormData.portfolioImages, ...newImages];
+        // Remove temporary previews and add actual uploaded images
+        const updatedImages = localFormData.portfolioImages
+          .filter(img => !img.path.startsWith('temp-'))
+          .concat(newImages);
         
         console.log("[PortfolioStep] Updating portfolioImages:", updatedImages);
         
@@ -291,6 +327,11 @@ const PortfolioStep = ({
       console.log("[PortfolioStep] Removing image at index", index);
       console.log("[PortfolioStep] Updated portfolio after removal:", updatedImages);
       
+      // Clean up URL object if it's a temporary preview
+      if (imageToRemove.path.startsWith('temp-')) {
+        URL.revokeObjectURL(imageToRemove.url);
+      }
+      
       setLocalFormData(prev => ({
         ...prev,
         portfolioImages: updatedImages
@@ -300,9 +341,6 @@ const PortfolioStep = ({
       updateFormData({
         portfolioImages: updatedImages
       });
-
-      // Optionally delete from storage (if needed)
-      // await supabase.storage.from("vendor-assets").remove([imageToRemove.path]);
       
       toast({
         title: "Image removed",
