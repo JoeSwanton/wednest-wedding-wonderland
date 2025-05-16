@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
 import Questionnaire from "./pages/Questionnaire";
 import Vendors from "./pages/Vendors";
+import VendorProfile from "./pages/VendorProfile";
 import PlanningTools from "./pages/PlanningTools";
 import Inspiration from "./pages/Inspiration";
 import Blog from "./pages/Blog";
@@ -44,6 +45,7 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/vendors" element={<Vendors />} />
+            <Route path="/vendors/:vendorId" element={<VendorProfile />} />
             <Route path="/planning-tools" element={<PlanningTools />} />
             <Route path="/inspiration" element={<Inspiration />} />
             <Route path="/blog" element={<Blog />} />

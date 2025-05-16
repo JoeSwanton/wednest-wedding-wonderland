@@ -4,6 +4,7 @@ import { MapPin, Heart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 export interface VendorData {
   id: number;
@@ -79,12 +80,14 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           ))}
         </div>
         
-        <Button 
-          variant="outline" 
-          className="w-full border-wednest-sage text-wednest-sage hover:bg-wednest-cream"
-        >
-          View Details
-        </Button>
+        <Link to={`/vendors/${vendor.id}`}>
+          <Button 
+            variant="outline" 
+            className="w-full border-wednest-sage text-wednest-sage hover:bg-wednest-cream"
+          >
+            View Details
+          </Button>
+        </Link>
       </div>
     </Card>
   );
