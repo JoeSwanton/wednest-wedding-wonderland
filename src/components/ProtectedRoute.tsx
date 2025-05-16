@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,23 +8,17 @@ const ProtectedRoute = () => {
   const location = useLocation();
   const [vendorOnboarded, setVendorOnboarded] = useState<boolean | null>(null);
   const [checkingOnboarding, setCheckingOnboarding] = useState(false);
-  
-  // Check if the route is a vendor route
+
   const isVendorRoute = location.pathname.startsWith('/vendor');
   const isProfileRoute = location.pathname === '/profile';
   const isOnboardingRoute = location.pathname === '/vendor/onboarding';
   const isAuthRoute = location.pathname === '/auth';
-  
-  // Check if vendor has completed onboarding
+
   useEffect(() => {
-    // Skip this check for non-protected routes
-    if (isAuthRoute) {
-      return;
-    }
-    
+    if (!user || !userProfile?.user_role || isAuthRoute || isOnboardingRoute) return;
+
     const checkVendorOnboarding = async () => {
-      if (user && userProfile?.user_role === 'vendor' && !isOnboardingRoute && !isAuthRoute) {
-        console.log("Checking vendor onboarding status for protected route");
+      if (userProfile.user_role === 'vendor' && isVendorRoute && !isOnboardingRoute) {
         setCheckingOnboarding(true);
         try {
           const { data, error } = await supabase
@@ -33,30 +26,21 @@ const ProtectedRoute = () => {
             .select('onboarding_completed')
             .eq('user_id', user.id)
             .single();
-            
-          if (error) {
-            console.error("Error checking vendor onboarding:", error);
-            setVendorOnboarded(false);
-          } else {
-            setVendorOnboarded(data?.onboarding_completed || false);
-          }
+
+          setVendorOnboarded(data?.onboarding_completed ?? false);
         } catch (err) {
-          console.error("Failed to check vendor onboarding:", err);
+          console.error("Failed to check onboarding:", err);
           setVendorOnboarded(false);
         } finally {
           setCheckingOnboarding(false);
         }
-      } else {
-        // Not a vendor or already on onboarding page, no need to check
-        setCheckingOnboarding(false);
       }
     };
-    
+
     checkVendorOnboarding();
-  }, [user, userProfile, isOnboardingRoute, isAuthRoute]);
-  
-  // If auth is still loading, show loading indicator
-  if (loading || checkingOnboarding) {
+  }, [user, userProfile, isVendorRoute, isOnboardingRoute, isAuthRoute]);
+
+  if (loading || checkingOnboarding || vendorOnboarded === null) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
@@ -64,43 +48,27 @@ const ProtectedRoute = () => {
       </div>
     );
   }
-  
-  // Special case: Auth route is always accessible, even when logged in
-  if (isAuthRoute) {
-    return <Outlet />;
-  }
-  
-  // If user is not authenticated, redirect to auth page
-  if (!user) {
-    console.log("User not authenticated, redirecting to auth page");
-    return <Navigate to="/auth" replace />;
-  }
-  
-  // Redirect vendor to onboarding if they haven't completed it
-  // Only for vendor routes, not for the auth page
-  if (userProfile?.user_role === 'vendor' && 
-      vendorOnboarded === false && 
-      !isOnboardingRoute &&
-      isVendorRoute) {
-    console.log("Vendor hasn't completed onboarding, redirecting to onboarding page");
+
+  if (isAuthRoute) return <Outlet />;
+  if (!user) return <Navigate to="/auth" replace />;
+
+  if (
+    userProfile?.user_role === 'vendor' &&
+    vendorOnboarded === false &&
+    !isOnboardingRoute &&
+    isVendorRoute
+  ) {
     return <Navigate to="/vendor/onboarding" replace />;
   }
-  
-  // For vendor routes, check if user is a vendor
+
   if (isVendorRoute && userProfile?.user_role !== 'vendor') {
-    // Redirect non-vendors away from vendor routes
-    console.log("Non-vendor user attempting to access vendor route, redirecting to dashboard");
     return <Navigate to="/dashboard" replace />;
   }
-  
-  // For couple routes, except profile page which all users can access
+
   if (!isVendorRoute && !isProfileRoute && userProfile?.user_role === 'vendor') {
-    // Redirect vendors to vendor dashboard
-    console.log("Vendor attempting to access couple route, redirecting to vendor dashboard");
     return <Navigate to="/vendor/dashboard" replace />;
   }
-  
-  // If user is authenticated and has proper permissions, render the child routes
+
   return <Outlet />;
 };
 
