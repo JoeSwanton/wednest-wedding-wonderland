@@ -172,6 +172,7 @@ export type Database = {
           updated_at: string
           user_id: string
           website: string | null
+          willing_to_travel: boolean | null
           years_in_business: number | null
         }
         Insert: {
@@ -201,6 +202,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           website?: string | null
+          willing_to_travel?: boolean | null
           years_in_business?: number | null
         }
         Update: {
@@ -230,6 +232,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           website?: string | null
+          willing_to_travel?: boolean | null
           years_in_business?: number | null
         }
         Relationships: [

@@ -86,6 +86,13 @@ const SubmitReviewStep = ({ onBack, onComplete, formData }: SubmitReviewStepProp
             <p className="text-sm text-wednest-brown-light">Service Packages</p>
             <p className="text-wednest-brown font-medium">{formData.servicePackages.length} packages created</p>
           </div>
+
+          <div>
+            <p className="text-sm text-wednest-brown-light">Travel</p>
+            <p className="text-wednest-brown font-medium">
+              {formData.willingToTravel ? "Willing to travel outside service area" : "Service within local area only"}
+            </p>
+          </div>
         </div>
       </div>
       
