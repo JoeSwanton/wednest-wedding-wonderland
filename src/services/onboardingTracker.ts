@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { VendorOnboardingData } from "@/types/vendor";
 
@@ -80,14 +81,15 @@ export async function logCompleteOnboardingData(formData: VendorOnboardingData):
       // Keep portfolio image count but not actual image data
       portfolioImagesCount: formData.portfolioImages?.length || 0,
       portfolioImages: formData.portfolioImages?.map(img => ({ 
-        id: img.id,
-        fileType: img.fileType 
+        url: img.url,
+        path: img.path,
+        caption: img.caption
       })),
       // Keep package count but simplify package data
       servicePackagesCount: formData.servicePackages?.length || 0,
       servicePackages: formData.servicePackages?.map(pkg => ({
         name: pkg.name,
-        price_range: pkg.price_range
+        priceRange: pkg.priceRange
       }))
     };
     
