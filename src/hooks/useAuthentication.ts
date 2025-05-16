@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,16 +13,10 @@ export const useAuthentication = () => {
   const { handleAuthRedirection } = useAuthRedirection();
   const navigate = useNavigate();
 
-  // Handle sign out
   const signOut = async () => {
     try {
-      console.log("Signing out user...");
       const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Error in signOut function:", error);
-        throw error;
-      }
-      console.log("Sign out successful");
+      if (error) throw error;
       setUser(null);
       setSession(null);
       setUserProfile(null);
@@ -33,82 +26,41 @@ export const useAuthentication = () => {
     }
   };
 
-  // Set up auth state listener and check current session
   useEffect(() => {
-    console.log("AuthProvider: Setting up auth state listener");
-    
-    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
-        console.log("Auth state change event:", event);
-        
-        // Update the session and user state synchronously
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
-        
-        // Use setTimeout to avoid recursive auth state changes
-        setTimeout(async () => {
-          try {
-            // Only call handleAuthRedirection for SIGNED_IN and SIGNED_OUT events
-            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-              const userMetadata = currentSession?.user?.user_metadata;
-              await handleAuthRedirection(
-                currentSession?.user ?? null,
-                currentSession?.user ? {
-                  full_name: userMetadata?.full_name,
-                  user_role: userMetadata?.user_type as "couple" | "vendor",
-                  business_name: userMetadata?.business_name,
-                  business_category: userMetadata?.business_category
-                } : null,
-                event
-              );
-            }
-          } catch (error) {
-            console.error("Error in auth state change handler:", error);
-          } finally {
-            setLoading(false);
-          }
-        }, 0);
+
+        // Redirect only on explicit sign-in/out events
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+          const userMetadata = currentSession?.user?.user_metadata;
+          setTimeout(async () => {
+            await handleAuthRedirection(
+              currentSession?.user ?? null,
+              currentSession?.user ? {
+                full_name: userMetadata?.full_name,
+                user_role: userMetadata?.user_type,
+                business_name: userMetadata?.business_name,
+                business_category: userMetadata?.business_category
+              } : null,
+              event
+            );
+          }, 0);
+        }
+
+        setLoading(false);
       }
     );
 
-    // Then check for existing session
-    console.log("AuthProvider: Checking for existing session");
+    // Initial session load – no redirection
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      console.log("Session check result:", currentSession ? "Session found" : "No session");
-      
-      // Update the session and user state
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
-      
-      setTimeout(async () => {
-        try {
-          // Don't trigger redirects on initial page load for non-redirect paths
-          const pathname = window.location.pathname;
-          if (!pathname.startsWith('/auth') && 
-              !pathname.startsWith('/vendor/onboarding') && 
-              currentSession?.user) {
-            const userMetadata = currentSession.user.user_metadata;
-            await handleAuthRedirection(
-              currentSession.user,
-              {
-                full_name: userMetadata?.full_name,
-                user_role: userMetadata?.user_type as "couple" | "vendor",
-                business_name: userMetadata?.business_name,
-                business_category: userMetadata?.business_category
-              }
-            );
-          }
-        } catch (error) {
-          console.error("Error in getSession handler:", error);
-        } finally {
-          setLoading(false);
-        }
-      }, 0);
+      setLoading(false);
     });
 
     return () => {
-      console.log("Unsubscribing from auth state changes");
       subscription.unsubscribe();
     };
   }, []);
