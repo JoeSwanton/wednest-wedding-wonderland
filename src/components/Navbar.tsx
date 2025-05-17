@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,7 +5,6 @@ import { Menu, X, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 const Navbar = () => {
   const {
     user,
@@ -18,7 +16,6 @@ const Navbar = () => {
   const {
     toast
   } = useToast();
-  
   const handleSignOut = async () => {
     try {
       console.log("Navbar: Initiating sign out");
@@ -36,13 +33,10 @@ const Navbar = () => {
       });
     }
   };
-  
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
-  
-  return (
-    <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
+  return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
         <h1 className="text-xl md:text-2xl font-serif font-semibold text-slate-50">
           Enosi
@@ -70,8 +64,7 @@ const Navbar = () => {
       
       {/* Authentication Buttons */}
       <div className="hidden md:flex items-center gap-3">
-        {user ? (
-          <DropdownMenu>
+        {user ? <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-2 text-slate-50 hover:text-theme-cream">
                 <User className="h-4 w-4" />
@@ -117,21 +110,18 @@ const Navbar = () => {
                 Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <>
+          </DropdownMenu> : <>
             <Link to="/auth">
-              <Button variant="ghost" className="text-slate-50 hover:text-theme-cream">
+              <Button variant="ghost" className="bg-slate-50 text-[theme-brown-dark] text-theme-brown">
                 Log In
               </Button>
             </Link>
             <Link to="/auth?tab=signup">
-              <Button className="bg-theme-blue hover:bg-theme-blue-dark text-white border-none">
+              <Button className="hover:bg-theme-blue-dark border-none text-[theme-brown-light] text-theme-brown bg-slate-50">
                 Sign Up
               </Button>
             </Link>
-          </>
-        )}
+          </>}
       </div>
 
       {/* Mobile Menu Button */}
@@ -140,8 +130,7 @@ const Navbar = () => {
       </button>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[57px] bg-white z-50 p-4">
+      {mobileMenuOpen && <div className="md:hidden fixed inset-0 top-[57px] bg-white z-50 p-4">
           <div className="flex flex-col gap-4">
             <Link to="/" className="text-theme-brown-light hover:text-theme-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
               Home
@@ -159,8 +148,7 @@ const Navbar = () => {
               Blog
             </Link>
             
-            {user ? (
-              <div className="flex flex-col gap-2 mt-4">
+            {user ? <div className="flex flex-col gap-2 mt-4">
                 <div className="text-theme-brown font-medium mb-2 pb-2 border-b">My Profile</div>
                 <Link to="/dashboard" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Dashboard
@@ -195,24 +183,18 @@ const Navbar = () => {
                   Subscription & Billing
                 </Link>
                 <Button onClick={() => {
-                  handleSignOut();
-                  toggleMobileMenu();
-                }} className="mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white">
+            handleSignOut();
+            toggleMobileMenu();
+          }} className="mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white">
                   Sign Out
                 </Button>
-              </div>
-            ) : (
-              <Link to="/auth" onClick={toggleMobileMenu}>
+              </div> : <Link to="/auth" onClick={toggleMobileMenu}>
                 <Button className="w-full mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white">
                   Sign In
                 </Button>
-              </Link>
-            )}
+              </Link>}
           </div>
-        </div>
-      )}
-    </nav>
-  );
+        </div>}
+    </nav>;
 };
-
 export default Navbar;
