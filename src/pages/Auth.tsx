@@ -13,10 +13,6 @@ const Auth = () => {
   const { user, userProfile, loading } = useAuth();
   const navigate = useNavigate();
   
-  // We'll completely remove the effect that was causing the redirect
-  // The auth state change handler in useAuthentication will
-  // handle redirects when signing in
-  
   // Show loading state
   if (loading) {
     return (
@@ -25,9 +21,6 @@ const Auth = () => {
       </div>
     );
   }
-  
-  // If already authenticated and trying to access the auth page,
-  // we won't auto-redirect. Let the user choose to navigate away manually.
   
   return (
     <div className="min-h-screen flex">
@@ -61,13 +54,13 @@ const Auth = () => {
       </div>
       
       {/* Right side - Auth forms */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-sm">
           <div className="mb-8">
-            <h1 className="text-4xl font-serif text-wednest-brown mb-2">
+            <h1 className="text-4xl font-serif text-theme-brown mb-2">
               {activeTab === "signin" ? "Sign in" : "Create Account"}
             </h1>
-            <p className="text-wednest-brown-light">
+            <p className="text-theme-brown-light">
               {activeTab === "signin" 
                 ? "Enter your email and password to access your account" 
                 : "Join Enosi to start planning your perfect wedding"}
