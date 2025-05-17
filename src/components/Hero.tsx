@@ -25,13 +25,12 @@ const Hero = () => {
   };
   return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
       <div className="max-w-6xl mx-auto text-center">
-        <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">
-          Search Verified Wedding Vendors
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">Find Wedding Vendors You Can Trust
+      </h1>
         
-        <p className="text-theme-cream mb-8 max-w-2xl mx-auto">
-          Find and book the perfect vendors for your special day
-        </p>
+        <p className="text-theme-cream mb-8 max-w-2xl mx-auto">Book verified photographers, florists, venues, and more all in one place.
+
+      </p>
         
         <div className="bg-white rounded-lg shadow-lg p-3 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
