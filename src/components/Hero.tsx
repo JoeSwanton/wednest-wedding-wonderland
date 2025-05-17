@@ -37,7 +37,7 @@ const Hero = () => {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
             {/* Location Input */}
             <div className="md:col-span-5">
-              <div className="flex items-center border rounded-md px-3 py-2 bg-white">
+              <div className="flex items-center border rounded-md px-3 bg-white py-0">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                 <Input type="text" placeholder="Where's your wedding?" className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0" value={location} onChange={e => setLocation(e.target.value)} />
               </div>
@@ -49,7 +49,7 @@ const Hero = () => {
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full border justify-start text-left font-normal bg-white">
                     <Calendar className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Wedding date</span>}
+                    {date ? format(date, "PPP") : <span className="text-theme-brown text-[theme-brown-light]">Wedding date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -77,7 +77,7 @@ const Hero = () => {
             
             {/* Search Button */}
             <div className="md:col-span-2">
-              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-white bg-[theme-brown-light] bg-theme-brown">
+              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-white bg-theme-brown bg-[theme-brown-light]">
                 <Search className="mr-2 h-4 w-4" /> Search
               </Button>
             </div>
