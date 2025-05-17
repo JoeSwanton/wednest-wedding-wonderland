@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,26 +8,22 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-
 const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
   const [vendorType, setVendorType] = useState("");
   const navigate = useNavigate();
-  
   const handleSearch = () => {
     // Build query parameters
     const params = new URLSearchParams();
     if (location) params.append("location", location);
     if (vendorType) params.append("category", vendorType);
     if (date) params.append("date", date.toISOString().split('T')[0]);
-    
+
     // Navigate to vendors page with search parameters
     navigate(`/vendors?${params.toString()}`);
   };
-  
-  return (
-    <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
+  return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">
           Search Verified Wedding Vendors
@@ -44,13 +39,7 @@ const Hero = () => {
             <div className="md:col-span-5">
               <div className="flex items-center border rounded-md px-3 py-2 bg-white">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
-                <Input 
-                  type="text" 
-                  placeholder="Where's your wedding?" 
-                  className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
+                <Input type="text" placeholder="Where's your wedding?" className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0" value={location} onChange={e => setLocation(e.target.value)} />
               </div>
             </div>
             
@@ -58,22 +47,13 @@ const Hero = () => {
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full border justify-start text-left font-normal bg-white"
-                  >
+                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-white">
                     <Calendar className="mr-2 h-4 w-4" />
                     {date ? format(date, "PPP") : <span>Wedding date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                    className="pointer-events-auto"
-                  />
+                  <CalendarComponent mode="single" selected={date} onSelect={setDate} initialFocus className="pointer-events-auto" />
                 </PopoverContent>
               </Popover>
             </div>
@@ -97,10 +77,7 @@ const Hero = () => {
             
             {/* Search Button */}
             <div className="md:col-span-2">
-              <Button 
-                className="w-full bg-theme-blue hover:bg-theme-blue-dark text-white"
-                onClick={handleSearch}
-              >
+              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-white bg-[theme-brown-light] bg-theme-brown">
                 <Search className="mr-2 h-4 w-4" /> Search
               </Button>
             </div>
@@ -127,8 +104,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Hero;
