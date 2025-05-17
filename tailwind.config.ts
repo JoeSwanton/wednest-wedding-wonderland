@@ -63,16 +63,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// WedNest custom colors
-				wednest: {
-					sage: '#7D8E74',
-					'sage-light': '#A6B59E',
-					'sage-dark': '#5A6A53',
-					cream: '#F8F5F0',
-					beige: '#E6DFD2',
-					brown: '#695F4C',
-					'brown-light': '#8A7F66',
-					gold: '#D4BE83'
+				// Custom theme colors based on the image
+				theme: {
+					brown: '#7a6954',
+					'brown-light': '#a99983',
+					'brown-dark': '#5a4d3d',
+					cream: '#f8f5f0',
+					beige: '#e6e0d3',
+					blue: '#0075d1',
+					'blue-dark': '#005ea8',
+					white: '#ffffff',
+					gray: '#f0f0f0',
+					'gray-dark': '#5c5c5c',
 				}
 			},
 			fontFamily: {

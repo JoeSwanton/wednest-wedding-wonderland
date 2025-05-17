@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -33,7 +32,6 @@ const Navbar = () => {
         title: "Signed out successfully",
         description: "You have been signed out of your account."
       });
-      // No need to navigate here as it's handled by onAuthStateChange
     } catch (error) {
       console.error("Error signing out:", error);
       toast({
@@ -48,28 +46,26 @@ const Navbar = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
   
-  return <nav className="w-full py-4 px-4 md:px-8 flex items-center justify-between border-b border-wednest-beige">
+  return (
+    <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between bg-white border-b border-theme-beige">
       <Link to="/" className="flex items-center">
-        <h1 className="text-2xl md:text-3xl font-serif font-semibold text-wednest-brown">
+        <h1 className="text-xl md:text-2xl font-serif text-theme-brown font-semibold">
           Enosi
         </h1>
       </Link>
       
       {/* Desktop Menu */}
-      <div className="hidden md:flex gap-8 items-center">
-        <Link to="/" className="text-wednest-brown-light hover:text-wednest-brown text-sm font-medium">
-          Home
+      <div className="hidden md:flex gap-6 items-center">
+        <Link to="/vendors" className="text-theme-brown hover:text-theme-brown-dark text-sm">
+          Browse Vendors
         </Link>
-        <Link to="/vendors" className="text-wednest-brown-light hover:text-wednest-brown text-sm font-medium">
-          Vendors
-        </Link>
-        <Link to="/planning-tools" className="text-wednest-brown-light hover:text-wednest-brown text-sm font-medium">
+        <Link to="/planning-tools" className="text-theme-brown hover:text-theme-brown-dark text-sm">
           Planning Tools
         </Link>
-        <Link to="/inspiration" className="text-wednest-brown-light hover:text-wednest-brown text-sm font-medium">
-          Inspiration
+        <Link to="/vendor/onboarding" className="text-theme-brown hover:text-theme-brown-dark text-sm">
+          For Vendors
         </Link>
-        <Link to="/blog" className="text-wednest-brown-light hover:text-wednest-brown text-sm font-medium">
+        <Link to="/blog" className="text-theme-brown hover:text-theme-brown-dark text-sm">
           Blog
         </Link>
       </div>
@@ -79,7 +75,7 @@ const Navbar = () => {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 text-wednest-brown-light hover:text-wednest-brown">
+              <button className="flex items-center gap-2 text-theme-brown hover:text-theme-brown-dark">
                 <User className="h-4 w-4" />
                 <span className="text-sm">My Profile</span>
                 <ChevronDown className="h-3 w-3 opacity-60" />
@@ -125,71 +121,79 @@ const Navbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Link to="/auth">
-            <Button className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
-              Sign In
-            </Button>
-          </Link>
+          <>
+            <Link to="/auth">
+              <Button variant="ghost" className="text-theme-brown hover:text-theme-brown-dark">
+                Log In
+              </Button>
+            </Link>
+            <Link to="/auth?tab=signup">
+              <Button className="bg-theme-blue hover:bg-theme-blue-dark text-white border-none">
+                Sign Up
+              </Button>
+            </Link>
+          </>
         )}
       </div>
 
       {/* Mobile Menu Button */}
       <button className="md:hidden" onClick={toggleMobileMenu}>
-        {mobileMenuOpen ? <X className="h-6 w-6 text-wednest-brown" /> : <Menu className="h-6 w-6 text-wednest-brown" />}
+        {mobileMenuOpen ? <X className="h-6 w-6 text-theme-brown" /> : <Menu className="h-6 w-6 text-theme-brown" />}
       </button>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && <div className="md:hidden fixed inset-0 top-[73px] bg-white z-50 p-4">
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-[57px] bg-white z-50 p-4">
           <div className="flex flex-col gap-4">
-            <Link to="/" className="text-wednest-brown-light hover:text-wednest-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
+            <Link to="/" className="text-theme-brown-light hover:text-theme-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
               Home
             </Link>
-            <Link to="/vendors" className="text-wednest-brown-light hover:text-wednest-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
+            <Link to="/vendors" className="text-theme-brown-light hover:text-theme-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
               Vendors
             </Link>
-            <Link to="/planning-tools" className="text-wednest-brown-light hover:text-wednest-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
+            <Link to="/planning-tools" className="text-theme-brown-light hover:text-theme-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
               Planning Tools
             </Link>
-            <Link to="/inspiration" className="text-wednest-brown-light hover:text-wednest-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
+            <Link to="/inspiration" className="text-theme-brown-light hover:text-theme-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
               Inspiration
             </Link>
-            <Link to="/blog" className="text-wednest-brown-light hover:text-wednest-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
+            <Link to="/blog" className="text-theme-brown-light hover:text-theme-brown text-lg py-2 border-b" onClick={toggleMobileMenu}>
               Blog
             </Link>
             
             {user ? (
               <div className="flex flex-col gap-2 mt-4">
-                <div className="text-wednest-brown font-medium mb-2 pb-2 border-b">My Profile</div>
-                <Link to="/dashboard" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <div className="text-theme-brown font-medium mb-2 pb-2 border-b">My Profile</div>
+                <Link to="/dashboard" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Dashboard
                 </Link>
-                <Link to="/vendor/listings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/listings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   My Listings
                 </Link>
-                <Link to="/vendor/bookings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/bookings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Bookings & Inquiries
                 </Link>
-                <Link to="/vendor/messages" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/messages" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Messages
                 </Link>
                 <div className="border-t mt-2 pt-2"></div>
-                <Link to="/vendor/packages" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/packages" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Packages & Pricing
                 </Link>
-                <Link to="/vendor/earnings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/earnings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Payments & Earnings
                 </Link>
-                <Link to="/vendor/reviews" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/reviews" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Reviews
                 </Link>
-                <Link to="/vendor/insights" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/insights" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Performance & Insights
                 </Link>
                 <div className="border-t mt-2 pt-2"></div>
-                <Link to="/vendor/settings" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/settings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Account Settings
                 </Link>
-                <Link to="/vendor/subscription" className="text-wednest-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                <Link to="/vendor/subscription" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
                   Subscription & Billing
                 </Link>
                 <Button onClick={() => {
@@ -207,7 +211,10 @@ const Navbar = () => {
               </Link>
             )}
           </div>
-        </div>}
-    </nav>;
+        </div>
+      )}
+    </nav>
+  );
 };
+
 export default Navbar;

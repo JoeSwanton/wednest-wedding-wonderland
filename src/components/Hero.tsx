@@ -28,17 +28,21 @@ const Hero = () => {
   };
   
   return (
-    <div className="w-full bg-blue-800 py-6 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-semibold text-white text-center mb-6">
-          Find your wedding vendors
+    <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
+      <div className="max-w-6xl mx-auto text-center">
+        <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">
+          Search Verified Wedding Vendors
         </h1>
         
-        <div className="bg-white p-4 rounded-md shadow-md">
+        <p className="text-theme-cream mb-8 max-w-2xl mx-auto">
+          Find and book the perfect vendors for your special day
+        </p>
+        
+        <div className="bg-white rounded-lg shadow-lg p-3 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
             {/* Location Input */}
-            <div className="md:col-span-4">
-              <div className="flex items-center border rounded-md px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-wednest-sage">
+            <div className="md:col-span-5">
+              <div className="flex items-center border rounded-md px-3 py-2 bg-white">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                 <Input 
                   type="text" 
@@ -56,13 +60,10 @@ const Hero = () => {
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className={cn(
-                      "w-full border justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
-                    )}
+                    className="w-full border justify-start text-left font-normal bg-white"
                   >
                     <Calendar className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Select date</span>}
+                    {date ? format(date, "PPP") : <span>Wedding date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -78,10 +79,10 @@ const Hero = () => {
             </div>
             
             {/* Vendor Type */}
-            <div className="md:col-span-3">
+            <div className="md:col-span-2">
               <Select value={vendorType} onValueChange={setVendorType}>
-                <SelectTrigger className="border">
-                  <SelectValue placeholder="All Vendor Types" />
+                <SelectTrigger className="border bg-white">
+                  <SelectValue placeholder="Vendor type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="photographer">Photographers</SelectItem>
@@ -97,32 +98,32 @@ const Hero = () => {
             {/* Search Button */}
             <div className="md:col-span-2">
               <Button 
-                className="w-full bg-blue-700 hover:bg-blue-800 text-white"
+                className="w-full bg-theme-blue hover:bg-theme-blue-dark text-white"
                 onClick={handleSearch}
               >
                 <Search className="mr-2 h-4 w-4" /> Search
               </Button>
             </div>
           </div>
-          
-          {/* Benefits Bar */}
-          <div className="flex flex-wrap justify-center gap-x-8 mt-6 text-xs md:text-sm text-gray-600 border-t pt-4">
-            <div className="flex items-center">
-              <span className="w-1.5 h-1.5 bg-wednest-sage rounded-full mr-1.5"></span>
-              <span>Verified Vendors</span>
-            </div>
-            <div className="flex items-center">
-              <span className="w-1.5 h-1.5 bg-wednest-sage rounded-full mr-1.5"></span>
-              <span>Planning Tools</span>
-            </div>
-            <div className="flex items-center">
-              <span className="w-1.5 h-1.5 bg-wednest-sage rounded-full mr-1.5"></span>
-              <span>Instant Inquiries</span>
-            </div>
-            <div className="flex items-center">
-              <span className="w-1.5 h-1.5 bg-wednest-sage rounded-full mr-1.5"></span>
-              <span>Mobile Friendly</span>
-            </div>
+        </div>
+        
+        {/* Benefits Bar */}
+        <div className="flex flex-wrap justify-center gap-x-8 mt-6 text-sm text-theme-cream">
+          <div className="flex items-center">
+            <span className="w-1.5 h-1.5 bg-white rounded-full mr-1.5"></span>
+            <span>Verified Vendors</span>
+          </div>
+          <div className="flex items-center">
+            <span className="w-1.5 h-1.5 bg-white rounded-full mr-1.5"></span>
+            <span>Planning Tools</span>
+          </div>
+          <div className="flex items-center">
+            <span className="w-1.5 h-1.5 bg-white rounded-full mr-1.5"></span>
+            <span>Instant Inquiries</span>
+          </div>
+          <div className="flex items-center">
+            <span className="w-1.5 h-1.5 bg-white rounded-full mr-1.5"></span>
+            <span>Mobile Friendly</span>
           </div>
         </div>
       </div>
