@@ -77,7 +77,7 @@ const Hero = () => {
             
             {/* Search Button */}
             <div className="md:col-span-2">
-              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-white bg-theme-brown bg-[theme-brown-light]">
+              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark bg-theme-brown bg-[theme-brown-light] text-theme-brown text-[theme-brown-light]">
                 <Search className="mr-2 h-4 w-4" /> Search
               </Button>
             </div>
