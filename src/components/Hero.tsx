@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
@@ -21,30 +19,19 @@ const Hero = () => {
   const navigate = useNavigate();
 
   // Major Australian locations for suggestions
-  const australianLocations = [
-    "Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", 
-    "Gold Coast", "Newcastle", "Canberra", "Wollongong", "Hobart",
-    "Geelong", "Townsville", "Cairns", "Darwin", "Toowoomba",
-    "Ballarat", "Bendigo", "Launceston", "Mackay", "Rockhampton",
-    "Bunbury", "Bundaberg", "Hervey Bay", "Wagga Wagga", "Albury",
-    "Mildura", "Shepparton", "Gladstone", "Coffs Harbour", "Port Macquarie"
-  ];
+  const australianLocations = ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Newcastle", "Canberra", "Wollongong", "Hobart", "Geelong", "Townsville", "Cairns", "Darwin", "Toowoomba", "Ballarat", "Bendigo", "Launceston", "Mackay", "Rockhampton", "Bunbury", "Bundaberg", "Hervey Bay", "Wagga Wagga", "Albury", "Mildura", "Shepparton", "Gladstone", "Coffs Harbour", "Port Macquarie"];
 
   // Major Australian States for initial dropdown
   const australianStates = ["Melbourne", "Sydney", "Brisbane", "Perth", "Queensland"];
-
   useEffect(() => {
     // Filter locations based on user input
     if (location) {
-      const filtered = australianLocations.filter(
-        loc => loc.toLowerCase().includes(location.toLowerCase())
-      );
+      const filtered = australianLocations.filter(loc => loc.toLowerCase().includes(location.toLowerCase()));
       setSearchResults(filtered);
     } else {
       setSearchResults([]);
     }
   }, [location]);
-
   const handleSearch = () => {
     // Build query parameters
     const params = new URLSearchParams();
@@ -55,25 +42,21 @@ const Hero = () => {
     // Navigate to vendors page with search parameters
     navigate(`/vendors?${params.toString()}`);
   };
-
   const handleLocationSelect = (selectedLocation: string) => {
     setLocation(selectedLocation);
     setIsLocationFocused(false);
   };
-
   const handleClickOutside = (e: MouseEvent) => {
     if (locationInputRef.current && !locationInputRef.current.contains(e.target as Node)) {
       setIsLocationFocused(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
   return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">Find Wedding Vendors You Can Trust</h1>
@@ -86,45 +69,20 @@ const Hero = () => {
             <div className="md:col-span-5" ref={locationInputRef}>
               <div className="flex items-center border rounded-md px-3 bg-white py-0 relative">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
-                <Input 
-                  type="text" 
-                  placeholder="Where's your wedding?" 
-                  className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0" 
-                  value={location} 
-                  onChange={e => setLocation(e.target.value)} 
-                  onFocus={() => setIsLocationFocused(true)}
-                />
+                <Input type="text" placeholder="Where's your wedding?" className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0" value={location} onChange={e => setLocation(e.target.value)} onFocus={() => setIsLocationFocused(true)} />
                 
                 {/* Dropdown for suggestions */}
-                {isLocationFocused && (
-                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                    {location === '' ? (
-                      // Show Australian states when empty
-                      australianStates.map((state, index) => (
-                        <div 
-                          key={index} 
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleLocationSelect(state)}
-                        >
+                {isLocationFocused && <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                    {location === '' ?
+                // Show Australian states when empty
+                australianStates.map((state, index) => <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleLocationSelect(state)}>
                           {state}
-                        </div>
-                      ))
-                    ) : searchResults.length > 0 ? (
-                      // Show filtered results when typing
-                      searchResults.map((result, index) => (
-                        <div 
-                          key={index} 
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => handleLocationSelect(result)}
-                        >
+                        </div>) : searchResults.length > 0 ?
+                // Show filtered results when typing
+                searchResults.map((result, index) => <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleLocationSelect(result)}>
                           {result}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="px-4 py-2 text-gray-500">No locations found</div>
-                    )}
-                  </div>
-                )}
+                        </div>) : <div className="px-4 py-2 text-gray-500">No locations found</div>}
+                  </div>}
               </div>
             </div>
             
@@ -132,9 +90,9 @@ const Hero = () => {
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-white">
+                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-theme-brown">
                     <Calendar className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span className="text-theme-brown text-[theme-brown-light]">Wedding date</span>}
+                    {date ? format(date, "PPP") : <span className="text-[theme-brown-light] text-slate-50">Wedding date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
