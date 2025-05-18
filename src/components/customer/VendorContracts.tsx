@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Search, FileText, Phone, Mail, Calendar, ExternalLink, Trash2, FilePlus } from "lucide-react";
+import { Upload, Search, FileText, Phone, Mail, Calendar, ExternalLink, Trash2, FilePlus, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
