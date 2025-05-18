@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
@@ -23,7 +21,6 @@ const Hero = () => {
 
   // Major Australian States for initial dropdown
   const australianStates = ["Melbourne", "Sydney", "Brisbane", "Perth", "Queensland"];
-
   const handleSearch = () => {
     // Build query parameters
     const params = new URLSearchParams();
@@ -34,12 +31,10 @@ const Hero = () => {
     // Navigate to vendors page with search parameters
     navigate(`/vendors?${params.toString()}`);
   };
-
   const handleLocationSelect = (selectedLocation: string) => {
     setLocation(selectedLocation);
     setIsLocationOpen(false);
   };
-
   return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">Find Wedding Vendors You Can Trust</h1>
@@ -62,10 +57,9 @@ const Hero = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[calc(100vw-2rem)] md:w-[320px]" align="start">
                   <div className="py-2 px-4 font-medium text-gray-800 bg-gray-100 border-b">
-                    <p>Trending destinations</p>
+                    <p className="font-normal text-sm text-gray-950">Trending destinations</p>
                   </div>
-                  {australianStates.map((state, index) => (
-                    <DropdownMenuItem key={index} onSelect={() => handleLocationSelect(state)}>
+                  {australianStates.map((state, index) => <DropdownMenuItem key={index} onSelect={() => handleLocationSelect(state)}>
                       <div className="flex items-center">
                         <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                         <div>
@@ -73,13 +67,11 @@ const Hero = () => {
                           <div className="text-xs text-gray-500">Australia</div>
                         </div>
                       </div>
-                    </DropdownMenuItem>
-                  ))}
+                    </DropdownMenuItem>)}
                   <div className="py-2 px-4 font-medium text-gray-800 bg-gray-100 border-t border-b">
                     <p>Other locations</p>
                   </div>
-                  {australianLocations.filter(loc => !australianStates.includes(loc)).slice(0, 5).map((location, index) => (
-                    <DropdownMenuItem key={`other-${index}`} onSelect={() => handleLocationSelect(location)}>
+                  {australianLocations.filter(loc => !australianStates.includes(loc)).slice(0, 5).map((location, index) => <DropdownMenuItem key={`other-${index}`} onSelect={() => handleLocationSelect(location)}>
                       <div className="flex items-center">
                         <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                         <div>
@@ -87,8 +79,7 @@ const Hero = () => {
                           <div className="text-xs text-gray-500">Australia</div>
                         </div>
                       </div>
-                    </DropdownMenuItem>
-                  ))}
+                    </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -156,5 +147,4 @@ const Hero = () => {
       </div>
     </div>;
 };
-
 export default Hero;
