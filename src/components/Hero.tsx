@@ -1,14 +1,15 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, MapPin, Search } from "lucide-react";
+import { Calendar, ChevronDown, MapPin, Search } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
@@ -23,6 +24,7 @@ const Hero = () => {
 
   // Major Australian States for initial dropdown
   const australianStates = ["Melbourne", "Sydney", "Brisbane", "Perth", "Queensland"];
+  
   useEffect(() => {
     // Filter locations based on user input
     if (location) {
@@ -32,6 +34,7 @@ const Hero = () => {
       setSearchResults([]);
     }
   }, [location]);
+
   const handleSearch = () => {
     // Build query parameters
     const params = new URLSearchParams();
@@ -42,22 +45,27 @@ const Hero = () => {
     // Navigate to vendors page with search parameters
     navigate(`/vendors?${params.toString()}`);
   };
+
   const handleLocationSelect = (selectedLocation: string) => {
     setLocation(selectedLocation);
     setIsLocationFocused(false);
   };
+
   const handleClickOutside = (e: MouseEvent) => {
     if (locationInputRef.current && !locationInputRef.current.contains(e.target as Node)) {
       setIsLocationFocused(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
+
+  return (
+    <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">Find Wedding Vendors You Can Trust</h1>
         
@@ -72,17 +80,37 @@ const Hero = () => {
                 <Input type="text" placeholder="Where's your wedding?" className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0" value={location} onChange={e => setLocation(e.target.value)} onFocus={() => setIsLocationFocused(true)} />
                 
                 {/* Dropdown for suggestions */}
-                {isLocationFocused && <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                    {location === '' ?
-                // Show Australian states when empty
-                australianStates.map((state, index) => <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleLocationSelect(state)}>
-                          {state}
-                        </div>) : searchResults.length > 0 ?
-                // Show filtered results when typing
-                searchResults.map((result, index) => <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleLocationSelect(result)}>
-                          {result}
-                        </div>) : <div className="px-4 py-2 text-gray-500">No locations found</div>}
-                  </div>}
+                {isLocationFocused && (
+                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                    <div className="py-2 px-4 font-medium text-gray-800 bg-gray-100 border-b">
+                      <p>Trending destinations</p>
+                    </div>
+                    {location === '' ? 
+                      // Show Australian states when empty
+                      australianStates.map((state, index) => (
+                        <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center" onClick={() => handleLocationSelect(state)}>
+                          <MapPin className="h-4 w-4 text-gray-400 mr-2" />
+                          <div>
+                            <div className="font-medium">{state}</div>
+                            <div className="text-xs text-gray-500">Australia</div>
+                          </div>
+                        </div>
+                      )) 
+                      : searchResults.length > 0 ?
+                      // Show filtered results when typing
+                      searchResults.map((result, index) => (
+                        <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center" onClick={() => handleLocationSelect(result)}>
+                          <MapPin className="h-4 w-4 text-gray-400 mr-2" />
+                          <div>
+                            <div className="font-medium">{result}</div>
+                            <div className="text-xs text-gray-500">Australia</div>
+                          </div>
+                        </div>
+                      ))
+                      : <div className="px-4 py-2 text-gray-500">No locations found</div>
+                    }
+                  </div>
+                )}
               </div>
             </div>
             
@@ -90,9 +118,9 @@ const Hero = () => {
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full border justify-start text-left font-normal text-[theme-brown-dark] text-slate-50 bg-slate-50">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span className="text-[theme-brown-light] text-theme-brown">Wedding date</span>}
+                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-white">
+                    <Calendar className="mr-2 h-4 w-4 text-theme-brown" />
+                    {date ? format(date, "PPP") : <span className="text-theme-brown-light">Wedding date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -103,24 +131,27 @@ const Hero = () => {
             
             {/* Vendor Type */}
             <div className="md:col-span-2">
-              <Select value={vendorType} onValueChange={setVendorType}>
-                <SelectTrigger className="border bg-white">
-                  <SelectValue placeholder="Vendor type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="photographer">Photographers</SelectItem>
-                  <SelectItem value="venue">Venues</SelectItem>
-                  <SelectItem value="catering">Catering</SelectItem>
-                  <SelectItem value="florist">Florists</SelectItem>
-                  <SelectItem value="music">Music & Entertainment</SelectItem>
-                  <SelectItem value="cake">Cake & Dessert</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <Select value={vendorType} onValueChange={setVendorType}>
+                  <SelectTrigger className="border bg-white text-theme-brown flex justify-between items-center">
+                    <SelectValue placeholder="Vendor type" className="text-theme-brown" />
+                    <ChevronDown className="h-4 w-4 text-theme-brown" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="photographer">Photographers</SelectItem>
+                    <SelectItem value="venue">Venues</SelectItem>
+                    <SelectItem value="catering">Catering</SelectItem>
+                    <SelectItem value="florist">Florists</SelectItem>
+                    <SelectItem value="music">Music & Entertainment</SelectItem>
+                    <SelectItem value="cake">Cake & Dessert</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
             {/* Search Button */}
             <div className="md:col-span-2">
-              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-[theme-brown-dark] text-slate-50 bg-[theme-brown-light] bg-theme-brown">
+              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-white bg-theme-brown">
                 <Search className="mr-2 h-4 w-4" /> Search
               </Button>
             </div>
@@ -147,6 +178,8 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Hero;
