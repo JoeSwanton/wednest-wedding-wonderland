@@ -73,8 +73,8 @@ const Hero = () => {
         
         <div className="bg-white rounded-lg shadow-lg p-3 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-            {/* Location Input with Dropdown */}
-            <div className="md:col-span-5" ref={locationInputRef}>
+            {/* Location Input with Dropdown - Slightly smaller width */}
+            <div className="md:col-span-4" ref={locationInputRef}>
               <div className="flex items-center border rounded-md px-3 bg-white py-0 relative">
                 <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                 <Input type="text" placeholder="Where's your wedding?" className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0" value={location} onChange={e => setLocation(e.target.value)} onFocus={() => setIsLocationFocused(true)} />
@@ -129,13 +129,13 @@ const Hero = () => {
               </Popover>
             </div>
             
-            {/* Vendor Type */}
-            <div className="md:col-span-2">
+            {/* Vendor Type - Updated to have brown text and right-side arrow */}
+            <div className="md:col-span-3">
               <div className="relative">
                 <Select value={vendorType} onValueChange={setVendorType}>
                   <SelectTrigger className="border bg-white text-theme-brown flex justify-between items-center">
                     <SelectValue placeholder="Vendor type" className="text-theme-brown" />
-                    <ChevronDown className="h-4 w-4 text-theme-brown" />
+                    {/* Only one ChevronDown here, removed the duplicate */}
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="photographer">Photographers</SelectItem>
