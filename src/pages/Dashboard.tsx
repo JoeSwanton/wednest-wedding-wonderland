@@ -90,6 +90,12 @@ const Dashboard = () => {
               `Your wedding planning journey is underway. Here's your latest progress.` : 
               "Let's start planning your dream wedding."}
           </p>
+          <Button 
+            className="mt-4 bg-white text-wednest-sage hover:bg-white/90"
+            onClick={() => navigate('/customer-dashboard')}
+          >
+            Try New Wedding Planning Tools
+          </Button>
         </div>
         
         {/* Dashboard Content */}

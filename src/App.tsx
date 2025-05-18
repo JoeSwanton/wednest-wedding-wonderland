@@ -15,6 +15,7 @@ import PlanningTools from "./pages/PlanningTools";
 import Inspiration from "./pages/Inspiration";
 import Blog from "./pages/Blog";
 import Dashboard from "./pages/Dashboard";
+import CustomerDashboard from "./pages/CustomerDashboard";
 
 // Vendor pages
 import VendorDashboard from "./pages/vendor/VendorDashboard";
@@ -55,6 +56,7 @@ function App() {
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/questionnaire" element={<Questionnaire />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/customer-dashboard" element={<CustomerDashboard />} />
               
               {/* Vendor routes */}
               <Route path="/vendor" element={<VendorDashboard />} />
