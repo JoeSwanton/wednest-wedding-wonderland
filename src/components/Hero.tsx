@@ -90,9 +90,9 @@ const Hero = () => {
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-theme-brown">
+                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-theme-brown text-[theme-brown-dark] text-slate-50">
                     <Calendar className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span className="text-[theme-brown-light] text-slate-50">Wedding date</span>}
+                    {date ? format(date, "PPP") : <span className="text-[theme-brown-light] text-theme-brown">Wedding date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
