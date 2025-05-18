@@ -1,16 +1,12 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
 import { Star, ArrowDown, ArrowUp, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
-
 const VendorListings = () => {
   const [sort, setSort] = useState("popular");
-
-  return (
-    <div className="w-full py-8 px-4 md:px-8 bg-white">
+  return <div className="w-full py-8 px-4 md:px-8 bg-white">
       <div className="max-w-6xl mx-auto">
         {/* Popular Vendors Section */}
         <div className="mb-10">
@@ -49,11 +45,7 @@ const VendorListings = () => {
                 </SelectContent>
               </Select>
               
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="flex items-center gap-1"
-              >
+              <Button variant="outline" size="sm" className="flex items-center gap-1">
                 <Filter className="h-4 w-4" /> Filter
               </Button>
             </div>
@@ -66,10 +58,7 @@ const VendorListings = () => {
         {/* "See More" Button */}
         <div className="text-center mt-8 mb-8">
           <Link to="/vendors">
-            <Button 
-              variant="outline" 
-              className="bg-theme-brown hover:bg-theme-brown-dark text-white px-8"
-            >
+            <Button variant="outline" className="bg-theme-brown hover:bg-theme-brown-dark text-white px-8">
               View All Sydney Vendors
             </Button>
           </Link>
@@ -81,20 +70,35 @@ const VendorListings = () => {
             Browse by Category
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {[
-              { type: "Venues", count: "245", icon: "🏰" },
-              { type: "Photographers", count: "189", icon: "📸" },
-              { type: "Caterers", count: "156", icon: "🍽️" },
-              { type: "Florists", count: "132", icon: "💐" },
-              { type: "Entertainment", count: "98", icon: "🎵" },
-              { type: "Planners", count: "76", icon: "📋" }
-            ].map((category, index) => (
-              <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="relative block rounded-lg overflow-hidden text-center border border-theme-beige hover:shadow-md transition-shadow duration-200 py-4 px-2 bg-white">
+            {[{
+            type: "Venues",
+            count: "245",
+            icon: "🏰"
+          }, {
+            type: "Photographers",
+            count: "189",
+            icon: "📸"
+          }, {
+            type: "Caterers",
+            count: "156",
+            icon: "🍽️"
+          }, {
+            type: "Florists",
+            count: "132",
+            icon: "💐"
+          }, {
+            type: "Entertainment",
+            count: "98",
+            icon: "🎵"
+          }, {
+            type: "Planners",
+            count: "76",
+            icon: "📋"
+          }].map((category, index) => <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="relative block rounded-lg overflow-hidden text-center border border-theme-beige hover:shadow-md transition-shadow duration-200 py-4 px-2 bg-white">
                 <div className="text-2xl mb-1">{category.icon}</div>
                 <h4 className="text-theme-brown text-sm font-medium mb-1">{category.type}</h4>
                 <p className="text-xs text-theme-gray-dark">{category.count} vendors</p>
-              </Link>
-            ))}
+              </Link>)}
           </div>
         </div>
 
@@ -105,11 +109,7 @@ const VendorListings = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="rounded-lg overflow-hidden border border-theme-beige hover:shadow-md transition-shadow">
-              <img 
-                src="https://images.unsplash.com/photo-1561128290-000992e97018?auto=format&fit=crop&q=80&w=400&h=300" 
-                alt="Bloom & Petal" 
-                className="w-full h-40 object-cover"
-              />
+              <img src="https://images.unsplash.com/photo-1561128290-000992e97018?auto=format&fit=crop&q=80&w=400&h=300" alt="Bloom & Petal" className="w-full h-40 object-cover" />
               <div className="p-3">
                 <div className="flex justify-between">
                   <h4 className="font-medium text-theme-brown">Bloom & Petal</h4>
@@ -137,25 +137,18 @@ const VendorListings = () => {
           </div>
           <div className="flex gap-3 mt-4 md:mt-0">
             <Link to="/auth">
-              <Button 
-                variant="outline" 
-                className="border-theme-brown text-theme-brown hover:bg-theme-beige"
-              >
+              <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-theme-beige">
                 Sign In
               </Button>
             </Link>
             <Link to="/auth?tab=signup">
-              <Button 
-                className="bg-theme-blue hover:bg-theme-blue-dark text-white"
-              >
+              <Button className="hover:bg-theme-blue-dark text-white bg-[theme-brown-light] bg-theme-brown">
                 Sign Up
               </Button>
             </Link>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default VendorListings;
