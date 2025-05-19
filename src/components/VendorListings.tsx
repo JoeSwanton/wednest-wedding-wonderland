@@ -17,7 +17,7 @@ const VendorListings = () => {
   const [sort, setSort] = useState("popular");
   const [categoryPage, setCategoryPage] = useState(0);
   
-  // Wedding vendor categories with images
+  // Wedding vendor categories with images - Added more categories
   const categories = [
     {
       type: "Venues",
@@ -48,18 +48,53 @@ const VendorListings = () => {
       type: "Planners",
       count: "76",
       image: "https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Cake Designers",
+      count: "64",
+      image: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Makeup Artists",
+      count: "82",
+      image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Bridal Wear",
+      count: "115",
+      image: "https://images.unsplash.com/photo-1535701121392-da2f8ef792f0?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Transport",
+      count: "41",
+      image: "https://images.unsplash.com/photo-1598361222252-52548ac224a4?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Jewelers",
+      count: "58",
+      image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Invitation Design",
+      count: "47",
+      image: "https://images.unsplash.com/photo-1591140422804-439f61cc8838?auto=format&fit=crop&q=80&w=400&h=300"
     }
   ];
 
   // Calculate the number of pages needed for categories (showing 3 at a time)
-  const totalCategoryPages = Math.ceil(categories.length / 3);
+  const totalCategoryPages = categories.length;
   
-  // Get the current page of categories to display (3 items per page)
-  const currentCategories = categories.slice(categoryPage * 3, (categoryPage + 1) * 3);
+  // Get the current page of categories to display (3 items per page, now showing 3 categories at a time)
+  const displayIndex = categoryPage % categories.length;
+  const currentCategories = [
+    categories[displayIndex],
+    categories[(displayIndex + 1) % categories.length],
+    categories[(displayIndex + 2) % categories.length]
+  ];
   
-  // Handle next category page
+  // Handle next category page - Scroll one category at a time
   const handleNextCategoryPage = () => {
-    setCategoryPage((prev) => (prev + 1) % totalCategoryPages);
+    setCategoryPage((prev) => (prev + 1) % categories.length);
   };
 
   return <div className="w-full py-8 px-4 md:px-8 bg-white">
@@ -71,12 +106,12 @@ const VendorListings = () => {
               Browse by Category
             </h3>
             
-            {/* Category navigation indicators */}
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalCategoryPages }).map((_, i) => (
+            {/* Category navigation indicators - Made smaller for more categories */}
+            <div className="flex items-center gap-1 flex-wrap max-w-[300px] justify-end">
+              {categories.map((_, i) => (
                 <span 
                   key={i} 
-                  className={`w-2 h-2 rounded-full ${categoryPage === i ? 'bg-theme-brown' : 'bg-theme-beige'}`}
+                  className={`w-1.5 h-1.5 rounded-full ${categoryPage % categories.length === i ? 'bg-theme-brown' : 'bg-theme-beige'} mx-0.5 mb-0.5`}
                 />
               ))}
             </div>
@@ -109,18 +144,18 @@ const VendorListings = () => {
             </Carousel>
           </div>
           
-          {/* Desktop view: 3x1 grid with navigation arrow */}
+          {/* Desktop view: 3x1 grid with navigation arrow - Made categories smaller */}
           <div className="hidden md:flex">
-            <div className="grid grid-cols-3 gap-6 flex-1">
+            <div className="grid grid-cols-3 gap-4 flex-1">
               {currentCategories.map((category, index) => (
                 <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="block">
                   <div className="relative rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
                     <img 
                       src={category.image} 
                       alt={category.type} 
-                      className="w-full h-60 object-cover"
+                      className="w-full h-52 object-cover"
                     />
-                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-3">
                       <h4 className="text-white text-lg font-medium">{category.type}</h4>
                       <p className="text-white/80 text-sm">{category.count} vendors</p>
                     </div>
