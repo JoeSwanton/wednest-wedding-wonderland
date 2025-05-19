@@ -1,27 +1,19 @@
-
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
-
 interface AuthFooterProps {
   loading: boolean;
   userType: string;
   onSwitchToSignIn: () => void;
   handleGoogleSignIn: () => void;
 }
-
 const AuthFooter = ({
   loading,
   userType,
   onSwitchToSignIn,
   handleGoogleSignIn
 }: AuthFooterProps) => {
-  return (
-    <>
-      <Button 
-        type="submit" 
-        className="w-full bg-wednest-sage hover:bg-wednest-sage-dark text-white" 
-        disabled={loading}
-      >
+  return <>
+      <Button type="submit" disabled={loading} className="w-full bg-wednest-sage hover:bg-wednest-sage-dark text-slate-50 bg-theme-brown">
         {loading ? "Creating account..." : `Register as ${userType === 'vendor' ? 'Vendor' : 'Couple'}`}
       </Button>
       
@@ -34,12 +26,7 @@ const AuthFooter = ({
         </div>
       </div>
       
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full flex items-center justify-center gap-2"
-        onClick={handleGoogleSignIn}
-      >
+      <Button type="button" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={handleGoogleSignIn}>
         <Github className="h-4 w-4" />
         Sign up with Google
       </Button>
@@ -47,17 +34,11 @@ const AuthFooter = ({
       <div className="text-center mt-6">
         <p className="text-sm text-gray-600">
           Already have an account?{" "}
-          <button
-            type="button"
-            onClick={onSwitchToSignIn}
-            className="text-wednest-sage hover:text-wednest-sage-dark font-medium"
-          >
+          <button type="button" onClick={onSwitchToSignIn} className="text-wednest-sage hover:text-wednest-sage-dark font-medium">
             Sign in
           </button>
         </p>
       </div>
-    </>
-  );
+    </>;
 };
-
 export default AuthFooter;
