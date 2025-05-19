@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
@@ -21,6 +23,7 @@ const Hero = () => {
 
   // Major Australian States for initial dropdown
   const australianStates = ["Melbourne", "Sydney", "Brisbane", "Perth", "Queensland"];
+
   const handleSearch = () => {
     // Build query parameters
     const params = new URLSearchParams();
@@ -31,10 +34,12 @@ const Hero = () => {
     // Navigate to vendors page with search parameters
     navigate(`/vendors?${params.toString()}`);
   };
+
   const handleLocationSelect = (selectedLocation: string) => {
     setLocation(selectedLocation);
     setIsLocationOpen(false);
   };
+
   return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">Find Wedding Vendors You Can Trust</h1>
@@ -84,17 +89,29 @@ const Hero = () => {
               </DropdownMenu>
             </div>
             
-            {/* Wedding Date */}
+            {/* Wedding Date - Updated to match location dropdown styling */}
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full border justify-start text-left font-normal bg-white">
-                    <CalendarIcon className="mr-2 h-4 w-4 text-theme-brown" />
-                    {date ? format(date, "PPP") : <span className="text-theme-brown-light font-normal text-[theme-brown-light] text-theme-brown">Wedding date</span>}
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-between border-theme-beige bg-white text-theme-brown hover:bg-theme-brown hover:text-white"
+                  >
+                    <div className="flex items-center">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <span className="truncate">{date ? format(date, "PPP") : "Wedding date"}</span>
+                    </div>
+                    <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent mode="single" selected={date} onSelect={setDate} initialFocus className="pointer-events-auto" />
+                  <CalendarComponent 
+                    mode="single" 
+                    selected={date} 
+                    onSelect={setDate} 
+                    initialFocus 
+                    className={cn("p-3 pointer-events-auto")} 
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -147,4 +164,5 @@ const Hero = () => {
       </div>
     </div>;
 };
+
 export default Hero;
