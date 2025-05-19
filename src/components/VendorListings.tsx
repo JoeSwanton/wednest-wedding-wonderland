@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
-import { Star, ArrowDown, ArrowUp, Filter } from "lucide-react";
+import { Star, ArrowDown, ArrowUp, Filter, ArrowRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
 import {
@@ -15,6 +15,7 @@ import {
 
 const VendorListings = () => {
   const [sort, setSort] = useState("popular");
+  const [categoryPage, setCategoryPage] = useState(0);
   
   // Wedding vendor categories with images
   const categories = [
@@ -50,13 +51,36 @@ const VendorListings = () => {
     }
   ];
 
+  // Calculate the number of pages needed for categories (showing 3 at a time)
+  const totalCategoryPages = Math.ceil(categories.length / 3);
+  
+  // Get the current page of categories to display (3 items per page)
+  const currentCategories = categories.slice(categoryPage * 3, (categoryPage + 1) * 3);
+  
+  // Handle next category page
+  const handleNextCategoryPage = () => {
+    setCategoryPage((prev) => (prev + 1) % totalCategoryPages);
+  };
+
   return <div className="w-full py-8 px-4 md:px-8 bg-white">
       <div className="max-w-6xl mx-auto">
         {/* Browse by Category Section - Moved above Popular in Sydney */}
         <div className="mb-12">
-          <h3 className="text-xl md:text-2xl font-serif text-theme-brown-dark mb-5">
-            Browse by Category
-          </h3>
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-xl md:text-2xl font-serif text-theme-brown-dark">
+              Browse by Category
+            </h3>
+            
+            {/* Category navigation indicators */}
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalCategoryPages }).map((_, i) => (
+                <span 
+                  key={i} 
+                  className={`w-2 h-2 rounded-full ${categoryPage === i ? 'bg-theme-brown' : 'bg-theme-beige'}`}
+                />
+              ))}
+            </div>
+          </div>
           
           {/* Mobile view: Show as carousel */}
           <div className="block md:hidden">
@@ -85,23 +109,36 @@ const VendorListings = () => {
             </Carousel>
           </div>
           
-          {/* Desktop view: Show as grid */}
-          <div className="hidden md:grid md:grid-cols-3 gap-6">
-            {categories.map((category, index) => (
-              <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="block">
-                <div className="relative rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
-                  <img 
-                    src={category.image} 
-                    alt={category.type} 
-                    className="w-full h-60 object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <h4 className="text-white text-lg font-medium">{category.type}</h4>
-                    <p className="text-white/80 text-sm">{category.count} vendors</p>
+          {/* Desktop view: 3x1 grid with navigation arrow */}
+          <div className="hidden md:flex">
+            <div className="grid grid-cols-3 gap-6 flex-1">
+              {currentCategories.map((category, index) => (
+                <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="block">
+                  <div className="relative rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
+                    <img 
+                      src={category.image} 
+                      alt={category.type} 
+                      className="w-full h-60 object-cover"
+                    />
+                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                      <h4 className="text-white text-lg font-medium">{category.type}</h4>
+                      <p className="text-white/80 text-sm">{category.count} vendors</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
+            
+            {/* Right arrow navigation button */}
+            <div className="flex items-center ml-4">
+              <Button 
+                onClick={handleNextCategoryPage} 
+                variant="outline" 
+                className="rounded-full h-12 w-12 flex items-center justify-center border-theme-beige hover:bg-theme-beige/20"
+              >
+                <ArrowRight className="h-5 w-5 text-theme-brown" />
+              </Button>
+            </div>
           </div>
         </div>
         
