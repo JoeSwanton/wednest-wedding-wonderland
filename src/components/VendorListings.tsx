@@ -1,14 +1,111 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
 import { Star, ArrowDown, ArrowUp, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 const VendorListings = () => {
   const [sort, setSort] = useState("popular");
+  
+  // Wedding vendor categories with images
+  const categories = [
+    {
+      type: "Venues",
+      count: "245",
+      image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Photographers",
+      count: "189",
+      image: "https://images.unsplash.com/photo-1537633552122-d3b236552305?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Caterers",
+      count: "156",
+      image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Florists",
+      count: "132",
+      image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Entertainment",
+      count: "98",
+      image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400&h=300"
+    },
+    {
+      type: "Planners",
+      count: "76",
+      image: "https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&q=80&w=400&h=300"
+    }
+  ];
+
   return <div className="w-full py-8 px-4 md:px-8 bg-white">
       <div className="max-w-6xl mx-auto">
-        {/* Popular Vendors Section */}
+        {/* Browse by Category Section - Moved above Popular in Sydney */}
+        <div className="mb-12">
+          <h3 className="text-xl md:text-2xl font-serif text-theme-brown-dark mb-5">
+            Browse by Category
+          </h3>
+          
+          {/* Mobile view: Show as carousel */}
+          <div className="block md:hidden">
+            <Carousel className="w-full">
+              <CarouselContent>
+                {categories.map((category, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <Link to={`/vendors?category=${category.type.toLowerCase()}`} className="block">
+                      <div className="relative rounded-lg overflow-hidden">
+                        <img 
+                          src={category.image} 
+                          alt={category.type} 
+                          className="w-full h-48 object-cover"
+                        />
+                        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-3">
+                          <h4 className="text-white text-lg font-medium">{category.type}</h4>
+                          <p className="text-white/80 text-sm">{category.count} vendors</p>
+                        </div>
+                      </div>
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="-left-4 bg-white border-theme-beige" />
+              <CarouselNext className="-right-4 bg-white border-theme-beige" />
+            </Carousel>
+          </div>
+          
+          {/* Desktop view: Show as grid */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6">
+            {categories.map((category, index) => (
+              <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="block">
+                <div className="relative rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
+                  <img 
+                    src={category.image} 
+                    alt={category.type} 
+                    className="w-full h-60 object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <h4 className="text-white text-lg font-medium">{category.type}</h4>
+                    <p className="text-white/80 text-sm">{category.count} vendors</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+        
+        {/* Popular Vendors Section - Now below Browse by Category */}
         <div className="mb-10">
           <div className="flex justify-between items-center mb-5">
             <h2 className="text-xl md:text-2xl font-serif text-theme-brown-dark">
@@ -64,45 +161,7 @@ const VendorListings = () => {
           </Link>
         </div>
         
-        {/* Browse by Category Section */}
-        <div className="mb-12">
-          <h3 className="text-xl font-serif text-theme-brown-dark mb-5">
-            Browse by Category
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {[{
-            type: "Venues",
-            count: "245",
-            icon: "🏰"
-          }, {
-            type: "Photographers",
-            count: "189",
-            icon: "📸"
-          }, {
-            type: "Caterers",
-            count: "156",
-            icon: "🍽️"
-          }, {
-            type: "Florists",
-            count: "132",
-            icon: "💐"
-          }, {
-            type: "Entertainment",
-            count: "98",
-            icon: "🎵"
-          }, {
-            type: "Planners",
-            count: "76",
-            icon: "📋"
-          }].map((category, index) => <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="relative block rounded-lg overflow-hidden text-center border border-theme-beige hover:shadow-md transition-shadow duration-200 py-4 px-2 bg-white">
-                <div className="text-2xl mb-1">{category.icon}</div>
-                <h4 className="text-theme-brown text-sm font-medium mb-1">{category.type}</h4>
-                <p className="text-xs text-theme-gray-dark">{category.count} vendors</p>
-              </Link>)}
-          </div>
-        </div>
-
-        {/* Recently Viewed Section (if needed) */}
+        {/* Recently Viewed Section */}
         <div className="mb-10">
           <h3 className="text-xl font-serif text-theme-brown-dark mb-5">
             Recently Viewed
@@ -142,7 +201,7 @@ const VendorListings = () => {
               </Button>
             </Link>
             <Link to="/auth?tab=signup">
-              <Button className="hover:bg-theme-blue-dark text-white bg-[theme-brown-light] bg-theme-brown">
+              <Button className="hover:bg-theme-blue-dark text-white bg-theme-brown">
                 Sign Up
               </Button>
             </Link>
