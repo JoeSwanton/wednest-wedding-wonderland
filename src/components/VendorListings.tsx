@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
-import { Star, ArrowDown, ArrowUp, Filter, ArrowRight } from "lucide-react";
+import { Star, ArrowDown, ArrowUp, Filter, ArrowRight, ArrowLeft } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
 import {
@@ -16,6 +16,7 @@ import {
 const VendorListings = () => {
   const [sort, setSort] = useState("popular");
   const [categoryPage, setCategoryPage] = useState(0);
+  const [slideDirection, setSlideDirection] = useState("right"); // Track slide direction for animation
   
   // Wedding vendor categories with images - Added more categories
   const categories = [
@@ -92,9 +93,16 @@ const VendorListings = () => {
     categories[(displayIndex + 2) % categories.length]
   ];
   
-  // Handle next category page - Scroll one category at a time
+  // Handle next category page - Scroll one category at a time with direction
   const handleNextCategoryPage = () => {
+    setSlideDirection("right");
     setCategoryPage((prev) => (prev + 1) % categories.length);
+  };
+
+  // Handle previous category page
+  const handlePrevCategoryPage = () => {
+    setSlideDirection("left");
+    setCategoryPage((prev) => (prev - 1 + categories.length) % categories.length);
   };
 
   return <div className="w-full py-8 px-4 md:px-8 bg-white">
@@ -144,12 +152,28 @@ const VendorListings = () => {
             </Carousel>
           </div>
           
-          {/* Desktop view: 3x1 grid with navigation arrow - Made categories smaller */}
+          {/* Desktop view: 3x1 grid with navigation arrows - Added animation and left arrow */}
           <div className="hidden md:flex">
-            <div className="grid grid-cols-3 gap-4 flex-1">
+            <div className="flex items-center mr-4">
+              {categoryPage > 0 && (
+                <Button 
+                  onClick={handlePrevCategoryPage} 
+                  variant="outline" 
+                  className="rounded-full h-12 w-12 flex items-center justify-center border-theme-beige hover:bg-theme-beige/20"
+                >
+                  <ArrowLeft className="h-5 w-5 text-theme-brown" />
+                </Button>
+              )}
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4 flex-1 relative overflow-hidden">
               {currentCategories.map((category, index) => (
                 <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="block">
-                  <div className="relative rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
+                  <div 
+                    className={`relative rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200 transform transition-transform ${
+                      slideDirection === "right" ? "animate-slide-from-right" : "animate-slide-from-left"
+                    }`}
+                  >
                     <img 
                       src={category.image} 
                       alt={category.type} 
