@@ -3,20 +3,29 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Bell, Menu, Search, Settings } from "lucide-react";
-import WeddingSummary from "@/components/dashboard/WeddingSummary";
-import TaskProgressChart from "@/components/dashboard/TaskProgressChart";
-import BudgetOverview from "@/components/dashboard/BudgetOverview";
-import QuickActions from "@/components/dashboard/QuickActions";
-import UpcomingEvents from "@/components/dashboard/UpcomingEvents";
+import { ChevronRight, Calendar, Clock, Plus, Settings, Search, Bell, MessageSquare, User } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import Navbar from "@/components/Navbar";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import WeddingSummaryHeader from "@/components/dashboard/WeddingSummaryHeader";
+import TaskProgressCard from "@/components/dashboard/TaskProgressCard";
+import BudgetSummaryCard from "@/components/dashboard/BudgetSummaryCard";
+import GuestListCard from "@/components/dashboard/GuestListCard";
+import UpcomingTasksList from "@/components/dashboard/UpcomingTasksList";
+import UpcomingEventsList from "@/components/dashboard/UpcomingEventsList";
+import VendorDashboardList from "@/components/dashboard/VendorDashboardList";
 
 const Dashboard = () => {
-  const { user, userProfile, signOut } = useAuth();
+  const { user, userProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [weddingDetails, setWeddingDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchWeddingDetails = async () => {
@@ -32,84 +41,79 @@ const Dashboard = () => {
         setWeddingDetails(data);
       } catch (error) {
         console.error('Error fetching wedding details:', error);
+      } finally {
+        setLoading(false);
       }
     };
     
     fetchWeddingDetails();
   }, [user]);
   
-  const handleSignOut = async () => {
-    try {
-      console.log("Dashboard: Initiating sign out");
-      await signOut();
-      toast({
-        title: "Signed out successfully",
-        description: "You have been signed out of your account.",
-      });
-      // No need to navigate here as it's handled by onAuthStateChange
-    } catch (error) {
-      console.error("Error signing out:", error);
-      toast({
-        title: "Sign out failed",
-        description: "There was a problem signing you out. Please try again.",
-        variant: "destructive"
-      });
+  // Determine if user is a couple based on profile
+  const isCouple = userProfile?.user_role !== 'vendor';
+
+  // If user is a vendor, redirect to vendor dashboard
+  useEffect(() => {
+    if (userProfile?.user_role === 'vendor') {
+      navigate('/vendor/dashboard');
     }
-  };
+  }, [userProfile, navigate]);
+
+  if (!isCouple) {
+    return null; // Return nothing while redirecting
+  }
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-wednest-beige/20">
-      <header className="bg-white shadow-sm border-b border-wednest-beige/30">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-serif text-wednest-brown">Your Wedding Dashboard</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="text-wednest-brown">
-              <Search className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-wednest-brown">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-wednest-brown">
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" onClick={handleSignOut} className="ml-2">Sign Out</Button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex bg-gray-50">
+      <DashboardSidebar />
       
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-wednest-sage-light to-wednest-sage rounded-lg shadow-sm p-6 mb-8 text-white">
-          <h2 className="text-2xl font-serif">
-            Welcome, {weddingDetails?.partner1_name || "there"}!
-          </h2>
-          <p className="opacity-90 mt-1">
-            {weddingDetails ? 
-              `Your wedding planning journey is underway. Here's your latest progress.` : 
-              "Let's start planning your dream wedding."}
-          </p>
-          <Button 
-            className="mt-4 bg-white text-wednest-sage hover:bg-white/90"
-            onClick={() => navigate('/customer-dashboard')}
-          >
-            Try New Wedding Planning Tools
-          </Button>
-        </div>
+      <div className="flex-1 flex flex-col">
+        <Navbar />
         
-        {/* Dashboard Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <WeddingSummary />
-          <TaskProgressChart />
-          <QuickActions />
+        <div className="p-6 flex-1 overflow-y-auto">
+          {/* Wedding Summary Header */}
+          <WeddingSummaryHeader weddingDetails={weddingDetails} loading={loading} />
+          
+          {/* Main Content */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            {/* Planning Progress */}
+            <TaskProgressCard />
+            
+            {/* Budget Overview */}
+            <BudgetSummaryCard />
+            
+            {/* Guest List */}
+            <GuestListCard />
+          </div>
+          
+          {/* Tasks and Events Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            {/* Upcoming Tasks */}
+            <UpcomingTasksList />
+            
+            {/* Upcoming Events */}
+            <UpcomingEventsList />
+          </div>
+          
+          {/* Vendor Section */}
+          <div className="mt-6">
+            <VendorDashboardList />
+          </div>
+          
+          {/* Recommendations */}
+          <Card className="mt-6 bg-theme-cream/20 border-theme-cream">
+            <CardContent className="flex items-center justify-between p-6">
+              <div>
+                <h3 className="font-medium text-lg text-theme-brown">Need help with your planning?</h3>
+                <p className="text-theme-brown-light">Explore our curated vendor recommendations based on your preferences.</p>
+              </div>
+              <Button variant="outline" className="bg-theme-brown text-white hover:bg-theme-brown-dark">
+                View Recommendations
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <BudgetOverview />
-          <UpcomingEvents />
-        </div>
-      </main>
+      </div>
     </div>
   );
 };
