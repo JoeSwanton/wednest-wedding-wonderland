@@ -83,7 +83,11 @@ const UpcomingTasksList = () => {
           {tasks.map((task) => (
             <div 
               key={task.id} 
-              className={`flex justify-between items-center p-3 rounded-md ${task.completed ? 'bg-gray-50/80' : 'hover:bg-gray-50'} cursor-pointer group transition-all duration-200`}
+              className={`flex justify-between items-center p-3 rounded-md border ${
+                task.completed 
+                  ? 'bg-gray-50/80 border-gray-200' 
+                  : 'bg-theme-cream/5 hover:bg-theme-cream/10 border-theme-cream/40 hover:border-theme-cream/80 shadow-sm'
+              } cursor-pointer group transition-all duration-200`}
             >
               <div className="flex items-start gap-3 flex-1">
                 <Checkbox 
