@@ -2,8 +2,15 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
-  Calendar, Check, CreditCard, Heart, Home,
-  MessageSquare, Settings, Users, ChevronRight
+  LayoutDashboard, 
+  ListChecks, 
+  Wallet, 
+  Users, 
+  Briefcase, 
+  Clock, 
+  MessageSquare, 
+  Settings, 
+  ChevronRight
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -41,27 +48,27 @@ const DashboardSidebar = () => {
     { 
       name: "Dashboard", 
       path: "/dashboard", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-brown to-theme-brown-dark text-white"><Home className="w-4 h-4" /></div> 
+      icon: <LayoutDashboard className="w-5 h-5" /> 
     },
     { 
       name: "Checklist", 
       path: "/checklist", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-sage to-theme-sage-dark text-white"><Check className="w-4 h-4" /></div> 
+      icon: <ListChecks className="w-5 h-5" /> 
     },
     { 
       name: "Budget", 
       path: "/budget", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-gold to-theme-gold-dark text-white"><CreditCard className="w-4 h-4" /></div> 
+      icon: <Wallet className="w-5 h-5" /> 
     },
     { 
       name: "Guest List", 
       path: "/guest-list", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-cream to-theme-cream-dark text-theme-brown"><Users className="w-4 h-4" /></div> 
+      icon: <Users className="w-5 h-5" /> 
     },
     { 
       name: "Vendors", 
       path: "/vendors", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-blue to-theme-blue-dark text-white"><Heart className="w-4 h-4" /></div>,
+      icon: <Briefcase className="w-5 h-5" />,
       subItems: [
         { name: "Find Vendors", path: "/vendors" },
         { name: "My Vendors", path: "/my-vendors" },
@@ -71,17 +78,17 @@ const DashboardSidebar = () => {
     { 
       name: "Timeline", 
       path: "/timeline", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-beige to-theme-beige-dark text-theme-brown"><Calendar className="w-4 h-4" /></div> 
+      icon: <Clock className="w-5 h-5" /> 
     },
     { 
       name: "Messages", 
       path: "/messages", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-theme-brown-light to-theme-brown text-white"><MessageSquare className="w-4 h-4" /></div> 
+      icon: <MessageSquare className="w-5 h-5" /> 
     },
     { 
       name: "Settings", 
       path: "/settings", 
-      icon: <div className="rounded-md p-1.5 bg-gradient-to-br from-gray-500 to-gray-700 text-white"><Settings className="w-4 h-4" /></div> 
+      icon: <Settings className="w-5 h-5" />
     },
   ];
   
@@ -152,7 +159,12 @@ const DashboardSidebar = () => {
                       ? "bg-theme-cream/10 text-theme-brown font-medium"
                       : "text-theme-brown-light hover:bg-theme-cream/10 hover:text-theme-brown"
                   )}>
-                    {item.icon}
+                    <div className={cn(
+                      "rounded-md p-1.5 text-theme-brown-light group-hover:text-theme-brown",
+                      location.pathname === item.path ? "text-theme-brown" : ""
+                    )}>
+                      {item.icon}
+                    </div>
                     <span className={cn("ml-3 flex-1 transition-opacity duration-300", 
                       isCollapsed && "opacity-0 w-0 hidden")}>{item.name}</span>
                     <ChevronRight className={cn("h-3.5 w-3.5 transition-transform text-theme-brown-light", 
@@ -187,7 +199,12 @@ const DashboardSidebar = () => {
                     : "text-theme-brown-light hover:bg-theme-cream/10 hover:text-theme-brown"
                 )}
               >
-                {item.icon}
+                <div className={cn(
+                  "rounded-md p-1 text-theme-brown-light group-hover:text-theme-brown",
+                  location.pathname === item.path ? "text-theme-brown" : ""
+                )}>
+                  {item.icon}
+                </div>
                 <span className={cn("ml-3 transition-opacity duration-300", 
                   isCollapsed && "opacity-0 w-0 hidden")}>{item.name}</span>
               </Link>
