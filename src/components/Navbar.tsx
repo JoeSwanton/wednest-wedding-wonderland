@@ -1,3 +1,4 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -5,6 +6,7 @@ import { Menu, X, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Navbar = () => {
   const {
     user,
@@ -16,6 +18,7 @@ const Navbar = () => {
   const {
     toast
   } = useToast();
+
   const handleSignOut = async () => {
     try {
       console.log("Navbar: Initiating sign out");
@@ -33,9 +36,14 @@ const Navbar = () => {
       });
     }
   };
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  // Determine if the user is a vendor or a couple
+  const isVendor = userProfile?.user_role === 'vendor';
+
   return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
         <h1 className="text-xl md:text-2xl font-serif font-semibold text-slate-50">
@@ -73,38 +81,82 @@ const Navbar = () => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem asChild>
-                <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/listings" className="cursor-pointer">My Listings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/bookings" className="cursor-pointer">Bookings & Inquiries</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/messages" className="cursor-pointer">Messages</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/packages" className="cursor-pointer">Packages & Pricing</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/earnings" className="cursor-pointer">Payments & Earnings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/reviews" className="cursor-pointer">Reviews</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/insights" className="cursor-pointer">Performance & Insights</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/settings" className="cursor-pointer">Account Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/vendor/subscription" className="cursor-pointer">Subscription & Billing</Link>
-              </DropdownMenuItem>
+              {isVendor ? (
+                // Vendor menu items
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/listings" className="cursor-pointer">My Listings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/bookings" className="cursor-pointer">Bookings & Inquiries</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/messages" className="cursor-pointer">Messages</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/packages" className="cursor-pointer">Packages & Pricing</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/earnings" className="cursor-pointer">Payments & Earnings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/reviews" className="cursor-pointer">Reviews</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/insights" className="cursor-pointer">Performance & Insights</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/settings" className="cursor-pointer">Account Settings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor/subscription" className="cursor-pointer">Subscription & Billing</Link>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                // Couple menu items - updated as requested
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="font-medium text-sm p-2">
+                    My Planning Tools
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="pl-4">
+                    <Link to="/customer-dashboard?tab=budget" className="cursor-pointer">Budget Tracker</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="pl-4">
+                    <Link to="/customer-dashboard?tab=guests" className="cursor-pointer">Guest List</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="pl-4">
+                    <Link to="/customer-dashboard?tab=timeline" className="cursor-pointer">Timeline</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="pl-4">
+                    <Link to="/customer-dashboard?tab=checklist" className="cursor-pointer">Checklist</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="pl-4">
+                    <Link to="/customer-dashboard?tab=contracts" className="cursor-pointer">Vendor Contracts</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/saved-vendors" className="cursor-pointer">Saved Vendors</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/inquiries" className="cursor-pointer">My Inquiries & Messages</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/wedding-details" className="cursor-pointer">Wedding Details</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer">Account Settings</Link>
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50">
                 Sign Out
@@ -150,38 +202,79 @@ const Navbar = () => {
             
             {user ? <div className="flex flex-col gap-2 mt-4">
                 <div className="text-theme-brown font-medium mb-2 pb-2 border-b">My Profile</div>
-                <Link to="/dashboard" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Dashboard
-                </Link>
-                <Link to="/vendor/listings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  My Listings
-                </Link>
-                <Link to="/vendor/bookings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Bookings & Inquiries
-                </Link>
-                <Link to="/vendor/messages" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Messages
-                </Link>
-                <div className="border-t mt-2 pt-2"></div>
-                <Link to="/vendor/packages" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Packages & Pricing
-                </Link>
-                <Link to="/vendor/earnings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Payments & Earnings
-                </Link>
-                <Link to="/vendor/reviews" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Reviews
-                </Link>
-                <Link to="/vendor/insights" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Performance & Insights
-                </Link>
-                <div className="border-t mt-2 pt-2"></div>
-                <Link to="/vendor/settings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Account Settings
-                </Link>
-                <Link to="/vendor/subscription" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
-                  Subscription & Billing
-                </Link>
+                {isVendor ? (
+                  // Vendor mobile menu items
+                  <>
+                    <Link to="/dashboard" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Dashboard
+                    </Link>
+                    <Link to="/vendor/listings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      My Listings
+                    </Link>
+                    <Link to="/vendor/bookings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Bookings & Inquiries
+                    </Link>
+                    <Link to="/vendor/messages" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Messages
+                    </Link>
+                    <div className="border-t mt-2 pt-2"></div>
+                    <Link to="/vendor/packages" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Packages & Pricing
+                    </Link>
+                    <Link to="/vendor/earnings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Payments & Earnings
+                    </Link>
+                    <Link to="/vendor/reviews" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Reviews
+                    </Link>
+                    <Link to="/vendor/insights" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Performance & Insights
+                    </Link>
+                    <div className="border-t mt-2 pt-2"></div>
+                    <Link to="/vendor/settings" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Account Settings
+                    </Link>
+                    <Link to="/vendor/subscription" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Subscription & Billing
+                    </Link>
+                  </>
+                ) : (
+                  // Couple mobile menu items - updated as requested
+                  <>
+                    <Link to="/dashboard" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Dashboard
+                    </Link>
+                    <div className="text-theme-brown pl-2 py-2 font-medium">My Planning Tools</div>
+                    <Link to="/customer-dashboard?tab=budget" className="text-theme-brown-light pl-6 py-2" onClick={toggleMobileMenu}>
+                      Budget Tracker
+                    </Link>
+                    <Link to="/customer-dashboard?tab=guests" className="text-theme-brown-light pl-6 py-2" onClick={toggleMobileMenu}>
+                      Guest List
+                    </Link>
+                    <Link to="/customer-dashboard?tab=timeline" className="text-theme-brown-light pl-6 py-2" onClick={toggleMobileMenu}>
+                      Timeline
+                    </Link>
+                    <Link to="/customer-dashboard?tab=checklist" className="text-theme-brown-light pl-6 py-2" onClick={toggleMobileMenu}>
+                      Checklist
+                    </Link>
+                    <Link to="/customer-dashboard?tab=contracts" className="text-theme-brown-light pl-6 py-2" onClick={toggleMobileMenu}>
+                      Vendor Contracts
+                    </Link>
+                    <div className="border-t mt-2 pt-2"></div>
+                    <Link to="/saved-vendors" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Saved Vendors
+                    </Link>
+                    <Link to="/inquiries" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      My Inquiries & Messages
+                    </Link>
+                    <Link to="/wedding-details" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Wedding Details
+                    </Link>
+                    <Link to="/profile" className="text-theme-brown-light pl-2 py-2" onClick={toggleMobileMenu}>
+                      Account Settings
+                    </Link>
+                  </>
+                )}
                 <Button onClick={() => {
             handleSignOut();
             toggleMobileMenu();
@@ -197,4 +290,5 @@ const Navbar = () => {
         </div>}
     </nav>;
 };
+
 export default Navbar;
