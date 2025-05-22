@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
@@ -10,66 +11,80 @@ import { VendorQuestionGenerator } from "@/components/planning-tools/VendorQuest
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calculator, ListCheck, MessageSquare, Users, FileText, Calendar } from "lucide-react";
 import { Testimonials } from "@/components/Testimonials";
+import { PlanningToolCard } from "@/components/planning-tools/PlanningToolCard";
+
 const PlanningTools = () => {
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState('tools-grid');
+  
   useEffect(() => {
     if (tabParam) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
-  const planningTools = [{
-    title: "Wedding Budget Calculator",
-    description: "Estimate and manage your wedding expenses with our detailed budget calculator.",
-    longDescription: "Track expenses, set realistic budgets, and get insights on where your money is going. Perfect for keeping your wedding costs under control.",
-    icon: <Calculator className="h-6 w-6 text-theme-brown" />,
-    bgColor: "bg-green-50",
-    path: "/planning-tools?tab=budget",
-    buttonText: "Use Budget Calculator"
-  }, {
-    title: "Wedding Checklist Generator",
-    description: "Generate a customized wedding planning checklist tailored to your timeline.",
-    longDescription: "Generate a personalized checklist based on your wedding date. Never miss a deadline or important task with our comprehensive planning tool.",
-    icon: <ListCheck className="h-6 w-6 text-theme-brown" />,
-    bgColor: "bg-pink-50",
-    path: "/planning-tools?tab=checklist",
-    buttonText: "Create Checklist"
-  }, {
-    title: "Save-the-Date SMS Composer",
-    description: "Create and send beautiful save-the-date messages to your guests via SMS.",
-    longDescription: "Craft the perfect save-the-date message and easily share it with your guests. A modern alternative to traditional paper invitations.",
-    icon: <MessageSquare className="h-6 w-6 text-theme-brown" />,
-    bgColor: "bg-gray-100",
-    path: "/planning-tools?tab=save-date",
-    buttonText: "Compose Message"
-  }, {
-    title: "Guest List Excel Download",
-    description: "Create and download a comprehensive guest list spreadsheet to manage your invitations.",
-    longDescription: "Organize your guest information, track RSVPs, and manage dietary requirements with our easy-to-use guest list template.",
-    icon: <Users className="h-6 w-6 text-theme-brown" />,
-    bgColor: "bg-yellow-50",
-    path: "/planning-tools?tab=guest-list",
-    buttonText: "Create Guest List"
-  }, {
-    title: "Vendor Question Generator",
-    description: "Get a list of questions to ask your wedding vendors.",
-    longDescription: "Be prepared with professional and tailored questions for photographers, venues, caterers, and more. Make informed decisions for your special day.",
-    icon: <FileText className="h-6 w-6 text-theme-brown" />,
-    bgColor: "bg-green-50",
-    path: "/planning-tools?tab=vendor-questions",
-    buttonText: "Generate Questions"
-  }, {
-    title: "More Tools Coming Soon",
-    description: "We're constantly adding new tools to help with your wedding planning.",
-    longDescription: "Sign up for a free account to be the first to know when we release new planning tools and features.",
-    icon: <Calendar className="h-6 w-6 text-theme-brown" />,
-    bgColor: "bg-pink-50",
-    path: "#",
-    buttonText: "Create Free Account"
-  }];
+  
+  const planningTools = [
+    {
+      title: "Wedding Budget Calculator",
+      description: "Estimate and manage your wedding expenses with our detailed budget calculator.",
+      longDescription: "Track expenses, set realistic budgets, and get insights on where your money is going. Perfect for keeping your wedding costs under control.",
+      bgColor: "bg-green-50",
+      path: "/planning-tools?tab=budget",
+      buttonText: "Use Budget Calculator",
+      iconType: "calculator" as const
+    },
+    {
+      title: "Wedding Checklist Generator",
+      description: "Generate a customized wedding planning checklist tailored to your timeline.",
+      longDescription: "Generate a personalized checklist based on your wedding date. Never miss a deadline or important task with our comprehensive planning tool.",
+      bgColor: "bg-pink-50",
+      path: "/planning-tools?tab=checklist",
+      buttonText: "Create Checklist",
+      iconType: "checklist" as const
+    },
+    {
+      title: "Save-the-Date SMS Composer",
+      description: "Create and send beautiful save-the-date messages to your guests via SMS.",
+      longDescription: "Craft the perfect save-the-date message and easily share it with your guests. A modern alternative to traditional paper invitations.",
+      bgColor: "bg-gray-100",
+      path: "/planning-tools?tab=save-date",
+      buttonText: "Compose Message",
+      iconType: "message" as const
+    },
+    {
+      title: "Guest List Excel Download",
+      description: "Create and download a comprehensive guest list spreadsheet to manage your invitations.",
+      longDescription: "Organize your guest information, track RSVPs, and manage dietary requirements with our easy-to-use guest list template.",
+      bgColor: "bg-yellow-50",
+      path: "/planning-tools?tab=guest-list",
+      buttonText: "Create Guest List",
+      iconType: "users" as const
+    },
+    {
+      title: "Vendor Question Generator",
+      description: "Get a list of questions to ask your wedding vendors.",
+      longDescription: "Be prepared with professional and tailored questions for photographers, venues, caterers, and more. Make informed decisions for your special day.",
+      bgColor: "bg-green-50",
+      path: "/planning-tools?tab=vendor-questions",
+      buttonText: "Generate Questions",
+      iconType: "file" as const
+    },
+    {
+      title: "More Tools Coming Soon",
+      description: "We're constantly adding new tools to help with your wedding planning.",
+      longDescription: "Sign up for a free account to be the first to know when we release new planning tools and features.",
+      bgColor: "bg-pink-50",
+      path: "#",
+      buttonText: "Create Free Account",
+      iconType: "calendar" as const
+    }
+  ];
+  
+  // Top 3 tools for the featured cards
+  const featuredTools = planningTools.slice(0, 3);
+  
   const testimonials = [{
     quote: "The budget calculator was a lifesaver! It helped us stay on track and avoid overspending on our wedding.",
     author: "Sarah & Michael",
@@ -83,6 +98,7 @@ const PlanningTools = () => {
     author: "Jessica & David",
     location: "Brisbane"
   }];
+  
   return <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <Separator className="bg-theme-brown h-[1px] w-full" />
@@ -119,26 +135,36 @@ const PlanningTools = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {planningTools.map((tool, index) => <div key={index} className={`border rounded-md overflow-hidden ${tool.bgColor}`}>
-                  <div className="p-8 text-center">
-                    <div className="flex justify-center mb-6">
-                      {tool.icon}
-                    </div>
-                    <h3 className="text-xl font-serif text-theme-brown mb-2">{tool.title}</h3>
-                    <p className="text-theme-brown-light mb-4">
-                      {tool.description}
-                    </p>
-                    <p className="text-sm text-theme-brown-light mb-6">
-                      {tool.longDescription}
-                    </p>
-                    <Button asChild variant="outline" className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark border-0">
-                      <a href={tool.path}>
-                        {tool.buttonText}
-                      </a>
-                    </Button>
-                  </div>
-                </div>)}
+            {/* Featured Tools - New Card Design */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+              {featuredTools.map((tool, index) => (
+                <PlanningToolCard 
+                  key={index}
+                  title={tool.title}
+                  description={tool.description}
+                  longDescription={tool.longDescription}
+                  bgColor={tool.bgColor}
+                  path={tool.path}
+                  buttonText={tool.buttonText}
+                  iconType={tool.iconType}
+                  featured={true}
+                />
+              ))}
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+              {planningTools.slice(3).map((tool, index) => (
+                <PlanningToolCard 
+                  key={index}
+                  title={tool.title}
+                  description={tool.description}
+                  longDescription={tool.longDescription}
+                  bgColor={tool.bgColor}
+                  path={tool.path}
+                  buttonText={tool.buttonText}
+                  iconType={tool.iconType}
+                />
+              ))}
             </div>
             
             <div className="mb-16">
@@ -201,4 +227,5 @@ const PlanningTools = () => {
       <Footer />
     </div>;
 };
+
 export default PlanningTools;
