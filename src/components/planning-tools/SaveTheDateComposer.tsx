@@ -1,234 +1,150 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { MessageSquare, Copy, Phone } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import ToolShareCta from "./ToolShareCta";
+import { Copy, Check } from "lucide-react";
 
 export const SaveTheDateComposer = () => {
   const { toast } = useToast();
-  const [names, setNames] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [template, setTemplate] = useState<string>("formal");
-  const [message, setMessage] = useState<string>("");
+  const [names, setNames] = useState("");
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [message, setMessage] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  // Template options
-  const templates = {
-    formal: `Save the Date!\n\n[names] are getting married on [date] in [location].\n\nFormal invitation to follow.`,
-    casual: `Hey there! Mark your calendar!\n\n[names] are tying the knot on [date] in [location].\n\nMore details coming soon!`,
-    fun: `WOOHOO! IT'S HAPPENING!\n\n[names] are saying "I do" on [date] in [location].\n\nGet ready to celebrate with us! Details to follow.`,
-    minimal: `SAVE THE DATE\n[names]\n[date]\n[location]`
+  const templates = [
+    {
+      id: 1,
+      title: "Classic",
+      content: "Save the Date! [Names] are getting married on [Date] in [Location]. Formal invitation to follow."
+    },
+    {
+      id: 2,
+      title: "Casual",
+      content: "We're tying the knot! Join [Names] on [Date] in [Location] to celebrate. More details coming soon!"
+    },
+    {
+      id: 3,
+      title: "Destination",
+      content: "Pack your bags! [Names] are getting married in [Location] on [Date]. Formal invitation with travel details to follow."
+    },
+    {
+      id: 4,
+      title: "Minimalist",
+      content: "[Names]. [Date]. [Location]. Save the Date."
+    }
+  ];
+
+  const [selectedTemplate, setSelectedTemplate] = useState(templates[0]);
+
+  const generateMessage = () => {
+    let generatedMessage = selectedTemplate.content;
+    generatedMessage = generatedMessage.replace("[Names]", names || "...");
+    generatedMessage = generatedMessage.replace("[Date]", date || "...");
+    generatedMessage = generatedMessage.replace("[Location]", location || "...");
+    setMessage(generatedMessage);
+    setCopied(false);
   };
-
-  // Update message when inputs change
-  const updateMessage = () => {
-    let template = templates[template as keyof typeof templates] || templates.formal;
-    
-    // Replace placeholders with actual values
-    let newMessage = template
-      .replace("[names]", names || "[your names]")
-      .replace("[date]", date || "[wedding date]")
-      .replace("[location]", location || "[wedding location]");
-    
-    setMessage(newMessage);
-  };
-
-  // Update message when template changes
-  const handleTemplateChange = (value: string) => {
-    setTemplate(value);
-    setTimeout(updateMessage, 0);
-  };
-
-  // Update message when inputs change
-  const handleInputChange = () => {
-    setTimeout(updateMessage, 0);
-  };
-
-  // Initialize message on component load
-  useState(() => {
-    updateMessage();
-  });
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(message);
+    setCopied(true);
     toast({
-      title: "Copied to clipboard",
-      description: "Your message has been copied to the clipboard."
+      title: "Copied to clipboard!",
+      description: "The message has been copied to your clipboard.",
     });
-  };
-
-  const sendSMS = () => {
-    if (!phoneNumber) {
-      toast({
-        title: "Phone number required",
-        description: "Please enter a phone number to send the SMS.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Format phone number for SMS link
-    const formattedPhone = phoneNumber.replace(/\D/g, "");
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Create SMS link
-    const smsLink = `sms:${formattedPhone}?body=${encodedMessage}`;
-    
-    // Open SMS link
-    window.open(smsLink, "_blank");
   };
 
   return (
     <div className="space-y-8">
       <Card className="border-theme-beige shadow-sm">
         <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="bg-theme-brown-light/10 p-3 rounded-full">
-              <MessageSquare className="h-6 w-6 text-theme-brown-light" />
-            </div>
-            <div>
-              <CardTitle className="text-2xl font-serif text-theme-brown">Save-the-Date SMS Composer</CardTitle>
-              <CardDescription>Create and send save-the-date messages to your guests via SMS</CardDescription>
-            </div>
-          </div>
+          <CardTitle className="text-2xl font-serif text-theme-brown">Save the Date Composer</CardTitle>
+          <CardDescription>Compose a save the date message to send to your guests</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <FormItem>
-                <FormLabel>Your Names</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="e.g. John & Jane" 
-                    value={names}
-                    onChange={(e) => { 
-                      setNames(e.target.value);
-                      handleInputChange();
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>Enter both your names</FormDescription>
-              </FormItem>
-              
-              <FormItem>
-                <FormLabel>Wedding Date</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="e.g. September 21, 2025" 
-                    value={date}
-                    onChange={(e) => { 
-                      setDate(e.target.value);
-                      handleInputChange();
-                    }}
-                  />
-                </FormControl>
-              </FormItem>
-              
-              <FormItem>
-                <FormLabel>Wedding Location</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="e.g. Sydney, Australia" 
-                    value={location}
-                    onChange={(e) => { 
-                      setLocation(e.target.value);
-                      handleInputChange();
-                    }}
-                  />
-                </FormControl>
-              </FormItem>
-              
-              <FormItem>
-                <FormLabel>Message Style</FormLabel>
-                <RadioGroup 
-                  value={template} 
-                  onValueChange={handleTemplateChange}
-                  className="flex flex-wrap gap-2 pt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="formal" id="formal" />
-                    <label htmlFor="formal" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Formal</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="casual" id="casual" />
-                    <label htmlFor="casual" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Casual</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="fun" id="fun" />
-                    <label htmlFor="fun" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Fun</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="minimal" id="minimal" />
-                    <label htmlFor="minimal" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Minimal</label>
-                  </div>
-                </RadioGroup>
-              </FormItem>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-theme-brown-light mb-2">Names</label>
+              <Input
+                type="text"
+                placeholder="Your Names"
+                value={names}
+                onChange={(e) => setNames(e.target.value)}
+              />
             </div>
-            
-            <div className="space-y-4">
-              <FormItem>
-                <FormLabel>Preview Message</FormLabel>
-                <Textarea 
-                  value={message} 
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="min-h-[200px]"
-                />
-                <FormDescription>Customize this message as needed</FormDescription>
-              </FormItem>
-              
-              <Button 
-                variant="outline" 
-                className="border-theme-brown-light text-theme-brown-light hover:bg-theme-brown-light hover:text-white flex items-center gap-2 w-full"
-                onClick={copyToClipboard}
-              >
-                <Copy className="h-4 w-4" />
-                Copy to Clipboard
-              </Button>
+            <div>
+              <label className="block text-sm font-medium text-theme-brown-light mb-2">Date</label>
+              <Input
+                type="text"
+                placeholder="Wedding Date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-theme-brown-light mb-2">Location</label>
+              <Input
+                type="text"
+                placeholder="Wedding Location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-theme-brown-light mb-2">Template</label>
+              <Select value={selectedTemplate.id.toString()} onValueChange={(value) => {
+                const template = templates.find(t => t.id === parseInt(value));
+                if (template) {
+                  setSelectedTemplate(template);
+                }
+              }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {templates.map((template) => (
+                    <SelectItem key={template.id} value={template.id.toString()}>{template.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
-          
-          <div className="border-t border-theme-beige pt-6">
-            <h3 className="text-lg font-medium text-theme-brown mb-4">Send via SMS</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-              <FormItem>
-                <FormLabel>Recipient Phone Number</FormLabel>
-                <div className="flex space-x-2">
-                  <FormControl>
-                    <Input 
-                      placeholder="e.g. +61 123 456 789" 
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-                  </FormControl>
-                  <Button 
-                    variant="default" 
-                    className="bg-theme-brown hover:bg-theme-brown-dark text-white"
-                    onClick={sendSMS}
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    Send SMS
-                  </Button>
+          <Button className="bg-theme-sage hover:bg-theme-sage-dark text-white w-full" onClick={generateMessage}>
+            Generate Message
+          </Button>
+          <div>
+            <label className="block text-sm font-medium text-theme-brown-light mb-2">Message</label>
+            <Textarea
+              readOnly
+              value={message}
+              className="resize-none bg-theme-cream/40 text-theme-brown"
+              rows={4}
+            />
+            <Button
+              variant="outline"
+              className="mt-2 w-full border-theme-sage-dark text-theme-sage-dark hover:bg-theme-sage-dark hover:text-white relative"
+              onClick={copyToClipboard}
+              disabled={copied || !message}
+            >
+              {copied ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Check className="h-4 w-4" />
+                  Copied!
                 </div>
-                <FormDescription>
-                  This will open your default SMS app with the message ready to send
-                </FormDescription>
-              </FormItem>
-            </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2">
+                  <Copy className="h-4 w-4" />
+                  Copy to Clipboard
+                </div>
+              )}
+            </Button>
           </div>
         </CardContent>
       </Card>
-
-      <ToolShareCta 
-        title="Save-the-Date SMS Composer" 
-        description="Create and send beautiful save-the-date messages to your guests via SMS. Choose from multiple templates and customize your message." 
-      />
     </div>
   );
 };
