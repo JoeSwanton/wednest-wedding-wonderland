@@ -209,8 +209,8 @@ const WeddingBudgetCalculator = () => {
               <h2 className="font-medium text-center text-theme-text-primary text-lg">Budget Breakdown</h2>
               
               <div className="grid grid-cols-2 text-sm text-center mb-0 bg-[#f5efe6] rounded-md p-2">
+                <div className="text-theme-text-primary">Budget Breakdown</div>
                 <div className="text-theme-text-primary">Estimated vs Actual</div>
-                <div className="text-theme-text-primary">vs Actual</div>
               </div>
 
               {categories.map((category, categoryIndex) => <Card key={category.name} className="bg-white border border-gray-200 shadow-sm overflow-hidden">
