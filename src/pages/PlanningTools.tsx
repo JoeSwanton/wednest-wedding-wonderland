@@ -156,10 +156,10 @@ const PlanningTools = () => {
                 Create a free account to save your progress, access premium tools, and connect with top wedding vendors in your area.
               </p>
               <div className="flex justify-center gap-4">
-                <Button className="bg-white text-theme-brown hover:bg-theme-cream">
+                <Button className="text-theme-brown bg-theme-white">
                   Create Free Account
                 </Button>
-                <Button variant="outline" className="border-white hover:bg-theme-brown-dark font-normal text-theme-brown text-[theme-brown-dark] bg-slate-50">
+                <Button variant="outline" className="border-white hover:bg-theme-brown-dark font-normal text-theme-brown text-[[theme-brown-dark]] bg-theme-white">
                   Learn More
                 </Button>
               </div>
