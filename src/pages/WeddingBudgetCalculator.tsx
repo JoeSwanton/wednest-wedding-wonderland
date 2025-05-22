@@ -1,10 +1,11 @@
+
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -168,11 +169,12 @@ const WeddingBudgetCalculator = () => {
     setCategories(newCategories);
   };
   
-  return <div className="min-h-screen flex flex-col bg-[#f8f7f3]">
+  return (
+    <div className="min-h-screen flex flex-col bg-[#f8f7f3]">
       <Navbar />
       <Separator className="bg-theme-brown h-[1px] w-full" />
       
-      <div className="container mx-auto px-4 py-6 flex-grow">
+      <div className="container mx-auto px-4 py-6 flex-grow max-w-5xl">
         <div className="mb-8">
           <Link to="/planning-tools" className="text-theme-brown inline-flex items-center text-sm mb-4">
             <ArrowLeft className="h-4 w-4 mr-1" /> Back to Tools
@@ -181,174 +183,162 @@ const WeddingBudgetCalculator = () => {
           <p className="text-theme-text-secondary">Plan, track, and manage your wedding expenses</p>
         </div>
         
-        {/* CTA Card */}
-        <div className="bg-[#f8f7f3] border border-gray-300 p-5 mb-8 rounded-sm">
-          <div className="flex flex-col">
-            <h3 className="font-medium text-base mb-1 text-theme-text-primary">Want to save your budget?</h3>
-            <p className="text-sm text-theme-text-secondary mb-3">Create a free account to save your budget, access it from any device, and get personalized vendor recommendations based on your budget.</p>
-            <div>
-              <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark text-xs px-4 py-2 h-auto font-semibold">
-                Create Free Account
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {/* Top Section with Overview and Summary side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-          {/* Wedding Budget Overview - Smaller */}
-          <div className="lg:col-span-6">
-            <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4">
-              <h2 className="font-medium text-theme-text-primary text-lg mb-3">Wedding Budget Overview</h2>
-              <p className="text-theme-text-secondary text-sm mb-4">Set your total budget and track your spending</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Wedding Budget Overview */}
+          <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4">
+            <h2 className="font-medium text-theme-text-primary text-lg mb-3">Wedding Budget Overview</h2>
+            <p className="text-theme-text-secondary text-sm mb-4">Set your total budget and track your spending</p>
+            
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="totalBudget" className="block text-sm text-theme-text-secondary mb-1">Total Wedding Budget (AUD)</label>
+                <Input id="totalBudget" value={totalBudget} onChange={e => setTotalBudget(e.target.value)} type="number" className="w-full" />
+              </div>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="totalBudget" className="block text-sm text-theme-text-secondary mb-1">Total Wedding Budget (AUD)</label>
-                  <Input id="totalBudget" value={totalBudget} onChange={e => setTotalBudget(e.target.value)} type="number" className="w-full" />
-                </div>
-                
-                <div>
-                  <label htmlFor="guestCount" className="block text-sm text-theme-text-secondary mb-1">Number of Guests</label>
-                  <Input id="guestCount" value={guestCount} onChange={e => setGuestCount(e.target.value)} type="number" className="w-full" />
-                </div>
+              <div>
+                <label htmlFor="guestCount" className="block text-sm text-theme-text-secondary mb-1">Number of Guests</label>
+                <Input id="guestCount" value={guestCount} onChange={e => setGuestCount(e.target.value)} type="number" className="w-full" />
               </div>
             </div>
           </div>
           
-          {/* Budget Summary - Moved next to Overview */}
-          <div className="lg:col-span-6">
-            <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4 h-full">
-              <h2 className="font-medium text-theme-text-primary text-lg mb-3">Budget Summary</h2>
-              <p className="text-theme-text-secondary text-sm mb-4">Track your spending progress</p>
-              
-              <div className="py-3 px-4 bg-gray-100 rounded-md text-sm mb-3">
-                <div className="flex justify-between">
-                  <span className="text-theme-text-secondary">Budget Used</span>
-                  <span className="text-theme-text-primary">${totalBudgeted} of ${totalBudget} ({percentUsed}%)</span>
-                </div>
+          {/* Budget Summary */}
+          <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4">
+            <h2 className="font-medium text-theme-text-primary text-lg mb-3">Budget Summary</h2>
+            <p className="text-theme-text-secondary text-sm mb-4">Track your spending progress</p>
+            
+            <div className="py-3 px-4 bg-gray-100 rounded-md text-sm mb-3">
+              <div className="flex justify-between">
+                <span className="text-theme-text-secondary">Budget Used</span>
+                <span className="text-theme-text-primary">${totalBudgeted} of ${totalBudget} ({percentUsed}%)</span>
               </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-white border border-green-200 p-3 rounded-md">
-                  <p className="text-xs text-green-700 mb-1">Remaining Budget</p>
-                  <p className="text-xl font-bold text-green-600 stats-number">${remainingBudget}</p>
-                </div>
-                <div className="bg-white border border-gray-200 p-3 rounded-md">
-                  <p className="text-xs text-theme-text-secondary mb-1">Cost Per Guest</p>
-                  <p className="text-xl font-bold text-theme-text-primary stats-number">${costPerGuest}</p>
-                </div>
-              </div>
-              
-              <Button className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark flex items-center justify-center gap-2 font-semibold">
-                Export Budget
-              </Button>
             </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="bg-white border border-green-200 p-3 rounded-md">
+                <p className="text-xs text-green-700 mb-1">Remaining Budget</p>
+                <p className="text-xl font-bold text-green-600 stats-number">${remainingBudget}</p>
+              </div>
+              <div className="bg-white border border-gray-200 p-3 rounded-md">
+                <p className="text-xs text-theme-text-secondary mb-1">Cost Per Guest</p>
+                <p className="text-xl font-bold text-theme-text-primary stats-number">${costPerGuest}</p>
+              </div>
+            </div>
+            
+            <Button className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark flex items-center justify-center gap-2 font-semibold">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M7 10L12 15L17 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Export Budget
+            </Button>
           </div>
+        </div>
+        
+        {/* Tab Buttons */}
+        <div className="flex border-b border-gray-300 mb-6">
+          <button 
+            onClick={() => setActiveTab('breakdown')} 
+            className={`py-2 px-4 font-medium text-sm ${activeTab === 'breakdown' 
+              ? 'border-b-2 border-theme-brown text-theme-text-primary' 
+              : 'text-theme-text-secondary'}`}
+          >
+            Budget Breakdown
+          </button>
+          <button 
+            onClick={() => setActiveTab('actual')} 
+            className={`py-2 px-4 font-medium text-sm ${activeTab === 'actual' 
+              ? 'border-b-2 border-theme-brown text-theme-text-primary' 
+              : 'text-theme-text-secondary'}`}
+          >
+            Estimated vs. Actual
+          </button>
         </div>
             
         {/* Budget Breakdown */}
         <div className="space-y-6">
-          {/* Tab Buttons */}
-          <div className="grid grid-cols-2 text-sm mb-4">
-            <button 
-              onClick={() => setActiveTab('breakdown')} 
-              className={`text-center py-2 px-4 font-medium ${activeTab === 'breakdown' 
-                ? 'bg-[#f5efe6] text-theme-text-primary rounded-t-md' 
-                : 'bg-gray-100 text-theme-text-secondary'}`}
-            >
-              Budget Breakdown
-            </button>
-            <button 
-              onClick={() => setActiveTab('actual')} 
-              className={`text-center py-2 px-4 font-medium ${activeTab === 'actual' 
-                ? 'bg-[#f5efe6] text-theme-text-primary rounded-t-md' 
-                : 'bg-gray-100 text-theme-text-secondary'}`}
-            >
-              Estimated vs Actual
-            </button>
-          </div>
-
-          {categories.map((category, categoryIndex) => <Card key={category.name} className="bg-white border border-gray-200 shadow-sm overflow-hidden">
-              <CardContent className="p-0">
-                <div className="p-4 border-b bg-gray-50">
-                  <h3 className="font-medium text-theme-text-primary">{category.name}</h3>
-                </div>
-                <table className="w-full">
-                  <tbody>
-                    {category.items.map((item, itemIndex) => <tr key={item.id} className="border-t border-gray-100">
-                        <td className="p-4 text-theme-text-primary">{item.name}</td>
-                        <td className="p-4">
-                          <Input type="number" value={item.budget} onChange={e => handleItemBudgetChange(categoryIndex, itemIndex, Number(e.target.value))} className="w-full text-right" />
-                        </td>
-                        <td className="p-4">
-                          <Input type="text" value={item.actual} onChange={e => handleItemActualChange(categoryIndex, itemIndex, e.target.value)} className="w-full text-right" placeholder="Actual" />
-                        </td>
-                        <td className="p-4 text-center">
-                          <button onClick={() => handleDeleteItem(categoryIndex, itemIndex)} className="text-gray-400 hover:text-red-500">
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </td>
-                      </tr>)}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={4} className="p-4 border-t">
-                        <button onClick={() => handleAddItem(categoryIndex)} className="text-theme-text-primary hover:text-gray-900 text-sm flex items-center">
-                          <Plus className="h-4 w-4 mr-1" /> Add Item
+          {categories.map((category, categoryIndex) => (
+            <div key={category.name} className="bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden">
+              <div className="p-4 border-b border-gray-100 bg-gray-50">
+                <h3 className="font-medium text-theme-text-primary">{category.name}</h3>
+              </div>
+              <table className="w-full">
+                <tbody>
+                  {category.items.map((item, itemIndex) => (
+                    <tr key={item.id} className="border-t border-gray-100">
+                      <td className="p-4 text-theme-text-primary">{item.name}</td>
+                      <td className="p-4 text-right">
+                        {item.budget}
+                      </td>
+                      <td className="p-4 text-center">
+                        Actual
+                      </td>
+                      <td className="p-4 w-10 text-center">
+                        <button className="text-gray-400 hover:text-red-500">
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </td>
                     </tr>
-                  </tfoot>
-                </table>
-              </CardContent>
-            </Card>)}
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan={4} className="p-4 border-t">
+                      <button 
+                        onClick={() => handleAddItem(categoryIndex)} 
+                        className="text-theme-text-primary hover:text-gray-900 text-sm flex items-center"
+                      >
+                        <Plus className="h-4 w-4 mr-1" /> Add Item
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          ))}
         </div>
           
-        {/* Right Column - Tips section */}
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            {/* Empty column for balance */}
-          </div>
-          <div className="lg:col-span-1">
-            <div className="bg-white border border-gray-200 rounded-md p-4">
-              <h2 className="font-medium text-theme-text-primary text-lg mb-3">Wedding Budget Tips</h2>
-              <ul className="space-y-2 text-sm text-theme-text-secondary">
-                <li className="flex items-start">
-                  <span className="text-theme-text-primary mr-2">•</span>
-                  <span>Allocate about 50% of your budget to venue, food, and drinks</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-theme-text-primary mr-2">•</span>
-                  <span>Set aside 10-15% for unexpected expenses</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-theme-text-primary mr-2">•</span>
-                  <span>Consider off-peak seasons or weekdays for better venue rates</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-theme-text-primary mr-2">•</span>
-                  <span>Prioritize what matters most to you and allocate more budget there</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-theme-text-primary mr-2">•</span>
-                  <span>Get multiple quotes from vendors to compare prices</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="text-center bg-[#f8f7f3] border border-gray-300 rounded-md p-4 mt-6">
-              <p className="text-theme-text-secondary text-sm mb-3">Need help finding vendors that fit your budget? Create a free account to get personalized recommendations.</p>
-              <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark font-semibold">
-                Create Free Account
-              </Button>
-            </div>
-          </div>
+        {/* Wedding Budget Tips */}
+        <div className="mt-12 mb-8 bg-white border border-gray-200 rounded-md p-6">
+          <h2 className="font-medium text-theme-text-primary text-lg mb-4">Wedding Budget Tips</h2>
+          <ul className="space-y-2 text-sm text-theme-text-secondary">
+            <li className="flex items-start">
+              <span className="text-theme-text-primary mr-2">•</span>
+              <span>Allocate about 50% of your budget to venue, food, and drinks</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-theme-text-primary mr-2">•</span>
+              <span>Set aside 10-15% for unexpected expenses</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-theme-text-primary mr-2">•</span>
+              <span>Consider off-peak seasons or weekdays for better venue rates</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-theme-text-primary mr-2">•</span>
+              <span>Prioritize what matters most to you and allocate more budget there</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-theme-text-primary mr-2">•</span>
+              <span>Get multiple quotes from vendors to compare prices</span>
+            </li>
+          </ul>
+        </div>
+        
+        {/* CTA */}
+        <div className="text-center bg-[#f8f7f3] border border-gray-300 rounded-md p-6 mb-8">
+          <p className="text-theme-text-secondary mb-3">Need help finding vendors that fit your budget? Create a free account to get personalized recommendations.</p>
+          <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark font-semibold">
+            Create Free Account
+          </Button>
         </div>
       </div>
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
 
 export default WeddingBudgetCalculator;
