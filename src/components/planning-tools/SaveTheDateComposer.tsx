@@ -20,7 +20,7 @@ export const SaveTheDateComposer = () => {
   const [date, setDate] = useState<Date | undefined>(new Date(new Date().setMonth(new Date().getMonth() + 9)));
   const [names, setNames] = useState<string>("Sarah & Michael");
   const [location, setLocation] = useState<string>("The Grand Hotel, New York");
-  const [message, setMessage] = useState<string>(
+  const [personalMessage, setPersonalMessage] = useState<string>(
     "We're excited to announce that we're getting married! Please save the date and stay tuned for a formal invitation with all the details."
   );
   
@@ -37,7 +37,7 @@ ${names} are getting married!
 🗓️ ${formattedDate}
 📍 ${location}
 
-${message}
+${personalMessage}
 
 Reply to let us know if you can make it!
     `.trim();
@@ -129,11 +129,11 @@ Reply to let us know if you can make it!
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="message">Personal Message</Label>
+                  <Label htmlFor="personalMessage">Personal Message</Label>
                   <Textarea 
-                    id="message" 
-                    value={message} 
-                    onChange={(e) => setMessage(e.target.value)} 
+                    id="personalMessage" 
+                    value={personalMessage} 
+                    onChange={(e) => setPersonalMessage(e.target.value)} 
                     placeholder="Add a personal note to your guests" 
                     rows={4} 
                   />
