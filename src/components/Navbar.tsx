@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,11 +7,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
+  // Use optional chaining to safely access auth context properties
   const {
     user,
     signOut,
-    userProfile
+    userProfile,
+    loading
   } = useAuth();
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const {
@@ -43,6 +45,19 @@ const Navbar = () => {
 
   // Determine if the user is a vendor or a couple
   const isVendor = userProfile?.user_role === 'vendor';
+
+  // If auth is loading, show a simplified navbar
+  if (loading) {
+    return (
+      <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
+        <Link to="/" className="flex items-center">
+          <h1 className="text-xl md:text-2xl font-serif font-semibold text-slate-50">
+            Enosi
+          </h1>
+        </Link>
+      </nav>
+    );
+  }
 
   return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
