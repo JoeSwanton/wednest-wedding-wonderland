@@ -2,7 +2,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
-import PlanningToolsGrid from "@/components/PlanningToolsGrid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BudgetCalculator } from "@/components/planning-tools/BudgetCalculator";
 import { WeddingChecklist } from "@/components/planning-tools/WeddingChecklist";
@@ -11,6 +10,9 @@ import { GuestListGenerator } from "@/components/planning-tools/GuestListGenerat
 import { VendorQuestionGenerator } from "@/components/planning-tools/VendorQuestionGenerator";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Calculator, ListCheck, MessageSquare, Users, FileText, Calendar } from "lucide-react";
+import { Testimonials } from "@/components/Testimonials";
 
 const PlanningTools = () => {
   const [searchParams] = useSearchParams();
@@ -23,40 +25,180 @@ const PlanningTools = () => {
     }
   }, [tabParam]);
 
+  const planningTools = [
+    {
+      title: "Wedding Budget Calculator",
+      description: "Estimate and manage your wedding expenses with our detailed budget calculator.",
+      longDescription: "Track expenses, set realistic budgets, and get insights on where your money is going. Perfect for keeping your wedding costs under control.",
+      icon: <Calculator className="h-6 w-6 text-theme-brown" />,
+      bgColor: "bg-green-50",
+      path: "/planning-tools?tab=budget",
+      buttonText: "Use Budget Calculator"
+    },
+    {
+      title: "Wedding Checklist Generator",
+      description: "Generate a customized wedding planning checklist tailored to your timeline.",
+      longDescription: "Generate a personalized checklist based on your wedding date. Never miss a deadline or important task with our comprehensive planning tool.",
+      icon: <ListCheck className="h-6 w-6 text-theme-brown" />,
+      bgColor: "bg-pink-50",
+      path: "/planning-tools?tab=checklist",
+      buttonText: "Create Checklist"
+    },
+    {
+      title: "Save-the-Date SMS Composer",
+      description: "Create and send beautiful save-the-date messages to your guests via SMS.",
+      longDescription: "Craft the perfect save-the-date message and easily share it with your guests. A modern alternative to traditional paper invitations.",
+      icon: <MessageSquare className="h-6 w-6 text-theme-brown" />,
+      bgColor: "bg-gray-100",
+      path: "/planning-tools?tab=save-date",
+      buttonText: "Compose Message"
+    },
+    {
+      title: "Guest List Excel Download",
+      description: "Create and download a comprehensive guest list spreadsheet to manage your invitations.",
+      longDescription: "Organize your guest information, track RSVPs, and manage dietary requirements with our easy-to-use guest list template.",
+      icon: <Users className="h-6 w-6 text-theme-brown" />,
+      bgColor: "bg-yellow-50",
+      path: "/planning-tools?tab=guest-list",
+      buttonText: "Create Guest List"
+    },
+    {
+      title: "Vendor Question Generator",
+      description: "Get a list of questions to ask your wedding vendors.",
+      longDescription: "Be prepared with professional and tailored questions for photographers, venues, caterers, and more. Make informed decisions for your special day.",
+      icon: <FileText className="h-6 w-6 text-theme-brown" />,
+      bgColor: "bg-green-50",
+      path: "/planning-tools?tab=vendor-questions",
+      buttonText: "Generate Questions"
+    },
+    {
+      title: "More Tools Coming Soon",
+      description: "We're constantly adding new tools to help with your wedding planning.",
+      longDescription: "Sign up for a free account to be the first to know when we release new planning tools and features.",
+      icon: <Calendar className="h-6 w-6 text-theme-brown" />,
+      bgColor: "bg-pink-50",
+      path: "#",
+      buttonText: "Create Free Account"
+    }
+  ];
+
+  const testimonials = [
+    {
+      quote: "The budget calculator was a lifesaver! It helped us stay on track and avoid overspending on our wedding.",
+      author: "Sarah & Michael",
+      location: "Melbourne"
+    },
+    {
+      quote: "I loved how easy it was to create a custom checklist. It made planning our wedding so much less stressful.",
+      author: "Emma & James",
+      location: "Melbourne"
+    },
+    {
+      quote: "The vendor question generator gave us confidence when meeting with potential vendors. We knew exactly what to ask!",
+      author: "Jessica & David",
+      location: "Brisbane"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <Separator className="bg-theme-brown h-[1px] w-full" />
       
-      <div className="bg-theme-cream py-12">
+      <div className="bg-theme-brown py-12 text-center">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-serif text-theme-brown text-center mb-4">
-            Wedding Planning Tools
+          <h1 className="text-4xl md:text-5xl font-serif text-white text-center mb-4">
+            Free Wedding Planning Tools
           </h1>
-          <p className="text-theme-brown-light text-center max-w-2xl mx-auto mb-8">
-            Free wedding planning tools to help you organize your perfect day - no signup required.
+          <p className="text-white/90 text-center max-w-2xl mx-auto">
+            Plan your perfect day with our suite of free wedding planning tools. No signup required!
           </p>
         </div>
       </div>
       
       <div className="container mx-auto px-4 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full md:w-auto md:inline-flex grid-cols-2 mb-8">
-            <TabsTrigger value="tools-grid">All Tools</TabsTrigger>
-            <TabsTrigger value="budget">Budget Calculator</TabsTrigger>
-            <TabsTrigger value="checklist">Wedding Checklist</TabsTrigger>
-            <TabsTrigger value="save-date">Save the Date</TabsTrigger>
-            <TabsTrigger value="guest-list">Guest List Excel</TabsTrigger>
-            <TabsTrigger value="vendor-questions">Vendor Questions</TabsTrigger>
-          </TabsList>
+          <div className="hidden">
+            <TabsList className="grid w-full md:w-auto md:inline-flex grid-cols-2 mb-8">
+              <TabsTrigger value="tools-grid">All Tools</TabsTrigger>
+              <TabsTrigger value="budget">Budget Calculator</TabsTrigger>
+              <TabsTrigger value="checklist">Wedding Checklist</TabsTrigger>
+              <TabsTrigger value="save-date">Save the Date</TabsTrigger>
+              <TabsTrigger value="guest-list">Guest List Excel</TabsTrigger>
+              <TabsTrigger value="vendor-questions">Vendor Questions</TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="tools-grid">
-            <div className="mb-12">
-              <h2 className="text-2xl font-serif text-theme-brown mb-4">Free Wedding Planning Tools</h2>
-              <p className="text-theme-brown-light mb-6">
-                All our planning tools are completely free to use, no signup required. Try them out to make your wedding planning easier!
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-serif text-theme-brown mb-4">Everything You Need to Plan Your Wedding</h2>
+              <p className="text-theme-brown-light max-w-3xl mx-auto">
+                Our free tools help you stay organized, on budget, and stress-free throughout your wedding planning journey.
               </p>
-              <PlanningToolsGrid />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              {planningTools.map((tool, index) => (
+                <div key={index} className={`border rounded-md overflow-hidden ${tool.bgColor}`}>
+                  <div className="p-8 text-center">
+                    <div className="flex justify-center mb-6">
+                      {tool.icon}
+                    </div>
+                    <h3 className="text-xl font-serif text-theme-brown mb-2">{tool.title}</h3>
+                    <p className="text-theme-brown-light mb-4">
+                      {tool.description}
+                    </p>
+                    <p className="text-sm text-theme-brown-light mb-6">
+                      {tool.longDescription}
+                    </p>
+                    <Button 
+                      asChild 
+                      variant="outline" 
+                      className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark border-0"
+                    >
+                      <a href={tool.path}>
+                        {tool.buttonText}
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mb-16">
+              <h2 className="text-3xl font-serif text-theme-brown text-center mb-8">What Couples Say About Our Tools</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="border p-6 rounded-md">
+                    <div className="flex justify-center mb-4">
+                      <div className="text-4xl text-theme-brown-light">"</div>
+                    </div>
+                    <p className="text-theme-brown mb-6 text-center italic">
+                      {testimonial.quote}
+                    </p>
+                    <div className="text-center">
+                      <div className="inline-block bg-theme-cream rounded-full w-10 h-10 mb-2"></div>
+                      <p className="font-medium text-theme-brown">{testimonial.author}</p>
+                      <p className="text-sm text-theme-brown-light">{testimonial.location}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="bg-theme-brown text-white p-8 rounded-md text-center">
+              <h2 className="text-3xl font-serif mb-4">Ready to Take Your Wedding Planning to the Next Level?</h2>
+              <p className="max-w-2xl mx-auto mb-8">
+                Create a free account to save your progress, access premium tools, and connect with top wedding vendors in your area.
+              </p>
+              <div className="flex justify-center gap-4">
+                <Button className="bg-white text-theme-brown hover:bg-theme-cream">
+                  Create Free Account
+                </Button>
+                <Button variant="outline" className="border-white text-white hover:bg-theme-brown-dark">
+                  Learn More
+                </Button>
+              </div>
             </div>
           </TabsContent>
           

@@ -1,7 +1,46 @@
 
 import { Star } from "lucide-react";
 
-const testimonials = [
+type TestimonialProps = {
+  testimonials?: Array<{
+    quote: string;
+    author: string;
+    location: string;
+  }>;
+};
+
+export const Testimonials = ({ testimonials = defaultTestimonials }: TestimonialProps) => {
+  return (
+    <div className="w-full py-16 px-4 md:px-8">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-serif text-theme-brown text-center mb-12">
+          What Our Users Say
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-theme-beige">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-theme-brown text-theme-brown" />
+                ))}
+              </div>
+              <p className="text-theme-brown mb-4 italic">
+                "{testimonial.quote}"
+              </p>
+              <div>
+                <p className="font-medium text-theme-brown">{testimonial.author}</p>
+                <p className="text-sm text-theme-brown-light">{testimonial.location}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const defaultTestimonials = [
   {
     quote: "Enosi simplified our planning process and helped us find amazing vendors that matched our style perfectly.",
     author: "Sarah & Michael",
@@ -18,36 +57,3 @@ const testimonials = [
     location: "Wedding Photographer, Melbourne"
   }
 ];
-
-const Testimonials = () => {
-  return (
-    <div className="w-full py-16 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-cormorant font-semibold text-wednest-brown text-center mb-12">
-          What Our Users Say
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-wednest-beige">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-wednest-gold text-wednest-gold" />
-                ))}
-              </div>
-              <p className="text-wednest-brown mb-4 italic">
-                "{testimonial.quote}"
-              </p>
-              <div>
-                <p className="font-medium text-wednest-brown">{testimonial.author}</p>
-                <p className="text-sm text-wednest-brown-light">{testimonial.location}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Testimonials;
