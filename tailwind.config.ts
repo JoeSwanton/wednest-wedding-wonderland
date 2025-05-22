@@ -75,6 +75,10 @@ export default {
 					white: '#ffffff',
 					gray: '#f0f0f0',
 					'gray-dark': '#5c5c5c',
+					// Adding new text colors as specified
+					'text-primary': '#5c4c3c',
+					'text-secondary': '#6b5d4d',
+					'text-light': '#e9e4dd',
 				}
 			},
 			fontFamily: {

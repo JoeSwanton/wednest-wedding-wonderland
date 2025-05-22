@@ -73,10 +73,65 @@
   }
   
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans text-theme-text-primary;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-normal;
+    @apply font-serif font-medium text-theme-text-primary;
+  }
+
+  /* Add styling for different heading levels */
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h3 {
+    @apply text-2xl;
+  }
+  
+  h4 {
+    @apply text-xl;
+  }
+  
+  h5 {
+    @apply text-lg;
+  }
+  
+  p {
+    @apply text-theme-text-secondary;
+  }
+
+  /* Buttons styling */
+  button {
+    @apply font-medium;
+  }
+
+  /* Apply font-semibold to logo elements */
+  .logo {
+    @apply font-semibold;
+  }
+
+  /* Apply styling for important numbers and statistics */
+  .stats-number {
+    @apply font-bold;
+  }
+}
+
+/* Custom classes for text styling */
+@layer utilities {
+  .text-primary-color {
+    @apply text-theme-text-primary;
+  }
+  
+  .text-secondary-color {
+    @apply text-theme-text-secondary;
+  }
+  
+  .text-light-color {
+    @apply text-theme-text-light;
   }
 }
