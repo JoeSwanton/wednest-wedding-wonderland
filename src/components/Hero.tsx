@@ -3,19 +3,20 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarIcon, ChevronDown, MapPin, Search } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown, MapPin, Search, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
   const [vendorType, setVendorType] = useState("");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
 
   // Major Australian locations for suggestions
@@ -23,6 +24,11 @@ const Hero = () => {
 
   // Major Australian States for initial dropdown
   const australianStates = ["Melbourne", "Sydney", "Brisbane", "Perth", "Queensland"];
+
+  // Filter locations based on input
+  const filteredLocations = australianLocations.filter(loc => 
+    loc.toLowerCase().includes(inputValue.toLowerCase())
+  );
 
   const handleSearch = () => {
     // Build query parameters
@@ -37,7 +43,20 @@ const Hero = () => {
 
   const handleLocationSelect = (selectedLocation: string) => {
     setLocation(selectedLocation);
+    setInputValue(selectedLocation);
     setIsLocationOpen(false);
+  };
+
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+    if (value) {
+      setLocation(value);
+    }
+  };
+
+  const clearInput = () => {
+    setInputValue("");
+    setLocation("");
   };
 
   return <div className="w-full bg-theme-brown py-12 px-4 md:px-8 text-white">
@@ -48,60 +67,104 @@ const Hero = () => {
         
         <div className="bg-white rounded-lg shadow-lg p-3 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-            {/* Location Input with Dropdown - Redesigned to match vendor type dropdown */}
+            {/* Location Input with Command component for search/select */}
             <div className="md:col-span-4">
-              <DropdownMenu open={isLocationOpen} onOpenChange={setIsLocationOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between border-theme-beige bg-white text-theme-brown">
-                    <div className="flex items-center">
-                      <MapPin className="mr-2 h-4 w-4 text-theme-brown" />
-                      <span className="truncate">{location || "Where's your wedding?"}</span>
+              <Popover open={isLocationOpen} onOpenChange={setIsLocationOpen}>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    role="combobox" 
+                    aria-expanded={isLocationOpen}
+                    className="w-full justify-between border border-theme-beige/40 bg-white text-theme-brown hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-colors"
+                  >
+                    <div className="flex items-center truncate">
+                      <MapPin className="mr-2 h-4 w-4 text-theme-brown-light flex-shrink-0" />
+                      {location ? (
+                        <span className="truncate">{location}</span>
+                      ) : (
+                        <span className="text-theme-brown-light truncate">Where's your wedding?</span>
+                      )}
                     </div>
-                    <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                    <ChevronDown className="ml-2 h-4 w-4 text-theme-brown-light flex-shrink-0" />
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[calc(100vw-2rem)] md:w-[320px]" align="start">
-                  <div className="py-2 px-4 font-medium text-gray-800 bg-gray-100 border-b">
-                    <p className="font-normal text-sm text-gray-950">Trending destinations</p>
-                  </div>
-                  {australianStates.map((state, index) => <DropdownMenuItem key={index} onSelect={() => handleLocationSelect(state)}>
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 text-gray-400 mr-2" />
-                        <div>
-                          <div className="font-medium">{state}</div>
-                          <div className="text-xs text-gray-500">Australia</div>
-                        </div>
-                      </div>
-                    </DropdownMenuItem>)}
-                  <div className="py-2 px-4 font-medium text-gray-800 bg-gray-100 border-t border-b">
-                    <p>Other locations</p>
-                  </div>
-                  {australianLocations.filter(loc => !australianStates.includes(loc)).slice(0, 5).map((location, index) => <DropdownMenuItem key={`other-${index}`} onSelect={() => handleLocationSelect(location)}>
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 text-gray-400 mr-2" />
-                        <div>
-                          <div className="font-medium">{location}</div>
-                          <div className="text-xs text-gray-500">Australia</div>
-                        </div>
-                      </div>
-                    </DropdownMenuItem>)}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </PopoverTrigger>
+                <PopoverContent className="w-[calc(100vw-2rem)] md:w-[320px] p-0" align="start">
+                  <Command>
+                    <div className="flex items-center border-b border-gray-100 px-3">
+                      <MapPin className="mr-2 h-4 w-4 shrink-0 text-theme-brown-light" />
+                      <CommandInput 
+                        placeholder="Search locations..." 
+                        value={inputValue}
+                        onValueChange={handleInputChange}
+                        className="h-10 w-full flex-1 bg-transparent outline-none placeholder:text-theme-brown-light/60"
+                      />
+                      {inputValue && (
+                        <Button 
+                          variant="ghost" 
+                          onClick={clearInput}
+                          className="h-6 w-6 p-0 rounded-full"
+                        >
+                          <X className="h-4 w-4 text-theme-brown-light" />
+                        </Button>
+                      )}
+                    </div>
+                    <CommandList>
+                      <CommandEmpty>No location found.</CommandEmpty>
+                      <CommandGroup heading="Popular destinations">
+                        {australianStates.map((state, index) => (
+                          <CommandItem
+                            key={`popular-${index}`}
+                            value={state}
+                            onSelect={() => handleLocationSelect(state)}
+                            className="flex items-center py-2 cursor-pointer"
+                          >
+                            <MapPin className="h-4 w-4 text-theme-brown-light mr-2 flex-shrink-0" />
+                            <div>
+                              <div className="font-medium text-sm">{state}</div>
+                              <div className="text-xs text-theme-brown-light">Australia</div>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                      {filteredLocations.length > 0 && filteredLocations.filter(loc => !australianStates.includes(loc)).length > 0 && (
+                        <CommandGroup heading="Other locations">
+                          {filteredLocations
+                            .filter(loc => !australianStates.includes(loc))
+                            .slice(0, 5).map((location, index) => (
+                            <CommandItem
+                              key={`other-${index}`}
+                              value={location}
+                              onSelect={() => handleLocationSelect(location)}
+                              className="flex items-center py-2 cursor-pointer"
+                            >
+                              <MapPin className="h-4 w-4 text-theme-brown-light mr-2 flex-shrink-0" />
+                              <div>
+                                <div className="font-medium text-sm">{location}</div>
+                                <div className="text-xs text-theme-brown-light">Australia</div>
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      )}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             
-            {/* Wedding Date - Updated to match location dropdown styling */}
+            {/* Wedding Date */}
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-between border-theme-beige bg-white text-theme-brown hover:bg-theme-brown hover:text-white"
+                    className="w-full justify-between border border-theme-beige/40 bg-white text-theme-brown hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-colors"
                   >
                     <div className="flex items-center">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <CalendarIcon className="mr-2 h-4 w-4 text-theme-brown-light" />
                       <span className="truncate">{date ? format(date, "PPP") : "Wedding date"}</span>
                     </div>
-                    <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                    <ChevronDown className="ml-2 h-4 w-4 text-theme-brown-light" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -119,8 +182,8 @@ const Hero = () => {
             {/* Vendor Type */}
             <div className="md:col-span-3">
               <Select value={vendorType} onValueChange={setVendorType}>
-                <SelectTrigger className="border bg-white text-theme-brown flex justify-between items-center">
-                  <SelectValue placeholder="Vendor type" className="text-theme-brown" />
+                <SelectTrigger className="border border-theme-beige/40 bg-white text-theme-brown hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-colors">
+                  <SelectValue placeholder="Vendor type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="photographer">Photographers</SelectItem>
@@ -135,7 +198,10 @@ const Hero = () => {
             
             {/* Search Button */}
             <div className="md:col-span-2">
-              <Button onClick={handleSearch} className="w-full hover:bg-theme-blue-dark text-white bg-theme-brown">
+              <Button 
+                onClick={handleSearch} 
+                className="w-full bg-theme-brown hover:bg-theme-brown/90 text-white transition-colors"
+              >
                 <Search className="mr-2 h-4 w-4" /> Search
               </Button>
             </div>
