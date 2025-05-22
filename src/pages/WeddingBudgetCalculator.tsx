@@ -206,7 +206,7 @@ const WeddingBudgetCalculator = () => {
             
             {/* Budget Breakdown */}
             <div className="space-y-6">
-              <h2 className="font-medium text-center text-theme-text-primary text-lg">Budget Breakdown</h2>
+              
               
               <div className="grid grid-cols-2 text-sm text-center mb-0 bg-[#f5efe6] rounded-md p-2">
                 <div className="text-theme-text-primary">Budget Breakdown</div>
