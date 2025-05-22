@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,10 +10,6 @@ import * as XLSX from 'xlsx';
 import { useToast } from "@/hooks/use-toast";
 import { nanoid } from "nanoid";
 import ToolShareCta from "./ToolShareCta";
-
-// Add XLSX library for Excel export
-<lov-add-dependency>xlsx@0.18.5</lov-add-dependency>
-<lov-add-dependency>nanoid@3.3.4</lov-add-dependency>
 
 type GuestGroup = "bride" | "groom" | "both";
 type GuestStatus = "invited" | "confirmed" | "declined" | "pending";
