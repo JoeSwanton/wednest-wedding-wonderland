@@ -9,6 +9,7 @@ import { Calculator, Download, Share } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ToolShareCta from "./ToolShareCta";
 import { FormProvider, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 export const BudgetCalculator = () => {
   const { toast } = useToast();
@@ -110,6 +111,12 @@ export const BudgetCalculator = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
+            <div className="text-center mb-4">
+              <Link to="/planning-tools/budget-calculator" className="text-theme-brown hover:text-theme-brown-dark underline text-sm">
+                Go to our more detailed budget calculator
+              </Link>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <div className="space-y-2">
