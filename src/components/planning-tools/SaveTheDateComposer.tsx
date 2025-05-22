@@ -1,156 +1,205 @@
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useForm, FormProvider } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, Copy, MessageSquare, Send } from "lucide-react";
+import { useState } from "react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Check } from "lucide-react";
+import ToolShareCta from "./ToolShareCta";
 
 export const SaveTheDateComposer = () => {
+  const methods = useForm();
   const { toast } = useToast();
-  const [names, setNames] = useState("");
-  const [date, setDate] = useState("");
-  const [location, setLocation] = useState("");
-  const [message, setMessage] = useState("");
-  const [copied, setCopied] = useState(false);
-
-  const templates = [
-    {
-      id: 1,
-      title: "Classic",
-      content: "Save the Date! [Names] are getting married on [Date] in [Location]. Formal invitation to follow."
-    },
-    {
-      id: 2,
-      title: "Casual",
-      content: "We're tying the knot! Join [Names] on [Date] in [Location] to celebrate. More details coming soon!"
-    },
-    {
-      id: 3,
-      title: "Destination",
-      content: "Pack your bags! [Names] are getting married in [Location] on [Date]. Formal invitation with travel details to follow."
-    },
-    {
-      id: 4,
-      title: "Minimalist",
-      content: "[Names]. [Date]. [Location]. Save the Date."
-    }
-  ];
-
-  const [selectedTemplate, setSelectedTemplate] = useState(templates[0]);
-
+  const [date, setDate] = useState<Date | undefined>(new Date(new Date().setMonth(new Date().getMonth() + 9)));
+  const [names, setNames] = useState<string>("Sarah & Michael");
+  const [location, setLocation] = useState<string>("The Grand Hotel, New York");
+  const [message, setMessage] = useState<string>(
+    "We're excited to announce that we're getting married! Please save the date and stay tuned for a formal invitation with all the details."
+  );
+  
+  const [generatedMessage, setGeneratedMessage] = useState<string>("");
+  
   const generateMessage = () => {
-    let generatedMessage = selectedTemplate.content;
-    generatedMessage = generatedMessage.replace("[Names]", names || "...");
-    generatedMessage = generatedMessage.replace("[Date]", date || "...");
-    generatedMessage = generatedMessage.replace("[Location]", location || "...");
-    setMessage(generatedMessage);
-    setCopied(false);
-  };
+    const formattedDate = date ? format(date, "EEEE, MMMM do, yyyy") : "";
+    
+    const message = `
+💍 SAVE THE DATE 💍
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(message);
-    setCopied(true);
+${names} are getting married!
+
+🗓️ ${formattedDate}
+📍 ${location}
+
+${message}
+
+Reply to let us know if you can make it!
+    `.trim();
+    
+    setGeneratedMessage(message);
+    
     toast({
-      title: "Copied to clipboard!",
-      description: "The message has been copied to your clipboard.",
+      title: "Message Generated",
+      description: "Your save-the-date message has been created. You can copy it or customize it further."
     });
+  };
+  
+  const copyToClipboard = () => {
+    if (generatedMessage) {
+      navigator.clipboard.writeText(generatedMessage);
+      
+      toast({
+        title: "Copied to Clipboard",
+        description: "Your save-the-date message has been copied to your clipboard."
+      });
+    }
   };
 
   return (
-    <div className="space-y-8">
-      <Card className="border-theme-beige shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl font-serif text-theme-brown">Save the Date Composer</CardTitle>
-          <CardDescription>Compose a save the date message to send to your guests</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="names">Names</Label>
-              <Input
-                id="names"
-                type="text"
-                placeholder="Your Names"
-                value={names}
-                onChange={(e) => setNames(e.target.value)}
-              />
+    <FormProvider {...methods}>
+      <div className="space-y-8">
+        <Card className="border-theme-beige shadow-sm">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="bg-theme-brown-light/10 p-3 rounded-full">
+                <MessageSquare className="h-6 w-6 text-theme-brown-light" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-serif text-theme-brown">Save-the-Date Composer</CardTitle>
+                <CardDescription>Create a beautiful save-the-date message to share with your guests</CardDescription>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="text"
-                placeholder="Wedding Date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                type="text"
-                placeholder="Wedding Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="template">Template</Label>
-              <Select value={selectedTemplate.id.toString()} onValueChange={(value) => {
-                const template = templates.find(t => t.id === parseInt(value));
-                if (template) {
-                  setSelectedTemplate(template);
-                }
-              }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a template" />
-                </SelectTrigger>
-                <SelectContent>
-                  {templates.map((template) => (
-                    <SelectItem key={template.id} value={template.id.toString()}>{template.title}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <Button className="bg-theme-sage hover:bg-theme-sage-dark text-white w-full" onClick={generateMessage}>
-            Generate Message
-          </Button>
-          <div className="space-y-2">
-            <Label htmlFor="message">Message</Label>
-            <Textarea
-              id="message"
-              readOnly
-              value={message}
-              className="resize-none bg-theme-cream/40 text-theme-brown"
-              rows={4}
-            />
-            <Button
-              variant="outline"
-              className="mt-2 w-full border-theme-sage-dark text-theme-sage-dark hover:bg-theme-sage-dark hover:text-white relative"
-              onClick={copyToClipboard}
-              disabled={copied || !message}
-            >
-              {copied ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Check className="h-4 w-4" />
-                  Copied!
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Input Form */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="names">Couple Names</Label>
+                  <Input 
+                    id="names" 
+                    value={names} 
+                    onChange={(e) => setNames(e.target.value)} 
+                    placeholder="e.g. Sarah & Michael" 
+                  />
                 </div>
-              ) : (
-                <div className="flex items-center justify-center gap-2">
-                  <Copy className="h-4 w-4" />
-                  Copy to Clipboard
+                
+                <div className="space-y-2">
+                  <Label htmlFor="date">Wedding Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                        disabled={(date) => date < new Date()}
+                        className={cn("p-3 pointer-events-auto")}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="location">Wedding Location</Label>
+                  <Input 
+                    id="location" 
+                    value={location} 
+                    onChange={(e) => setLocation(e.target.value)} 
+                    placeholder="e.g. The Grand Hotel, New York" 
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="message">Personal Message</Label>
+                  <Textarea 
+                    id="message" 
+                    value={message} 
+                    onChange={(e) => setMessage(e.target.value)} 
+                    placeholder="Add a personal note to your guests" 
+                    rows={4} 
+                  />
+                </div>
+                
+                <Button 
+                  onClick={generateMessage}
+                  className="w-full bg-theme-brown-light hover:bg-theme-brown text-white"
+                >
+                  Generate Message
+                </Button>
+              </div>
+              
+              {/* Preview */}
+              <div>
+                <div className="border rounded-md p-4 h-full bg-slate-50">
+                  <h3 className="font-medium text-theme-brown mb-2">Preview</h3>
+                  
+                  {generatedMessage ? (
+                    <div className="space-y-4">
+                      <div className="whitespace-pre-wrap bg-white p-4 rounded border min-h-[250px] text-theme-brown-light">
+                        {generatedMessage}
+                      </div>
+                      
+                      <div className="flex gap-3">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 border-theme-brown text-theme-brown hover:bg-theme-brown hover:text-white"
+                          onClick={copyToClipboard}
+                        >
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copy Text
+                        </Button>
+                        
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 border-theme-brown-light text-theme-brown-light hover:bg-theme-brown-light hover:text-white"
+                          onClick={() => {
+                            // Would integrate with SMS service in real implementation
+                            toast({
+                              title: "SMS Feature",
+                              description: "In a production app, this would integrate with an SMS service to send your message."
+                            });
+                          }}
+                        >
+                          <Send className="mr-2 h-4 w-4" />
+                          Send via SMS
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-[250px] text-theme-brown-light text-center">
+                      <p>Fill out the form and click "Generate Message" to see your save-the-date message here</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <ToolShareCta 
+          title="Save-the-Date Composer" 
+          description="Create and send beautiful save-the-date messages to your guests with our free message composer." 
+        />
+      </div>
+    </FormProvider>
   );
 };

@@ -1,391 +1,137 @@
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useForm, FormProvider } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Download, PlusCircle, X } from "lucide-react";
-import * as XLSX from 'xlsx';
+import { Download, Users } from "lucide-react";
+import { useState } from "react";
+import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
-import { nanoid } from "nanoid";
 import ToolShareCta from "./ToolShareCta";
-
-type GuestGroup = "bride" | "groom" | "both";
-type GuestStatus = "invited" | "confirmed" | "declined" | "pending";
-
-interface Guest {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  group: GuestGroup;
-  status: GuestStatus;
-  plusOne: boolean;
-  notes: string;
-}
 
 export const GuestListGenerator = () => {
   const { toast } = useToast();
-  const [guests, setGuests] = useState<Guest[]>([
-    {
-      id: nanoid(),
-      firstName: "John",
-      lastName: "Smith",
-      email: "john.smith@example.com",
-      phone: "555-123-4567",
-      group: "bride",
-      status: "invited",
-      plusOne: true,
-      notes: "Allergic to nuts"
-    },
-    {
-      id: nanoid(),
-      firstName: "Emily",
-      lastName: "Johnson",
-      email: "emily.j@example.com",
-      phone: "555-987-6543",
-      group: "groom",
-      status: "confirmed",
-      plusOne: false,
-      notes: ""
-    },
-  ]);
+  const methods = useForm();
+  const [guestCount, setGuestCount] = useState(100);
   
-  const [newGuest, setNewGuest] = useState<Guest>({
-    id: nanoid(),
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    group: "both",
-    status: "invited",
-    plusOne: false,
-    notes: ""
-  });
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewGuest(prev => ({ ...prev, [name]: value }));
-  };
-  
-  const handleSelectChange = (name: string, value: any) => {
-    setNewGuest(prev => ({ ...prev, [name]: value }));
-  };
-  
-  const handlePlusOneChange = () => {
-    setNewGuest(prev => ({ ...prev, plusOne: !prev.plusOne }));
-  };
-  
-  const addGuest = () => {
-    if (!newGuest.firstName || !newGuest.lastName) {
-      toast({
-        title: "Missing information",
-        description: "Please provide at least the first and last name.",
-        variant: "destructive"
-      });
-      return;
+  const generateExcel = () => {
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Create main guest list worksheet
+    const wsData = [
+      ["Guest Name", "Email", "Phone", "Address", "Relationship", "RSVP Status", "Plus One", "Dietary Restrictions", "Notes"],
+    ];
+    
+    // Add empty rows based on guest count
+    for (let i = 0; i < guestCount; i++) {
+      wsData.push(["", "", "", "", "", "", "", "", ""]);
     }
     
-    setGuests(prev => [...prev, { ...newGuest, id: nanoid() }]);
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
     
-    // Reset form
-    setNewGuest({
-      id: nanoid(),
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      group: "both",
-      status: "invited",
-      plusOne: false,
-      notes: ""
-    });
+    // Add column widths
+    const colWidths = [
+      { wch: 25 }, // Guest Name
+      { wch: 25 }, // Email
+      { wch: 15 }, // Phone
+      { wch: 30 }, // Address
+      { wch: 15 }, // Relationship
+      { wch: 15 }, // RSVP Status
+      { wch: 10 }, // Plus One
+      { wch: 20 }, // Dietary Restrictions
+      { wch: 30 }, // Notes
+    ];
+    ws['!cols'] = colWidths;
     
-    toast({
-      title: "Guest Added",
-      description: `${newGuest.firstName} ${newGuest.lastName} has been added to your guest list.`
-    });
-  };
-  
-  const removeGuest = (id: string) => {
-    setGuests(prev => prev.filter(guest => guest.id !== id));
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Guest List");
     
-    toast({
-      title: "Guest Removed",
-      description: "The guest has been removed from your list."
-    });
-  };
-  
-  const downloadExcel = () => {
-    // Prepare data for Excel
-    const worksheet = XLSX.utils.json_to_sheet(guests.map(guest => ({
-      "First Name": guest.firstName,
-      "Last Name": guest.lastName,
-      "Email": guest.email,
-      "Phone": guest.phone,
-      "Group": guest.group.charAt(0).toUpperCase() + guest.group.slice(1),
-      "Status": guest.status.charAt(0).toUpperCase() + guest.status.slice(1),
-      "Plus One": guest.plusOne ? "Yes" : "No",
-      "Notes": guest.notes
-    })));
+    // Create summary worksheet
+    const summaryWsData = [
+      ["Wedding Guest List Summary"],
+      [""],
+      ["Category", "Count"],
+      ["Total Invited", "=COUNTA('Guest List'!A2:A101)"],
+      ["Accepted", "=COUNTIF('Guest List'!F2:F101,\"Accepted\")"],
+      ["Declined", "=COUNTIF('Guest List'!F2:F101,\"Declined\")"],
+      ["Pending", "=COUNTIF('Guest List'!F2:F101,\"Pending\")"],
+      ["Plus Ones", "=COUNTIF('Guest List'!G2:G101,\"Yes\")"],
+      ["Total Attending", "=D4+D8"],
+    ];
     
-    // Create workbook
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Guest List");
+    const summaryWs = XLSX.utils.aoa_to_sheet(summaryWsData);
+    XLSX.utils.book_append_sheet(wb, summaryWs, "Summary");
     
-    // Generate Excel file and trigger download
-    XLSX.writeFile(workbook, "wedding_guest_list.xlsx");
+    // Generate the excel file
+    XLSX.writeFile(wb, "Wedding_Guest_List.xlsx");
     
     toast({
-      title: "Guest List Downloaded",
-      description: "Your guest list has been downloaded as an Excel file."
+      title: "Guest List Generated",
+      description: `An Excel file with ${guestCount} rows has been created for your guest list.`
     });
   };
-  
-  // Guest stats
-  const totalGuests = guests.length;
-  const confirmedGuests = guests.filter(g => g.status === "confirmed").length;
-  const plusOnes = guests.filter(g => g.plusOne).length;
-  const potentialTotal = totalGuests + plusOnes;
 
   return (
-    <div className="space-y-8">
-      <Card className="border-theme-beige shadow-sm">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="bg-theme-sage-dark/10 p-3 rounded-full">
-              <Users className="h-6 w-6 text-theme-sage-dark" />
+    <FormProvider {...methods}>
+      <div className="space-y-8">
+        <Card className="border-theme-beige shadow-sm">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="bg-theme-sage-dark/10 p-3 rounded-full">
+                <Users className="h-6 w-6 text-theme-sage-dark" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-serif text-theme-brown">Guest List Generator</CardTitle>
+                <CardDescription>Create a customized Excel file to manage your wedding guests</CardDescription>
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-2xl font-serif text-theme-brown">Guest List Generator</CardTitle>
-              <CardDescription>Create and download a guest list for your wedding</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-theme-cream/20 p-4 rounded-md text-center">
-              <p className="text-sm text-theme-brown-light mb-1">Total Guests</p>
-              <p className="text-2xl font-medium text-theme-brown">{totalGuests}</p>
-              <p className="text-xs text-theme-brown-light mt-1">
-                Potential: {potentialTotal} (with plus ones)
-              </p>
-            </div>
-            <div className="bg-theme-cream/20 p-4 rounded-md text-center">
-              <p className="text-sm text-theme-brown-light mb-1">Confirmed</p>
-              <p className="text-2xl font-medium text-theme-brown">{confirmedGuests}</p>
-              <p className="text-xs text-theme-brown-light mt-1">
-                {Math.round((confirmedGuests / totalGuests) * 100) || 0}% of invites
-              </p>
-            </div>
-            <div className="bg-theme-cream/20 p-4 rounded-md text-center">
-              <p className="text-sm text-theme-brown-light mb-1">Plus Ones</p>
-              <p className="text-2xl font-medium text-theme-brown">{plusOnes}</p>
-              <p className="text-xs text-theme-brown-light mt-1">
-                {Math.round((plusOnes / totalGuests) * 100) || 0}% of guests
-              </p>
-            </div>
-          </div>
-          
-          <div className="border-t border-theme-beige pt-6">
-            <h3 className="text-lg font-medium text-theme-brown mb-4">Add Guest</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First Name*</Label>
-                <Input 
-                  id="firstName"
-                  name="firstName"
-                  value={newGuest.firstName}
-                  onChange={handleInputChange}
-                  placeholder="First Name"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name*</Label>
-                <Input 
-                  id="lastName"
-                  name="lastName"
-                  value={newGuest.lastName}
-                  onChange={handleInputChange}
-                  placeholder="Last Name"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email"
-                  name="email"
-                  value={newGuest.email}
-                  onChange={handleInputChange}
-                  placeholder="Email"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input 
-                  id="phone"
-                  name="phone"
-                  value={newGuest.phone}
-                  onChange={handleInputChange}
-                  placeholder="Phone"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="group">Group</Label>
-                <Select 
-                  value={newGuest.group} 
-                  onValueChange={(value) => handleSelectChange("group", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Group" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bride">Bride's Side</SelectItem>
-                    <SelectItem value="groom">Groom's Side</SelectItem>
-                    <SelectItem value="both">Both</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select 
-                  value={newGuest.status} 
-                  onValueChange={(value) => handleSelectChange("status", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="invited">Invited</SelectItem>
-                    <SelectItem value="confirmed">Confirmed</SelectItem>
-                    <SelectItem value="declined">Declined</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
-                <Input 
-                  id="notes"
-                  name="notes"
-                  value={newGuest.notes}
-                  onChange={handleInputChange}
-                  placeholder="Any notes or dietary requirements"
-                />
-              </div>
-              
-              <div className="flex items-end gap-4">
-                <div className="flex items-center space-x-2 h-10">
-                  <input
-                    type="checkbox"
-                    id="plusOne"
-                    checked={newGuest.plusOne}
-                    onChange={handlePlusOneChange}
-                    className="h-4 w-4"
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="max-w-md mx-auto">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="guestCount">How many guests do you expect?</Label>
+                  <Input 
+                    id="guestCount"
+                    type="number" 
+                    min="10" 
+                    max="500" 
+                    value={guestCount} 
+                    onChange={(e) => setGuestCount(parseInt(e.target.value) || 100)}
                   />
-                  <label htmlFor="plusOne" className="text-sm font-medium leading-none">
-                    Plus One
-                  </label>
+                  <p className="text-sm text-muted-foreground">This will determine how many empty rows to include in your spreadsheet.</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium text-theme-brown mb-2">Your Excel file will include:</h3>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-theme-brown-light">
+                    <li>A ready-to-use guest list template</li>
+                    <li>Columns for contact information, RSVP status, and notes</li>
+                    <li>A summary sheet with automatic calculations</li>
+                    <li>Formulas to track total attendance</li>
+                    <li>Space for plus-ones and dietary restrictions</li>
+                  </ul>
                 </div>
                 
                 <Button 
-                  className="bg-theme-sage hover:bg-theme-sage-dark text-white flex-1"
-                  onClick={addGuest}
+                  onClick={generateExcel} 
+                  className="w-full bg-theme-sage-dark hover:bg-theme-sage text-white"
                 >
-                  <PlusCircle className="h-4 w-4 mr-2" />
-                  Add Guest
+                  <Download className="mr-2 h-4 w-4" />
+                  Generate Guest List Excel
                 </Button>
               </div>
             </div>
-          </div>
-          
-          <div className="border-t border-theme-beige pt-6">
-            <h3 className="text-lg font-medium text-theme-brown mb-4">Guest List</h3>
-            
-            <div className="rounded-md border border-theme-beige overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead className="hidden md:table-cell">Email</TableHead>
-                    <TableHead className="hidden md:table-cell">Group</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">Plus One</TableHead>
-                    <TableHead className="w-[80px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {guests.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-theme-brown-light">
-                        No guests added yet. Add your first guest above.
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    guests.map((guest) => (
-                      <TableRow key={guest.id}>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium text-theme-brown">{guest.firstName} {guest.lastName}</p>
-                            <p className="text-xs text-theme-brown-light md:hidden">{guest.email}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">{guest.email}</TableCell>
-                        <TableCell className="hidden md:table-cell capitalize">{guest.group}</TableCell>
-                        <TableCell>
-                          <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
-                            guest.status === "confirmed" ? "bg-green-100 text-green-800" : 
-                            guest.status === "declined" ? "bg-red-100 text-red-800" :
-                            guest.status === "pending" ? "bg-orange-100 text-orange-800" :
-                            "bg-blue-100 text-blue-800"
-                          }`}>
-                            {guest.status.charAt(0).toUpperCase() + guest.status.slice(1)}
-                          </span>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">{guest.plusOne ? "Yes" : "No"}</TableCell>
-                        <TableCell>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => removeGuest(guest.id)} 
-                            className="h-8 w-8 p-0"
-                          >
-                            <X className="h-4 w-4 text-theme-brown-light" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-          
-          <Button 
-            variant="outline" 
-            className="mt-6 border-theme-sage-dark text-theme-sage-dark hover:bg-theme-sage-dark hover:text-white flex items-center gap-2"
-            onClick={downloadExcel}
-            disabled={guests.length === 0}
-          >
-            <Download className="h-4 w-4" />
-            Download Guest List Excel
-          </Button>
-        </CardContent>
-      </Card>
-
-      <ToolShareCta 
-        title="Guest List Generator" 
-        description="Create, manage, and download a complete wedding guest list with our free Excel generator tool. Track RSVPs, manage plus ones, and more." 
-      />
-    </div>
+          </CardContent>
+        </Card>
+        
+        <ToolShareCta 
+          title="Guest List Generator" 
+          description="Our free guest list generator creates a professional Excel spreadsheet to track your wedding invitations and RSVPs." 
+        />
+      </div>
+    </FormProvider>
   );
 };
