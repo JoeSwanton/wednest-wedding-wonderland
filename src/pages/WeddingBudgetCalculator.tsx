@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const WeddingBudgetCalculator = () => {
   const [totalBudget, setTotalBudget] = useState<string>("30000");
   const [guestCount, setGuestCount] = useState<string>("100");
@@ -210,7 +209,7 @@ const WeddingBudgetCalculator = () => {
               <h2 className="font-medium text-center text-theme-text-primary text-lg">Budget Breakdown</h2>
               
               <div className="grid grid-cols-2 text-sm text-center mb-0 bg-[#f5efe6] rounded-md p-2">
-                <div className="text-theme-text-primary">Estimated</div>
+                <div className="text-theme-text-primary">Estimated vs Actual</div>
                 <div className="text-theme-text-primary">vs Actual</div>
               </div>
 
@@ -319,5 +318,4 @@ const WeddingBudgetCalculator = () => {
       <Footer />
     </div>;
 };
-
 export default WeddingBudgetCalculator;
