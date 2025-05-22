@@ -9,8 +9,20 @@ import { WeddingChecklist } from "@/components/planning-tools/WeddingChecklist";
 import { SaveTheDateComposer } from "@/components/planning-tools/SaveTheDateComposer";
 import { GuestListGenerator } from "@/components/planning-tools/GuestListGenerator";
 import { VendorQuestionGenerator } from "@/components/planning-tools/VendorQuestionGenerator";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const PlanningTools = () => {
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState('tools-grid');
+
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
@@ -28,7 +40,7 @@ const PlanningTools = () => {
       </div>
       
       <div className="container mx-auto px-4 py-12">
-        <Tabs defaultValue="tools-grid" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full md:w-auto md:inline-flex grid-cols-2 mb-8">
             <TabsTrigger value="tools-grid">All Tools</TabsTrigger>
             <TabsTrigger value="budget">Budget Calculator</TabsTrigger>

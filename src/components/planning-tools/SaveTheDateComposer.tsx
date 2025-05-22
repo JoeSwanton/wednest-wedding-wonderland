@@ -1,8 +1,10 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Check } from "lucide-react";
@@ -67,35 +69,38 @@ export const SaveTheDateComposer = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-theme-brown-light mb-2">Names</label>
+            <div className="space-y-2">
+              <Label htmlFor="names">Names</Label>
               <Input
+                id="names"
                 type="text"
                 placeholder="Your Names"
                 value={names}
                 onChange={(e) => setNames(e.target.value)}
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-theme-brown-light mb-2">Date</label>
+            <div className="space-y-2">
+              <Label htmlFor="date">Date</Label>
               <Input
+                id="date"
                 type="text"
                 placeholder="Wedding Date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-theme-brown-light mb-2">Location</label>
+            <div className="space-y-2">
+              <Label htmlFor="location">Location</Label>
               <Input
+                id="location"
                 type="text"
                 placeholder="Wedding Location"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-theme-brown-light mb-2">Template</label>
+            <div className="space-y-2">
+              <Label htmlFor="template">Template</Label>
               <Select value={selectedTemplate.id.toString()} onValueChange={(value) => {
                 const template = templates.find(t => t.id === parseInt(value));
                 if (template) {
@@ -116,9 +121,10 @@ export const SaveTheDateComposer = () => {
           <Button className="bg-theme-sage hover:bg-theme-sage-dark text-white w-full" onClick={generateMessage}>
             Generate Message
           </Button>
-          <div>
-            <label className="block text-sm font-medium text-theme-brown-light mb-2">Message</label>
+          <div className="space-y-2">
+            <Label htmlFor="message">Message</Label>
             <Textarea
+              id="message"
               readOnly
               value={message}
               className="resize-none bg-theme-cream/40 text-theme-brown"

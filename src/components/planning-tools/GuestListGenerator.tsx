@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Users, Download, PlusCircle, X } from "lucide-react";
@@ -192,56 +193,52 @@ export const GuestListGenerator = () => {
           <div className="border-t border-theme-beige pt-6">
             <h3 className="text-lg font-medium text-theme-brown mb-4">Add Guest</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <FormItem>
-                <FormLabel>First Name*</FormLabel>
-                <FormControl>
-                  <Input 
-                    name="firstName"
-                    value={newGuest.firstName}
-                    onChange={handleInputChange}
-                    placeholder="First Name"
-                  />
-                </FormControl>
-              </FormItem>
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name*</Label>
+                <Input 
+                  id="firstName"
+                  name="firstName"
+                  value={newGuest.firstName}
+                  onChange={handleInputChange}
+                  placeholder="First Name"
+                />
+              </div>
               
-              <FormItem>
-                <FormLabel>Last Name*</FormLabel>
-                <FormControl>
-                  <Input 
-                    name="lastName"
-                    value={newGuest.lastName}
-                    onChange={handleInputChange}
-                    placeholder="Last Name"
-                  />
-                </FormControl>
-              </FormItem>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name*</Label>
+                <Input 
+                  id="lastName"
+                  name="lastName"
+                  value={newGuest.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Last Name"
+                />
+              </div>
               
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input 
-                    name="email"
-                    value={newGuest.email}
-                    onChange={handleInputChange}
-                    placeholder="Email"
-                  />
-                </FormControl>
-              </FormItem>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input 
+                  id="email"
+                  name="email"
+                  value={newGuest.email}
+                  onChange={handleInputChange}
+                  placeholder="Email"
+                />
+              </div>
               
-              <FormItem>
-                <FormLabel>Phone</FormLabel>
-                <FormControl>
-                  <Input 
-                    name="phone"
-                    value={newGuest.phone}
-                    onChange={handleInputChange}
-                    placeholder="Phone"
-                  />
-                </FormControl>
-              </FormItem>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Input 
+                  id="phone"
+                  name="phone"
+                  value={newGuest.phone}
+                  onChange={handleInputChange}
+                  placeholder="Phone"
+                />
+              </div>
               
-              <FormItem>
-                <FormLabel>Group</FormLabel>
+              <div className="space-y-2">
+                <Label htmlFor="group">Group</Label>
                 <Select 
                   value={newGuest.group} 
                   onValueChange={(value) => handleSelectChange("group", value)}
@@ -255,10 +252,10 @@ export const GuestListGenerator = () => {
                     <SelectItem value="both">Both</SelectItem>
                   </SelectContent>
                 </Select>
-              </FormItem>
+              </div>
               
-              <FormItem>
-                <FormLabel>Status</FormLabel>
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
                 <Select 
                   value={newGuest.status} 
                   onValueChange={(value) => handleSelectChange("status", value)}
@@ -273,22 +270,21 @@ export const GuestListGenerator = () => {
                     <SelectItem value="pending">Pending</SelectItem>
                   </SelectContent>
                 </Select>
-              </FormItem>
+              </div>
               
-              <FormItem>
-                <FormLabel>Notes</FormLabel>
-                <FormControl>
-                  <Input 
-                    name="notes"
-                    value={newGuest.notes}
-                    onChange={handleInputChange}
-                    placeholder="Any notes or dietary requirements"
-                  />
-                </FormControl>
-              </FormItem>
+              <div className="space-y-2">
+                <Label htmlFor="notes">Notes</Label>
+                <Input 
+                  id="notes"
+                  name="notes"
+                  value={newGuest.notes}
+                  onChange={handleInputChange}
+                  placeholder="Any notes or dietary requirements"
+                />
+              </div>
               
               <div className="flex items-end gap-4">
-                <FormItem className="flex items-center space-x-2 h-10">
+                <div className="flex items-center space-x-2 h-10">
                   <input
                     type="checkbox"
                     id="plusOne"
@@ -299,7 +295,7 @@ export const GuestListGenerator = () => {
                   <label htmlFor="plusOne" className="text-sm font-medium leading-none">
                     Plus One
                   </label>
-                </FormItem>
+                </div>
                 
                 <Button 
                   className="bg-theme-sage hover:bg-theme-sage-dark text-white flex-1"
