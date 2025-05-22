@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Calculator, ListCheck, MessageSquare, Users, FileText, Calendar } from "lucide-react";
-
 interface PlanningToolCardProps {
   title: string;
   description: string;
@@ -13,7 +11,6 @@ interface PlanningToolCardProps {
   iconType: 'calculator' | 'checklist' | 'message' | 'users' | 'file' | 'calendar';
   featured?: boolean;
 }
-
 export const PlanningToolCard = ({
   title,
   description,
@@ -27,7 +24,6 @@ export const PlanningToolCard = ({
   const getIcon = () => {
     const size = featured ? 64 : 24;
     const strokeWidth = featured ? 1.5 : 2;
-    
     switch (iconType) {
       case 'calculator':
         return <Calculator size={size} strokeWidth={strokeWidth} />;
@@ -45,17 +41,15 @@ export const PlanningToolCard = ({
         return <Calculator size={size} strokeWidth={strokeWidth} />;
     }
   };
-
   if (featured) {
-    return (
-      <div className="border rounded-md overflow-hidden bg-white shadow-sm flex flex-col h-full">
+    return <div className="border rounded-md overflow-hidden bg-white shadow-sm flex flex-col h-full">
         <div className={`h-64 ${bgColor} flex items-center justify-center`}>
           <div className="text-theme-brown w-24 h-24 flex items-center justify-center">
             {getIcon()}
           </div>
         </div>
         <div className="p-6 flex flex-col flex-grow">
-          <h3 className="text-2xl font-serif text-theme-brown mb-3">{title}</h3>
+          <h3 className="font-serif text-theme-brown mb-3 text-xl">{title}</h3>
           <p className="text-theme-brown-light mb-4">
             {description}
           </p>
@@ -68,12 +62,9 @@ export const PlanningToolCard = ({
             </a>
           </Button>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className={`border rounded-md overflow-hidden ${bgColor}`}>
+  return <div className={`border rounded-md overflow-hidden ${bgColor}`}>
       <div className="p-8 text-center">
         <div className="flex justify-center mb-6">
           <div className="text-theme-brown">
@@ -93,6 +84,5 @@ export const PlanningToolCard = ({
           </a>
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
