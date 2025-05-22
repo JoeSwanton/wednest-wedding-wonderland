@@ -300,7 +300,7 @@ const WeddingBudgetCalculator = () => {
         </div>
         
         {/* CTA */}
-        <div className="text-center bg-[#f8f7f3] border border-gray-300 rounded-md p-6 mb-8">
+        <div className="text-center bg-[#f8f7f3] border border-gray-300 p-6 mb-8 rounded-none">
           <p className="text-theme-text-secondary mb-3">Need help finding vendors that fit your budget? Create a free account to get personalized recommendations.</p>
           <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark font-semibold">
             Create Free Account
