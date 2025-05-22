@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
@@ -13,95 +12,78 @@ import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calculator, ListCheck, MessageSquare, Users, FileText, Calendar } from "lucide-react";
 import { Testimonials } from "@/components/Testimonials";
-
 const PlanningTools = () => {
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState('tools-grid');
-
   useEffect(() => {
     if (tabParam) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
-
-  const planningTools = [
-    {
-      title: "Wedding Budget Calculator",
-      description: "Estimate and manage your wedding expenses with our detailed budget calculator.",
-      longDescription: "Track expenses, set realistic budgets, and get insights on where your money is going. Perfect for keeping your wedding costs under control.",
-      icon: <Calculator className="h-6 w-6 text-theme-brown" />,
-      bgColor: "bg-green-50",
-      path: "/planning-tools?tab=budget",
-      buttonText: "Use Budget Calculator"
-    },
-    {
-      title: "Wedding Checklist Generator",
-      description: "Generate a customized wedding planning checklist tailored to your timeline.",
-      longDescription: "Generate a personalized checklist based on your wedding date. Never miss a deadline or important task with our comprehensive planning tool.",
-      icon: <ListCheck className="h-6 w-6 text-theme-brown" />,
-      bgColor: "bg-pink-50",
-      path: "/planning-tools?tab=checklist",
-      buttonText: "Create Checklist"
-    },
-    {
-      title: "Save-the-Date SMS Composer",
-      description: "Create and send beautiful save-the-date messages to your guests via SMS.",
-      longDescription: "Craft the perfect save-the-date message and easily share it with your guests. A modern alternative to traditional paper invitations.",
-      icon: <MessageSquare className="h-6 w-6 text-theme-brown" />,
-      bgColor: "bg-gray-100",
-      path: "/planning-tools?tab=save-date",
-      buttonText: "Compose Message"
-    },
-    {
-      title: "Guest List Excel Download",
-      description: "Create and download a comprehensive guest list spreadsheet to manage your invitations.",
-      longDescription: "Organize your guest information, track RSVPs, and manage dietary requirements with our easy-to-use guest list template.",
-      icon: <Users className="h-6 w-6 text-theme-brown" />,
-      bgColor: "bg-yellow-50",
-      path: "/planning-tools?tab=guest-list",
-      buttonText: "Create Guest List"
-    },
-    {
-      title: "Vendor Question Generator",
-      description: "Get a list of questions to ask your wedding vendors.",
-      longDescription: "Be prepared with professional and tailored questions for photographers, venues, caterers, and more. Make informed decisions for your special day.",
-      icon: <FileText className="h-6 w-6 text-theme-brown" />,
-      bgColor: "bg-green-50",
-      path: "/planning-tools?tab=vendor-questions",
-      buttonText: "Generate Questions"
-    },
-    {
-      title: "More Tools Coming Soon",
-      description: "We're constantly adding new tools to help with your wedding planning.",
-      longDescription: "Sign up for a free account to be the first to know when we release new planning tools and features.",
-      icon: <Calendar className="h-6 w-6 text-theme-brown" />,
-      bgColor: "bg-pink-50",
-      path: "#",
-      buttonText: "Create Free Account"
-    }
-  ];
-
-  const testimonials = [
-    {
-      quote: "The budget calculator was a lifesaver! It helped us stay on track and avoid overspending on our wedding.",
-      author: "Sarah & Michael",
-      location: "Melbourne"
-    },
-    {
-      quote: "I loved how easy it was to create a custom checklist. It made planning our wedding so much less stressful.",
-      author: "Emma & James",
-      location: "Melbourne"
-    },
-    {
-      quote: "The vendor question generator gave us confidence when meeting with potential vendors. We knew exactly what to ask!",
-      author: "Jessica & David",
-      location: "Brisbane"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-white flex flex-col">
+  const planningTools = [{
+    title: "Wedding Budget Calculator",
+    description: "Estimate and manage your wedding expenses with our detailed budget calculator.",
+    longDescription: "Track expenses, set realistic budgets, and get insights on where your money is going. Perfect for keeping your wedding costs under control.",
+    icon: <Calculator className="h-6 w-6 text-theme-brown" />,
+    bgColor: "bg-green-50",
+    path: "/planning-tools?tab=budget",
+    buttonText: "Use Budget Calculator"
+  }, {
+    title: "Wedding Checklist Generator",
+    description: "Generate a customized wedding planning checklist tailored to your timeline.",
+    longDescription: "Generate a personalized checklist based on your wedding date. Never miss a deadline or important task with our comprehensive planning tool.",
+    icon: <ListCheck className="h-6 w-6 text-theme-brown" />,
+    bgColor: "bg-pink-50",
+    path: "/planning-tools?tab=checklist",
+    buttonText: "Create Checklist"
+  }, {
+    title: "Save-the-Date SMS Composer",
+    description: "Create and send beautiful save-the-date messages to your guests via SMS.",
+    longDescription: "Craft the perfect save-the-date message and easily share it with your guests. A modern alternative to traditional paper invitations.",
+    icon: <MessageSquare className="h-6 w-6 text-theme-brown" />,
+    bgColor: "bg-gray-100",
+    path: "/planning-tools?tab=save-date",
+    buttonText: "Compose Message"
+  }, {
+    title: "Guest List Excel Download",
+    description: "Create and download a comprehensive guest list spreadsheet to manage your invitations.",
+    longDescription: "Organize your guest information, track RSVPs, and manage dietary requirements with our easy-to-use guest list template.",
+    icon: <Users className="h-6 w-6 text-theme-brown" />,
+    bgColor: "bg-yellow-50",
+    path: "/planning-tools?tab=guest-list",
+    buttonText: "Create Guest List"
+  }, {
+    title: "Vendor Question Generator",
+    description: "Get a list of questions to ask your wedding vendors.",
+    longDescription: "Be prepared with professional and tailored questions for photographers, venues, caterers, and more. Make informed decisions for your special day.",
+    icon: <FileText className="h-6 w-6 text-theme-brown" />,
+    bgColor: "bg-green-50",
+    path: "/planning-tools?tab=vendor-questions",
+    buttonText: "Generate Questions"
+  }, {
+    title: "More Tools Coming Soon",
+    description: "We're constantly adding new tools to help with your wedding planning.",
+    longDescription: "Sign up for a free account to be the first to know when we release new planning tools and features.",
+    icon: <Calendar className="h-6 w-6 text-theme-brown" />,
+    bgColor: "bg-pink-50",
+    path: "#",
+    buttonText: "Create Free Account"
+  }];
+  const testimonials = [{
+    quote: "The budget calculator was a lifesaver! It helped us stay on track and avoid overspending on our wedding.",
+    author: "Sarah & Michael",
+    location: "Melbourne"
+  }, {
+    quote: "I loved how easy it was to create a custom checklist. It made planning our wedding so much less stressful.",
+    author: "Emma & James",
+    location: "Melbourne"
+  }, {
+    quote: "The vendor question generator gave us confidence when meeting with potential vendors. We knew exactly what to ask!",
+    author: "Jessica & David",
+    location: "Brisbane"
+  }];
+  return <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <Separator className="bg-theme-brown h-[1px] w-full" />
       
@@ -138,8 +120,7 @@ const PlanningTools = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {planningTools.map((tool, index) => (
-                <div key={index} className={`border rounded-md overflow-hidden ${tool.bgColor}`}>
+              {planningTools.map((tool, index) => <div key={index} className={`border rounded-md overflow-hidden ${tool.bgColor}`}>
                   <div className="p-8 text-center">
                     <div className="flex justify-center mb-6">
                       {tool.icon}
@@ -151,25 +132,19 @@ const PlanningTools = () => {
                     <p className="text-sm text-theme-brown-light mb-6">
                       {tool.longDescription}
                     </p>
-                    <Button 
-                      asChild 
-                      variant="outline" 
-                      className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark border-0"
-                    >
+                    <Button asChild variant="outline" className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark border-0">
                       <a href={tool.path}>
                         {tool.buttonText}
                       </a>
                     </Button>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
             
             <div className="mb-16">
               <h2 className="text-3xl font-serif text-theme-brown text-center mb-8">What Couples Say About Our Tools</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {testimonials.map((testimonial, index) => (
-                  <div key={index} className="border p-6 rounded-md">
+                {testimonials.map((testimonial, index) => <div key={index} className="border p-6 rounded-md">
                     <div className="flex justify-center mb-4">
                       <div className="text-4xl text-theme-brown-light">"</div>
                     </div>
@@ -181,8 +156,7 @@ const PlanningTools = () => {
                       <p className="font-medium text-theme-brown">{testimonial.author}</p>
                       <p className="text-sm text-theme-brown-light">{testimonial.location}</p>
                     </div>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </div>
             
@@ -195,7 +169,7 @@ const PlanningTools = () => {
                 <Button className="bg-white text-theme-brown hover:bg-theme-cream">
                   Create Free Account
                 </Button>
-                <Button variant="outline" className="border-white text-white hover:bg-theme-brown-dark">
+                <Button variant="outline" className="border-white hover:bg-theme-brown-dark font-normal text-theme-brown text-[theme-brown-dark] bg-slate-50">
                   Learn More
                 </Button>
               </div>
@@ -225,8 +199,6 @@ const PlanningTools = () => {
       </div>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default PlanningTools;
