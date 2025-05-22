@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+
 const WeddingBudgetCalculator = () => {
   const [totalBudget, setTotalBudget] = useState<string>("30000");
   const [guestCount, setGuestCount] = useState<string>("100");
+  const [activeTab, setActiveTab] = useState<'breakdown' | 'actual'>('breakdown');
   const [categories, setCategories] = useState([{
     name: "Venue & Catering",
     items: [{
@@ -118,15 +120,18 @@ const WeddingBudgetCalculator = () => {
       id: "mi-1"
     }]
   }]);
+  
   const getTotalBudgeted = () => {
     return categories.reduce((total, category) => {
       return total + category.items.reduce((catTotal, item) => catTotal + item.budget, 0);
     }, 0);
   };
+
   const totalBudgeted = getTotalBudgeted();
   const remainingBudget = Number(totalBudget) - totalBudgeted;
   const costPerGuest = Number(guestCount) > 0 ? Math.round(Number(totalBudget) / Number(guestCount)) : 0;
   const percentUsed = Math.round(totalBudgeted / Number(totalBudget) * 100);
+
   const handleAddItem = (categoryIndex: number) => {
     const newCategories = [...categories];
     const newItem = {
@@ -138,26 +143,31 @@ const WeddingBudgetCalculator = () => {
     newCategories[categoryIndex].items.push(newItem);
     setCategories(newCategories);
   };
+
   const handleDeleteItem = (categoryIndex: number, itemIndex: number) => {
     const newCategories = [...categories];
     newCategories[categoryIndex].items.splice(itemIndex, 1);
     setCategories(newCategories);
   };
+
   const handleItemBudgetChange = (categoryIndex: number, itemIndex: number, value: number) => {
     const newCategories = [...categories];
     newCategories[categoryIndex].items[itemIndex].budget = value;
     setCategories(newCategories);
   };
+
   const handleItemActualChange = (categoryIndex: number, itemIndex: number, value: string) => {
     const newCategories = [...categories];
     newCategories[categoryIndex].items[itemIndex].actual = value;
     setCategories(newCategories);
   };
+
   const handleItemNameChange = (categoryIndex: number, itemIndex: number, value: string) => {
     const newCategories = [...categories];
     newCategories[categoryIndex].items[itemIndex].name = value;
     setCategories(newCategories);
   };
+  
   return <div className="min-h-screen flex flex-col bg-[#f8f7f3]">
       <Navbar />
       <Separator className="bg-theme-brown h-[1px] w-full" />
@@ -184,75 +194,31 @@ const WeddingBudgetCalculator = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Top Section with Overview and Summary side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+          {/* Wedding Budget Overview - Smaller */}
+          <div className="lg:col-span-6">
             <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4">
               <h2 className="font-medium text-theme-text-primary text-lg mb-3">Wedding Budget Overview</h2>
               <p className="text-theme-text-secondary text-sm mb-4">Set your total budget and track your spending</p>
               
-              <div className="space-y-4 mb-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="totalBudget" className="block text-sm text-theme-text-secondary mb-1">Total Wedding Budget (AUD)</label>
-                  <Input id="totalBudget" value={totalBudget} onChange={e => setTotalBudget(e.target.value)} type="number" className="max-w-[200px]" />
+                  <Input id="totalBudget" value={totalBudget} onChange={e => setTotalBudget(e.target.value)} type="number" className="w-full" />
                 </div>
                 
                 <div>
                   <label htmlFor="guestCount" className="block text-sm text-theme-text-secondary mb-1">Number of Guests</label>
-                  <Input id="guestCount" value={guestCount} onChange={e => setGuestCount(e.target.value)} type="number" className="max-w-[200px]" />
+                  <Input id="guestCount" value={guestCount} onChange={e => setGuestCount(e.target.value)} type="number" className="w-full" />
                 </div>
               </div>
             </div>
-            
-            {/* Budget Breakdown */}
-            <div className="space-y-6">
-              
-              
-              <div className="grid grid-cols-2 text-sm text-center mb-0 bg-[#f5efe6] rounded-md p-2">
-                <div className="text-theme-text-primary">Budget Breakdown</div>
-                <div className="text-theme-text-primary">Estimated vs Actual</div>
-              </div>
-
-              {categories.map((category, categoryIndex) => <Card key={category.name} className="bg-white border border-gray-200 shadow-sm overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="p-4 border-b bg-gray-50">
-                      <h3 className="font-medium text-theme-text-primary">{category.name}</h3>
-                    </div>
-                    <table className="w-full">
-                      <tbody>
-                        {category.items.map((item, itemIndex) => <tr key={item.id} className="border-t border-gray-100">
-                            <td className="p-4 text-theme-text-primary">{item.name}</td>
-                            <td className="p-4">
-                              <Input type="number" value={item.budget} onChange={e => handleItemBudgetChange(categoryIndex, itemIndex, Number(e.target.value))} className="w-full text-right" />
-                            </td>
-                            <td className="p-4">
-                              <Input type="text" value={item.actual} onChange={e => handleItemActualChange(categoryIndex, itemIndex, e.target.value)} className="w-full text-right" placeholder="Actual" />
-                            </td>
-                            <td className="p-4 text-center">
-                              <button onClick={() => handleDeleteItem(categoryIndex, itemIndex)} className="text-gray-400 hover:text-red-500">
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </td>
-                          </tr>)}
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <td colSpan={4} className="p-4 border-t">
-                            <button onClick={() => handleAddItem(categoryIndex)} className="text-theme-text-primary hover:text-gray-900 text-sm flex items-center">
-                              <Plus className="h-4 w-4 mr-1" /> Add Item
-                            </button>
-                          </td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </CardContent>
-                </Card>)}
-            </div>
           </div>
           
-          {/* Right Column */}
-          <div className="space-y-6">
-            <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4">
+          {/* Budget Summary - Moved next to Overview */}
+          <div className="lg:col-span-6">
+            <div className="bg-white border border-gray-200 shadow-sm rounded-md p-4 h-full">
               <h2 className="font-medium text-theme-text-primary text-lg mb-3">Budget Summary</h2>
               <p className="text-theme-text-secondary text-sm mb-4">Track your spending progress</p>
               
@@ -278,7 +244,73 @@ const WeddingBudgetCalculator = () => {
                 Export Budget
               </Button>
             </div>
+          </div>
+        </div>
             
+        {/* Budget Breakdown */}
+        <div className="space-y-6">
+          {/* Tab Buttons */}
+          <div className="grid grid-cols-2 text-sm mb-4">
+            <button 
+              onClick={() => setActiveTab('breakdown')} 
+              className={`text-center py-2 px-4 font-medium ${activeTab === 'breakdown' 
+                ? 'bg-[#f5efe6] text-theme-text-primary rounded-t-md' 
+                : 'bg-gray-100 text-theme-text-secondary'}`}
+            >
+              Budget Breakdown
+            </button>
+            <button 
+              onClick={() => setActiveTab('actual')} 
+              className={`text-center py-2 px-4 font-medium ${activeTab === 'actual' 
+                ? 'bg-[#f5efe6] text-theme-text-primary rounded-t-md' 
+                : 'bg-gray-100 text-theme-text-secondary'}`}
+            >
+              Estimated vs Actual
+            </button>
+          </div>
+
+          {categories.map((category, categoryIndex) => <Card key={category.name} className="bg-white border border-gray-200 shadow-sm overflow-hidden">
+              <CardContent className="p-0">
+                <div className="p-4 border-b bg-gray-50">
+                  <h3 className="font-medium text-theme-text-primary">{category.name}</h3>
+                </div>
+                <table className="w-full">
+                  <tbody>
+                    {category.items.map((item, itemIndex) => <tr key={item.id} className="border-t border-gray-100">
+                        <td className="p-4 text-theme-text-primary">{item.name}</td>
+                        <td className="p-4">
+                          <Input type="number" value={item.budget} onChange={e => handleItemBudgetChange(categoryIndex, itemIndex, Number(e.target.value))} className="w-full text-right" />
+                        </td>
+                        <td className="p-4">
+                          <Input type="text" value={item.actual} onChange={e => handleItemActualChange(categoryIndex, itemIndex, e.target.value)} className="w-full text-right" placeholder="Actual" />
+                        </td>
+                        <td className="p-4 text-center">
+                          <button onClick={() => handleDeleteItem(categoryIndex, itemIndex)} className="text-gray-400 hover:text-red-500">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>)}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan={4} className="p-4 border-t">
+                        <button onClick={() => handleAddItem(categoryIndex)} className="text-theme-text-primary hover:text-gray-900 text-sm flex items-center">
+                          <Plus className="h-4 w-4 mr-1" /> Add Item
+                        </button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </CardContent>
+            </Card>)}
+        </div>
+          
+        {/* Right Column - Tips section */}
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            {/* Empty column for balance */}
+          </div>
+          <div className="lg:col-span-1">
             <div className="bg-white border border-gray-200 rounded-md p-4">
               <h2 className="font-medium text-theme-text-primary text-lg mb-3">Wedding Budget Tips</h2>
               <ul className="space-y-2 text-sm text-theme-text-secondary">
@@ -305,7 +337,7 @@ const WeddingBudgetCalculator = () => {
               </ul>
             </div>
             
-            <div className="text-center bg-[#f8f7f3] border border-gray-300 rounded-md p-4">
+            <div className="text-center bg-[#f8f7f3] border border-gray-300 rounded-md p-4 mt-6">
               <p className="text-theme-text-secondary text-sm mb-3">Need help finding vendors that fit your budget? Create a free account to get personalized recommendations.</p>
               <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark font-semibold">
                 Create Free Account
@@ -318,4 +350,5 @@ const WeddingBudgetCalculator = () => {
       <Footer />
     </div>;
 };
+
 export default WeddingBudgetCalculator;
