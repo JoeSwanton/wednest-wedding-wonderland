@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
@@ -31,7 +30,7 @@ const PlanningTools = () => {
       description: "Estimate and manage your wedding expenses with our detailed budget calculator.",
       longDescription: "Track expenses, set realistic budgets, and get insights on where your money is going. Perfect for keeping your wedding costs under control.",
       bgColor: "bg-green-50",
-      path: "/planning-tools?tab=budget",
+      path: "/planning-tools/budget-calculator",
       buttonText: "Use Budget Calculator",
       iconType: "calculator" as const
     }, 
@@ -40,7 +39,7 @@ const PlanningTools = () => {
       description: "Generate a customized wedding planning checklist tailored to your timeline.",
       longDescription: "Generate a personalized checklist based on your wedding date. Never miss a deadline or important task with our comprehensive planning tool.",
       bgColor: "bg-pink-50",
-      path: "/planning-tools?tab=checklist",
+      path: "/planning-tools/checklist",
       buttonText: "Create Checklist",
       iconType: "checklist" as const
     }, 
@@ -49,7 +48,7 @@ const PlanningTools = () => {
       description: "Create and send beautiful save-the-date messages to your guests via SMS.",
       longDescription: "Craft the perfect save-the-date message and easily share it with your guests. A modern alternative to traditional paper invitations.",
       bgColor: "bg-gray-100",
-      path: "/planning-tools?tab=save-date",
+      path: "/planning-tools/save-date",
       buttonText: "Compose Message",
       iconType: "message" as const
     }, 
@@ -58,7 +57,7 @@ const PlanningTools = () => {
       description: "Create and download a comprehensive guest list spreadsheet to manage your invitations.",
       longDescription: "Organize your guest information, track RSVPs, and manage dietary requirements with our easy-to-use guest list template.",
       bgColor: "bg-yellow-50",
-      path: "/planning-tools?tab=guest-list",
+      path: "/planning-tools/guest-list",
       buttonText: "Create Guest List",
       iconType: "file-spreadsheet" as const
     }, 
@@ -67,7 +66,7 @@ const PlanningTools = () => {
       description: "Get a list of questions to ask your wedding vendors.",
       longDescription: "Be prepared with professional and tailored questions for photographers, venues, caterers, and more. Make informed decisions for your special day.",
       bgColor: "bg-green-50",
-      path: "/planning-tools?tab=vendor-questions",
+      path: "/planning-tools/vendor-questions",
       buttonText: "Generate Questions",
       iconType: "file-question" as const
     }, 

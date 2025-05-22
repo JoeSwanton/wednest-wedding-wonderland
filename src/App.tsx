@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import PlanningTools from "./pages/PlanningTools";
+import WeddingBudgetCalculator from "./pages/WeddingBudgetCalculator";
 import Inspiration from "./pages/Inspiration";
 import Blog from "./pages/Blog";
 import Vendors from "./pages/Vendors";
@@ -56,6 +57,7 @@ function App() {
             <Route path="/vendors" element={<Vendors />} />
             <Route path="/vendors/:vendorId" element={<VendorProfile />} />
             <Route path="/planning-tools" element={<PlanningTools />} />
+            <Route path="/planning-tools/budget-calculator" element={<WeddingBudgetCalculator />} />
             <Route path="/inspiration" element={<Inspiration />} />
             <Route path="/blog" element={<Blog />} />
             

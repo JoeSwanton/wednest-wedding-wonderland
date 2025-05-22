@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Calculator, ListCheck, MessageSquare, Users, FileText, Calendar, FileSpreadsheet, ListChecks, FileQuestion } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface PlanningToolCardProps {
   title: string;
@@ -68,9 +69,9 @@ export const PlanningToolCard = ({
           {longDescription}
         </p>
         <Button asChild variant="default" className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark border-0 mt-auto">
-          <a href={path}>
+          <Link to={path}>
             {buttonText}
-          </a>
+          </Link>
         </Button>
       </div>
     </div>
