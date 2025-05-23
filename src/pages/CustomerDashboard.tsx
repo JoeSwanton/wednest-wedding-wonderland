@@ -3,8 +3,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, Settings } from "lucide-react";
+import { Bell, Search, Settings, Plus, Calendar, CheckSquare, Users, CreditCard, Calendar } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BudgetTracker from "@/components/customer/BudgetTracker";
@@ -20,126 +22,164 @@ const CustomerDashboard = () => {
   const [activeTab, setActiveTab] = useState("budget");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-wednest-beige/20">
+    <div className="min-h-screen bg-gradient-to-b from-white to-theme-beige/20">
       <Navbar />
       
       {/* Dashboard Header */}
       <DashboardHeader />
       
       {/* Dashboard Content */}
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Quick Access Tiles */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <h3 className="font-serif font-semibold text-xl text-theme-text-primary mb-4">Planning Tools</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <Button 
             variant="outline" 
             onClick={() => setActiveTab("budget")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 ${activeTab === 'budget' ? 'border-theme-brown bg-theme-cream/20' : ''}`}
+            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 
+              ${activeTab === 'budget' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
-            <span className="text-2xl">📊</span>
-            <span className="font-medium">Budget Tracker</span>
+            <CreditCard className="h-6 w-6 text-theme-brown" />
+            <span className="font-medium text-sm">Budget</span>
           </Button>
           
           <Button 
             variant="outline" 
             onClick={() => setActiveTab("guests")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 ${activeTab === 'guests' ? 'border-theme-brown bg-theme-cream/20' : ''}`}
+            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
+              ${activeTab === 'guests' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
-            <span className="text-2xl">👥</span>
-            <span className="font-medium">Guest List</span>
+            <Users className="h-6 w-6 text-theme-brown" />
+            <span className="font-medium text-sm">Guests</span>
           </Button>
           
           <Button 
             variant="outline" 
             onClick={() => setActiveTab("timeline")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 ${activeTab === 'timeline' ? 'border-theme-brown bg-theme-cream/20' : ''}`}
+            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
+              ${activeTab === 'timeline' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
-            <span className="text-2xl">🕒</span>
-            <span className="font-medium">Timeline</span>
+            <Calendar className="h-6 w-6 text-theme-brown" />
+            <span className="font-medium text-sm">Timeline</span>
           </Button>
           
           <Button 
             variant="outline" 
             onClick={() => setActiveTab("checklist")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 ${activeTab === 'checklist' ? 'border-theme-brown bg-theme-cream/20' : ''}`}
+            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
+              ${activeTab === 'checklist' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
-            <span className="text-2xl">✅</span>
-            <span className="font-medium">Checklist</span>
+            <CheckSquare className="h-6 w-6 text-theme-brown" />
+            <span className="font-medium text-sm">Checklist</span>
           </Button>
           
           <Button 
             variant="outline" 
             onClick={() => setActiveTab("contracts")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 ${activeTab === 'contracts' ? 'border-theme-brown bg-theme-cream/20' : ''}`}
+            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
+              ${activeTab === 'contracts' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
             <span className="text-2xl">📄</span>
-            <span className="font-medium">Vendor Contracts</span>
+            <span className="font-medium text-sm">Contracts</span>
           </Button>
           
           <Button 
             variant="outline" 
             onClick={() => navigate("/vendors")}
-            className="h-28 flex flex-col items-center justify-center gap-2"
+            className="h-28 flex flex-col items-center justify-center gap-2 hover:shadow-card transition-all duration-200"
           >
-            <span className="text-2xl">💍</span>
-            <span className="font-medium">Browse Vendors</span>
+            <Search className="h-6 w-6 text-theme-brown" />
+            <span className="font-medium text-sm">Find Vendors</span>
           </Button>
         </div>
         
         {/* Tab Content */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <Card className="bg-white rounded-lg shadow-card mb-8 animate-fade-in overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-5 mb-6">
-              <TabsTrigger value="budget">Budget Tracker</TabsTrigger>
-              <TabsTrigger value="guests">Guest List</TabsTrigger>
-              <TabsTrigger value="timeline">Timeline</TabsTrigger>
-              <TabsTrigger value="checklist">Checklist</TabsTrigger>
-              <TabsTrigger value="contracts">Contracts</TabsTrigger>
+            <TabsList className="grid grid-cols-5 bg-theme-cream/20 p-0 h-auto">
+              <TabsTrigger 
+                value="budget" 
+                className="py-3 data-[state=active]:bg-white data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-theme-brown data-[state=active]:rounded-none data-[state=active]:text-theme-brown data-[state=active]:font-medium"
+              >
+                Budget Tracker
+              </TabsTrigger>
+              <TabsTrigger 
+                value="guests" 
+                className="py-3 data-[state=active]:bg-white data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-theme-brown data-[state=active]:rounded-none data-[state=active]:text-theme-brown data-[state=active]:font-medium"
+              >
+                Guest List
+              </TabsTrigger>
+              <TabsTrigger 
+                value="timeline" 
+                className="py-3 data-[state=active]:bg-white data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-theme-brown data-[state=active]:rounded-none data-[state=active]:text-theme-brown data-[state=active]:font-medium"
+              >
+                Timeline
+              </TabsTrigger>
+              <TabsTrigger 
+                value="checklist" 
+                className="py-3 data-[state=active]:bg-white data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-theme-brown data-[state=active]:rounded-none data-[state=active]:text-theme-brown data-[state=active]:font-medium"
+              >
+                Checklist
+              </TabsTrigger>
+              <TabsTrigger 
+                value="contracts" 
+                className="py-3 data-[state=active]:bg-white data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-theme-brown data-[state=active]:rounded-none data-[state=active]:text-theme-brown data-[state=active]:font-medium"
+              >
+                Contracts
+              </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="budget">
-              <BudgetTracker />
-            </TabsContent>
-            
-            <TabsContent value="guests">
-              <GuestListManager />
-            </TabsContent>
-            
-            <TabsContent value="timeline">
-              <TimelineCreator />
-            </TabsContent>
-            
-            <TabsContent value="checklist">
-              <TaskChecklist />
-            </TabsContent>
-            
-            <TabsContent value="contracts">
-              <VendorContracts />
-            </TabsContent>
+            <div className="p-6">
+              <TabsContent value="budget" className="mt-0">
+                <BudgetTracker />
+              </TabsContent>
+              
+              <TabsContent value="guests" className="mt-0">
+                <GuestListManager />
+              </TabsContent>
+              
+              <TabsContent value="timeline" className="mt-0">
+                <TimelineCreator />
+              </TabsContent>
+              
+              <TabsContent value="checklist" className="mt-0">
+                <TaskChecklist />
+              </TabsContent>
+              
+              <TabsContent value="contracts" className="mt-0">
+                <VendorContracts />
+              </TabsContent>
+            </div>
           </Tabs>
-        </div>
+        </Card>
         
         {/* Bottom Action Bar */}
-        <div className="flex flex-wrap justify-center gap-x-8 mb-8 bg-white rounded-lg p-4 shadow-sm">
-          <Button variant="ghost" className="flex flex-col items-center gap-1">
-            <span className="text-xl">📥</span>
-            <span className="text-sm font-medium">Uploads</span>
-          </Button>
-          
-          <Button variant="ghost" className="flex flex-col items-center gap-1">
-            <span className="text-xl">🔔</span>
-            <span className="text-sm font-medium">Reminders</span>
-          </Button>
-          
-          <Button variant="ghost" className="flex flex-col items-center gap-1">
-            <span className="text-xl">📱</span>
-            <span className="text-sm font-medium">Mobile View</span>
-          </Button>
-          
-          <Button variant="ghost" className="flex flex-col items-center gap-1">
-            <span className="text-xl">⚙️</span>
-            <span className="text-sm font-medium">Settings</span>
-          </Button>
-        </div>
+        <Card className="shadow-card bg-white">
+          <CardHeader className="pb-0">
+            <CardTitle className="text-lg font-serif">Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap justify-center md:justify-start gap-x-4 md:gap-x-8">
+            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
+              <Bell className="h-5 w-5 text-theme-brown" />
+              <span className="text-xs font-medium">Reminders</span>
+            </Button>
+            
+            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
+              <Plus className="h-5 w-5 text-theme-brown" />
+              <span className="text-xs font-medium">Add Task</span>
+            </Button>
+            
+            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
+              <Calendar className="h-5 w-5 text-theme-brown" />
+              <span className="text-xs font-medium">Add Event</span>
+            </Button>
+            
+            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
+              <Settings className="h-5 w-5 text-theme-brown" />
+              <span className="text-xs font-medium">Settings</span>
+            </Button>
+          </CardContent>
+        </Card>
       </main>
       
       <Footer />

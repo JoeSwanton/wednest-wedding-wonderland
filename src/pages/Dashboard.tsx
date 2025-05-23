@@ -63,8 +63,10 @@ const Dashboard = () => {
     return null; // Return nothing while redirecting
   }
   
+  const hasWeddingInfo = weddingDetails && weddingDetails.selected_date;
+  
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen flex bg-theme-cream/10">
       <DashboardSidebar />
       
       <div className="flex-1 flex flex-col">
@@ -73,6 +75,24 @@ const Dashboard = () => {
         <div className="p-6 flex-1 overflow-y-auto">
           {/* Wedding Summary Header */}
           <WeddingSummaryHeader weddingDetails={weddingDetails} loading={loading} />
+          
+          {/* Setup CTA if wedding info is missing */}
+          {!hasWeddingInfo && (
+            <div className="dashboard-card mb-6 bg-theme-beige/30 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-lg font-serif font-semibold text-theme-brown">Complete Your Wedding Profile</h4>
+                  <p className="text-theme-brown-light mt-1">Set important details like date, location, and guest count</p>
+                </div>
+                <Button 
+                  className="bg-theme-brown text-white hover:bg-theme-brown-dark font-semibold"
+                  onClick={() => navigate('/questionnaire')}
+                >
+                  Setup Wedding Details
+                </Button>
+              </div>
+            </div>
+          )}
           
           {/* Main Content */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -87,7 +107,7 @@ const Dashboard = () => {
           </div>
           
           {/* Tasks and Events Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             {/* Upcoming Tasks */}
             <UpcomingTasksList />
             
@@ -96,18 +116,22 @@ const Dashboard = () => {
           </div>
           
           {/* Vendor Section */}
-          <div className="mt-6">
+          <div className="mt-8">
             <VendorDashboardList />
           </div>
           
           {/* Recommendations */}
-          <Card className="mt-6 bg-theme-cream/20 border-theme-cream">
-            <CardContent className="flex items-center justify-between p-6">
+          <Card className="mt-8 bg-theme-cream/20 border-theme-cream shadow-card">
+            <CardContent className="flex flex-col md:flex-row items-center justify-between p-6 gap-4">
               <div>
-                <h3 className="font-medium text-lg text-theme-brown">Need help with your planning?</h3>
+                <h4 className="font-serif font-semibold text-lg text-theme-brown">Need help with your planning?</h4>
                 <p className="text-theme-brown-light">Explore our curated vendor recommendations based on your preferences.</p>
               </div>
-              <Button variant="outline" className="bg-theme-brown text-white hover:bg-theme-brown-dark">
+              <Button 
+                variant="outline" 
+                className="bg-theme-brown text-white hover:bg-theme-brown-dark font-semibold whitespace-nowrap"
+              >
+                <Search className="mr-2 h-4 w-4" />
                 View Recommendations
               </Button>
             </CardContent>

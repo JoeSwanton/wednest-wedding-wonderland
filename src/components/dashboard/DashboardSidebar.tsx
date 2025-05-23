@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
 
 const DashboardSidebar = () => {
   const location = useLocation();
@@ -53,7 +54,8 @@ const DashboardSidebar = () => {
     { 
       name: "Checklist", 
       path: "/checklist", 
-      icon: <ListChecks className="w-5 h-5" /> 
+      icon: <ListChecks className="w-5 h-5" />,
+      badge: "24"
     },
     { 
       name: "Budget", 
@@ -83,7 +85,8 @@ const DashboardSidebar = () => {
     { 
       name: "Messages", 
       path: "/messages", 
-      icon: <MessageSquare className="w-5 h-5" /> 
+      icon: <MessageSquare className="w-5 h-5" />,
+      badge: "3"
     },
     { 
       name: "Settings", 
@@ -126,7 +129,7 @@ const DashboardSidebar = () => {
 
   return (
     <div className={cn(
-      "bg-white border-r border-gray-200 h-screen transition-all duration-300 flex flex-col",
+      "bg-white border-r border-gray-200 h-screen transition-all duration-300 flex flex-col shadow-sm",
       isCollapsed ? "w-16" : "w-60"
     )}>
       <div className="p-4 border-b border-gray-100 flex items-center justify-between">
@@ -148,16 +151,16 @@ const DashboardSidebar = () => {
       </div>
       
       <div className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        <nav className="px-2 space-y-1">
+        <nav className="px-2 space-y-1.5">
           {navItems.map((item) => (
             item.subItems ? (
               <Collapsible key={item.name} className="w-full">
                 <CollapsibleTrigger className="w-full" asChild>
                   <div className={cn(
-                    "flex items-center px-3 py-2 text-sm rounded-md cursor-pointer group mb-1",
+                    "flex items-center px-3 py-2.5 text-sm rounded-md cursor-pointer group mb-1 transition-colors duration-150",
                     location.pathname === item.path
-                      ? "bg-theme-cream/10 text-theme-brown font-medium"
-                      : "text-theme-brown-light hover:bg-theme-cream/10 hover:text-theme-brown"
+                      ? "bg-theme-cream/30 text-theme-brown font-medium"
+                      : "text-theme-brown-light hover:bg-theme-cream/20 hover:text-theme-brown"
                   )}>
                     <div className={cn(
                       "rounded-md p-1.5 text-theme-brown-light group-hover:text-theme-brown",
@@ -167,20 +170,23 @@ const DashboardSidebar = () => {
                     </div>
                     <span className={cn("ml-3 flex-1 transition-opacity duration-300", 
                       isCollapsed && "opacity-0 w-0 hidden")}>{item.name}</span>
+                    {item.badge && !isCollapsed && (
+                      <Badge className="bg-theme-brown text-white ml-2 mr-2">{item.badge}</Badge>
+                    )}
                     <ChevronRight className={cn("h-3.5 w-3.5 transition-transform text-theme-brown-light", 
                       isCollapsed && "hidden")} />
                   </div>
                 </CollapsibleTrigger>
-                <CollapsibleContent className={cn("space-y-1 pl-8", isCollapsed && "hidden")}>
+                <CollapsibleContent className={cn("space-y-1 pl-9", isCollapsed && "hidden")}>
                   {item.subItems.map((subItem) => (
                     <Link
                       key={subItem.name}
                       to={subItem.path}
                       className={cn(
-                        "block px-3 py-1.5 text-xs rounded-md",
+                        "block px-3 py-2 text-xs rounded-md transition-colors duration-150",
                         location.pathname === subItem.path
-                          ? "bg-theme-cream/10 text-theme-brown font-medium"
-                          : "text-theme-brown-light hover:bg-theme-cream/10 hover:text-theme-brown"
+                          ? "bg-theme-cream/30 text-theme-brown font-medium"
+                          : "text-theme-brown-light hover:bg-theme-cream/20 hover:text-theme-brown"
                       )}
                     >
                       {subItem.name}
@@ -193,10 +199,10 @@ const DashboardSidebar = () => {
                 key={item.name}
                 to={item.path}
                 className={cn(
-                  "flex items-center px-3 py-2 text-sm rounded-md group",
+                  "flex items-center px-3 py-2.5 text-sm rounded-md group transition-colors duration-150",
                   location.pathname === item.path
-                    ? "bg-theme-cream/10 text-theme-brown font-medium"
-                    : "text-theme-brown-light hover:bg-theme-cream/10 hover:text-theme-brown"
+                    ? "bg-theme-cream/30 text-theme-brown font-medium"
+                    : "text-theme-brown-light hover:bg-theme-cream/20 hover:text-theme-brown"
                 )}
               >
                 <div className={cn(
@@ -207,21 +213,26 @@ const DashboardSidebar = () => {
                 </div>
                 <span className={cn("ml-3 transition-opacity duration-300", 
                   isCollapsed && "opacity-0 w-0 hidden")}>{item.name}</span>
+                {item.badge && !isCollapsed && (
+                  <Badge className="bg-theme-brown text-white ml-auto">{item.badge}</Badge>
+                )}
               </Link>
             )
           ))}
         </nav>
       </div>
       
-      <div className={cn("p-4 border-t border-gray-100", 
-        isCollapsed ? "flex justify-center" : "")}>
+      <div className={cn(
+        "p-4 border-t border-gray-100 transition-all duration-300", 
+        isCollapsed ? "flex justify-center" : ""
+      )}>
         {isCollapsed ? (
-          <div className="h-8 w-8 rounded-full bg-theme-brown flex items-center justify-center text-white text-xs">
+          <div className="h-8 w-8 rounded-full bg-theme-brown flex items-center justify-center text-white text-xs font-medium shadow-md">
             {initials}
           </div>
         ) : (
           <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-theme-brown flex items-center justify-center text-white text-xs">
+            <div className="h-8 w-8 rounded-full bg-theme-brown flex items-center justify-center text-white text-xs font-medium shadow-md">
               {initials}
             </div>
             <div className="ml-3">
@@ -229,7 +240,9 @@ const DashboardSidebar = () => {
               <div className="flex items-center gap-1">
                 <p className="text-xs text-theme-brown-light">{weddingDate}</p>
                 {daysLeft !== null && (
-                  <span className="bg-theme-cream/20 text-theme-brown-light text-xs px-1.5 rounded-full">{daysLeft}d</span>
+                  <Badge variant="outline" className="bg-theme-cream/20 text-theme-brown-light text-xs px-1.5 py-0 rounded-full border-none">
+                    {daysLeft}d
+                  </Badge>
                 )}
               </div>
             </div>

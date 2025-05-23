@@ -79,11 +79,17 @@ export default {
 					'text-primary': '#5c4c3c',
 					'text-secondary': '#6b5d4d',
 					'text-light': '#e9e4dd',
+					// Add status colors for better contrast
+					'success': '#24a148',
+					'warning': '#f1c21b',
+					'error': '#da1e28',
+					'info': '#0043ce',
+					'pending': '#8a6f4d',
 				}
 			},
 			fontFamily: {
 				'sans': ['Inter', 'sans-serif'],
-				'serif': ['DM Serif Display', 'serif']
+				'serif': ['Playfair Display', 'serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -126,13 +132,22 @@ export default {
 						transform: 'translateX(0)', 
 						opacity: '1' 
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'slide-from-right': 'slide-from-right 0.3s ease-out',
-				'slide-from-left': 'slide-from-left 0.3s ease-out'
+				'slide-from-left': 'slide-from-left 0.3s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out'
+			},
+			boxShadow: {
+				'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+				'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
 			}
 		}
 	},
