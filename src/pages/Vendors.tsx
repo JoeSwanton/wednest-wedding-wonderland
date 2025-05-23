@@ -8,6 +8,7 @@ import VendorHeader from "@/components/vendors/VendorHeader";
 import VendorFilters from "@/components/vendors/VendorFilters";
 import VendorMapView from "@/components/vendors/VendorMapView";
 import VendorListingHeader from "@/components/vendors/VendorListingHeader";
+import VendorShowcase from "@/components/vendors/VendorShowcase";
 
 const Vendors = () => {
   // State for search filters
@@ -72,7 +73,7 @@ const Vendors = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-theme-cream via-white to-theme-beige/30 flex flex-col">
       <Navbar />
       <div className="flex-grow">
         <VendorHeader
@@ -80,18 +81,23 @@ const Vendors = () => {
           selectedLocation={selectedLocation}
         />
         
-        <div className="container mx-auto px-4 py-6 md:py-8">
-          {/* Search Component */}
-          <VendorSearch 
-            onSearchChange={handleSearchChange}
-            onCategoryChange={handleCategoryChange}
-            onLocationChange={handleLocationChange}
-            onPriceChange={handlePriceChange}
-            onStyleChange={handleStyleChange}
-            onAvailabilityChange={handleAvailabilityChange}
-            onRatingChange={handleRatingChange}
-            onViewChange={handleViewChange}
-          />
+        {/* Vendor Showcase Section */}
+        <VendorShowcase />
+        
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          {/* Enhanced Search Section */}
+          <div className="bg-white rounded-2xl shadow-lg border border-theme-beige/50 overflow-hidden mb-8">
+            <VendorSearch 
+              onSearchChange={handleSearchChange}
+              onCategoryChange={handleCategoryChange}
+              onLocationChange={handleLocationChange}
+              onPriceChange={handlePriceChange}
+              onStyleChange={handleStyleChange}
+              onAvailabilityChange={handleAvailabilityChange}
+              onRatingChange={handleRatingChange}
+              onViewChange={handleViewChange}
+            />
+          </div>
           
           {/* Active Filters */}
           <VendorFilters
@@ -120,19 +126,23 @@ const Vendors = () => {
             />
             
             {/* Map or Grid view */}
-            {viewMode === "grid" ? (
-              <VendorCards 
-                searchQuery={searchQuery}
-                selectedCategory={selectedCategory}
-                selectedLocation={selectedLocation}
-                priceFilter={priceFilter}
-                styleFilter={styleFilter}
-                availabilityFilter={availabilityFilter}
-                ratingFilter={ratingFilter}
-              />
-            ) : (
-              <VendorMapView />
-            )}
+            <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/30 overflow-hidden">
+              {viewMode === "grid" ? (
+                <div className="p-6">
+                  <VendorCards 
+                    searchQuery={searchQuery}
+                    selectedCategory={selectedCategory}
+                    selectedLocation={selectedLocation}
+                    priceFilter={priceFilter}
+                    styleFilter={styleFilter}
+                    availabilityFilter={availabilityFilter}
+                    ratingFilter={ratingFilter}
+                  />
+                </div>
+              ) : (
+                <VendorMapView />
+              )}
+            </div>
           </div>
         </div>
       </div>
