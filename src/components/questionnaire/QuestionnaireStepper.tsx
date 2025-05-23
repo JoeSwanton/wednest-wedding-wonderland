@@ -130,32 +130,45 @@ const QuestionnaireStepper = ({ onComplete }: QuestionnaireStepperProps) => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-wednest-beige">
+    <Card className="w-full max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border-2 border-theme-cream">
       <CardContent className="p-0">
-        <div className="bg-gradient-to-r from-wednest-sage-light to-wednest-sage p-1" />
-        <div className="p-6 space-y-6">
+        {/* Progress Bar */}
+        <div className="bg-gradient-to-r from-theme-brown to-theme-brown-light p-1">
+          <div className="bg-white bg-opacity-20 rounded-full h-2 mx-4">
+            <motion.div 
+              className="bg-white h-2 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            />
+          </div>
+        </div>
+        
+        <div className="px-6 md:px-12 py-6 space-y-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="min-h-[400px] flex flex-col"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="min-h-[500px] flex flex-col"
             >
               {renderStep()}
             </motion.div>
           </AnimatePresence>
           
-          <div className="flex justify-center">
-            {/* Progress dots */}
-            <div className="flex space-x-2">
+          {/* Progress Dots */}
+          <div className="flex justify-center pt-4">
+            <div className="flex space-x-3">
               {steps.map((step, index) => (
-                <div
+                <motion.div
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentStep ? "bg-wednest-sage" : "bg-gray-300"
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentStep ? "bg-theme-brown scale-125" : 
+                    index < currentStep ? "bg-theme-brown-light" : "bg-theme-cream"
                   }`}
+                  whileHover={{ scale: 1.2 }}
                 />
               ))}
             </div>

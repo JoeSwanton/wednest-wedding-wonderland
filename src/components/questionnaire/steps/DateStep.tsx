@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { QuestionContainer } from "./QuestionContainer";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { CalendarIcon, ArrowRight, ArrowLeft } from "lucide-react";
 
 interface DateStepProps {
   data: any;
@@ -40,70 +40,104 @@ const DateStep = ({ data, updateData, onNext, onBack }: DateStepProps) => {
   };
 
   return (
-    <QuestionContainer question="When are you planning to get married?">
-      <RadioGroup
-        className="space-y-4 my-6"
-        value={data.wedding_date_status}
-        onValueChange={handleOptionChange}
+    <QuestionContainer 
+      question="When are you planning to get married?"
+      icon={<CalendarIcon className="h-6 w-6 text-theme-brown" />}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
       >
-        <label className="flex items-start space-x-2 cursor-pointer">
-          <RadioGroupItem value="chosen" id="date-chosen" />
-          <div className="grid gap-1.5 leading-none">
-            <div className="flex items-center">
-              <span>We've chosen a date 📅</span>
+        <RadioGroup
+          className="space-y-4 my-8"
+          value={data.wedding_date_status}
+          onValueChange={handleOptionChange}
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex items-start space-x-3 p-4 rounded-lg border-2 border-theme-cream hover:border-theme-brown transition-colors cursor-pointer"
+          >
+            <RadioGroupItem value="chosen" id="date-chosen" className="mt-1" />
+            <div className="flex-1">
+              <label htmlFor="date-chosen" className="flex items-center gap-2 cursor-pointer font-medium text-theme-text-primary">
+                📅 We've chosen a date
+              </label>
               {data.wedding_date_status === "chosen" && (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "ml-4 w-[240px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={handleDateChange}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="mt-3"
+                >
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-12 text-lg border-2",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-5 w-5" />
+                        {date ? format(date, "PPP") : <span>Pick your wedding date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={handleDateChange}
+                        initialFocus
+                        disabled={(date) => date < new Date()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </motion.div>
               )}
             </div>
-          </div>
-        </label>
+          </motion.div>
 
-        <label className="flex items-center space-x-2 cursor-pointer">
-          <RadioGroupItem value="month_year" id="date-month-year" />
-          <span>We have a month and year in mind</span>
-        </label>
+          <motion.label
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            htmlFor="date-month-year"
+            className="flex items-center space-x-3 p-4 rounded-lg border-2 border-theme-cream hover:border-theme-brown transition-colors cursor-pointer"
+          >
+            <RadioGroupItem value="month_year" id="date-month-year" />
+            <span className="font-medium text-theme-text-primary">📆 We have a month and year in mind</span>
+          </motion.label>
 
-        <label className="flex items-center space-x-2 cursor-pointer">
-          <RadioGroupItem value="undecided" id="date-undecided" />
-          <span>We haven't decided yet</span>
-        </label>
-      </RadioGroup>
+          <motion.label
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6 }}
+            htmlFor="date-undecided"
+            className="flex items-center space-x-3 p-4 rounded-lg border-2 border-theme-cream hover:border-theme-brown transition-colors cursor-pointer"
+          >
+            <RadioGroupItem value="undecided" id="date-undecided" />
+            <span className="font-medium text-theme-text-primary">🤔 We haven't decided yet</span>
+          </motion.label>
+        </RadioGroup>
+      </motion.div>
 
-      <div className="flex justify-between mt-6">
+      <div className="flex justify-between items-center mt-8 pt-6 border-t border-theme-cream">
         <Button 
           onClick={onBack} 
           variant="outline"
-          className="text-wednest-brown"
+          className="flex items-center gap-2 px-6 py-3 border-2 border-theme-cream hover:border-theme-brown text-theme-brown"
         >
+          <ArrowLeft className="h-4 w-4" />
           Back
         </Button>
         <Button 
           onClick={onNext}
-          className="bg-wednest-sage hover:bg-wednest-sage-dark text-white"
+          className="flex items-center gap-2 bg-theme-brown hover:bg-theme-brown-dark text-white px-6 py-3 font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
         >
-          ➡️ Next
+          Next
+          <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
     </QuestionContainer>
