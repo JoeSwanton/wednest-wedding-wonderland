@@ -17,13 +17,28 @@ const WeddingSummaryHeader = ({ weddingDetails, loading }: WeddingSummaryHeaderP
     return `${weddingDetails.partner1_name || "Partner 1"} & ${weddingDetails.partner2_name || "Partner 2"}'s Wedding`;
   };
   
-  // Format location
+  // Format location based on questionnaire data
   const getLocation = () => {
-    if (loading || !weddingDetails) return "";
-    if (weddingDetails.location_details) return weddingDetails.location_details;
-    if (weddingDetails.location) return weddingDetails.location;
-    if (weddingDetails.city) return weddingDetails.city;
-    return "";
+    if (loading || !weddingDetails) return "Not set";
+    
+    // If they have location details from questionnaire
+    if (weddingDetails.location_details) {
+      return weddingDetails.location_details;
+    }
+    
+    // Format based on wedding_location_status from questionnaire
+    switch (weddingDetails.wedding_location_status) {
+      case "booked":
+        return "Venue booked";
+      case "city_region":
+        return "City/region selected";
+      case "destination":
+        return "Destination wedding";
+      case "exploring":
+        return "Still exploring";
+      default:
+        return "Not set";
+    }
   };
   
   // Calculate days until wedding
@@ -37,16 +52,55 @@ const WeddingSummaryHeader = ({ weddingDetails, loading }: WeddingSummaryHeaderP
     return daysLeft > 0 ? daysLeft : 0;
   };
 
-  // Format wedding date
+  // Format wedding date based on questionnaire data
   const getFormattedDate = () => {
-    if (loading || !weddingDetails || !weddingDetails.selected_date) return "";
+    if (loading || !weddingDetails) return "Not set";
     
-    return new Date(weddingDetails.selected_date).toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    });
+    // If they chose a specific date
+    if (weddingDetails.wedding_date_status === "chosen" && weddingDetails.selected_date) {
+      return new Date(weddingDetails.selected_date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    }
+    
+    // Format based on wedding_date_status from questionnaire
+    switch (weddingDetails.wedding_date_status) {
+      case "month_year":
+        return "Month and year planned";
+      case "undecided":
+        return "Date not decided yet";
+      default:
+        return "Not set";
+    }
+  };
+
+  // Format guest count based on questionnaire data
+  const getGuestCount = () => {
+    if (loading || !weddingDetails) return "Not set";
+    
+    // If they selected exact number
+    if (weddingDetails.guest_count === "exact" && weddingDetails.exact_guest_count) {
+      return `${weddingDetails.exact_guest_count} guests`;
+    }
+    
+    // Format based on guest_count ranges from questionnaire
+    switch (weddingDetails.guest_count) {
+      case "lt_10":
+        return "Less than 10 guests";
+      case "10_to_50":
+        return "10-50 guests";
+      case "51_to_100":
+        return "51-100 guests";
+      case "101_to_150":
+        return "101-150 guests";
+      case "more_than_150":
+        return "More than 150 guests";
+      default:
+        return "Not set";
+    }
   };
   
   const daysLeft = getDaysRemaining();
@@ -79,7 +133,7 @@ const WeddingSummaryHeader = ({ weddingDetails, loading }: WeddingSummaryHeaderP
               </div>
               <div>
                 <p className="text-white/80 text-sm font-medium">Wedding Date</p>
-                <p className="text-white font-medium">{loading ? "Loading..." : getFormattedDate() || "Not set"}</p>
+                <p className="text-white font-medium">{getFormattedDate()}</p>
               </div>
             </div>
             
@@ -89,7 +143,7 @@ const WeddingSummaryHeader = ({ weddingDetails, loading }: WeddingSummaryHeaderP
               </div>
               <div>
                 <p className="text-white/80 text-sm font-medium">Location</p>
-                <p className="text-white font-medium">{loading ? "Loading..." : getLocation() || "Not set"}</p>
+                <p className="text-white font-medium">{getLocation()}</p>
               </div>
             </div>
             
@@ -99,7 +153,7 @@ const WeddingSummaryHeader = ({ weddingDetails, loading }: WeddingSummaryHeaderP
               </div>
               <div>
                 <p className="text-white/80 text-sm font-medium">Guest Count</p>
-                <p className="text-white font-medium">{loading ? "Loading..." : weddingDetails?.exact_guest_count || "Not set"}</p>
+                <p className="text-white font-medium">{getGuestCount()}</p>
               </div>
             </div>
             
@@ -137,17 +191,17 @@ const WeddingSummaryHeader = ({ weddingDetails, loading }: WeddingSummaryHeaderP
               
               <div>
                 <p className="text-white/70 text-sm">Wedding Date</p>
-                <p className="text-white">{loading ? "Loading..." : getFormattedDate() || "Not set"}</p>
+                <p className="text-white">{getFormattedDate()}</p>
               </div>
               
               <div>
                 <p className="text-white/70 text-sm">Venue</p>
-                <p className="text-white">{loading ? "Loading..." : getLocation() || "Not set"}</p>
+                <p className="text-white">{getLocation()}</p>
               </div>
               
               <div>
                 <p className="text-white/70 text-sm">Guest Count</p>
-                <p className="text-white">{loading ? "Loading..." : weddingDetails?.exact_guest_count || "Not set"}</p>
+                <p className="text-white">{getGuestCount()}</p>
               </div>
             </div>
           </div>
