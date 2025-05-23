@@ -20,6 +20,18 @@ const CustomerDashboard = () => {
   const { user, userProfile, signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("budget");
+  const [slideDirection, setSlideDirection] = useState("right");
+  
+  // Function to handle tab change with animation
+  const handleTabChange = (tab: string) => {
+    // Determine slide direction based on current and new tab
+    const tabOrder = ["budget", "guests", "timeline", "checklist", "contracts"];
+    const currentIndex = tabOrder.indexOf(activeTab);
+    const newIndex = tabOrder.indexOf(tab);
+    
+    setSlideDirection(newIndex > currentIndex ? "right" : "left");
+    setActiveTab(tab);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-theme-beige/20">
@@ -35,7 +47,7 @@ const CustomerDashboard = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <Button 
             variant="outline" 
-            onClick={() => setActiveTab("budget")}
+            onClick={() => handleTabChange("budget")}
             className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 
               ${activeTab === 'budget' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
@@ -45,7 +57,7 @@ const CustomerDashboard = () => {
           
           <Button 
             variant="outline" 
-            onClick={() => setActiveTab("guests")}
+            onClick={() => handleTabChange("guests")}
             className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
               ${activeTab === 'guests' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
@@ -55,7 +67,7 @@ const CustomerDashboard = () => {
           
           <Button 
             variant="outline" 
-            onClick={() => setActiveTab("timeline")}
+            onClick={() => handleTabChange("timeline")}
             className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
               ${activeTab === 'timeline' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
@@ -65,7 +77,7 @@ const CustomerDashboard = () => {
           
           <Button 
             variant="outline" 
-            onClick={() => setActiveTab("checklist")}
+            onClick={() => handleTabChange("checklist")}
             className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
               ${activeTab === 'checklist' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
@@ -75,7 +87,7 @@ const CustomerDashboard = () => {
           
           <Button 
             variant="outline" 
-            onClick={() => setActiveTab("contracts")}
+            onClick={() => handleTabChange("contracts")}
             className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
               ${activeTab === 'contracts' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
           >
@@ -95,7 +107,7 @@ const CustomerDashboard = () => {
         
         {/* Tab Content */}
         <Card className="bg-white rounded-lg shadow-card mb-8 animate-fade-in overflow-hidden">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid grid-cols-5 bg-theme-cream/20 p-0 h-auto">
               <TabsTrigger 
                 value="budget" 
@@ -130,23 +142,23 @@ const CustomerDashboard = () => {
             </TabsList>
             
             <div className="p-6">
-              <TabsContent value="budget" className="mt-0">
+              <TabsContent value="budget" className={`mt-0 ${slideDirection === "right" ? "animate-slide-from-right" : "animate-slide-from-left"}`}>
                 <BudgetTracker />
               </TabsContent>
               
-              <TabsContent value="guests" className="mt-0">
+              <TabsContent value="guests" className={`mt-0 ${slideDirection === "right" ? "animate-slide-from-right" : "animate-slide-from-left"}`}>
                 <GuestListManager />
               </TabsContent>
               
-              <TabsContent value="timeline" className="mt-0">
+              <TabsContent value="timeline" className={`mt-0 ${slideDirection === "right" ? "animate-slide-from-right" : "animate-slide-from-left"}`}>
                 <TimelineCreator />
               </TabsContent>
               
-              <TabsContent value="checklist" className="mt-0">
+              <TabsContent value="checklist" className={`mt-0 ${slideDirection === "right" ? "animate-slide-from-right" : "animate-slide-from-left"}`}>
                 <TaskChecklist />
               </TabsContent>
               
-              <TabsContent value="contracts" className="mt-0">
+              <TabsContent value="contracts" className={`mt-0 ${slideDirection === "right" ? "animate-slide-from-right" : "animate-slide-from-left"}`}>
                 <VendorContracts />
               </TabsContent>
             </div>
