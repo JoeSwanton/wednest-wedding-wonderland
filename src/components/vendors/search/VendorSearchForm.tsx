@@ -75,76 +75,67 @@ const VendorSearchForm = ({
   };
 
   return (
-    <div className="space-y-6 p-8">
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 relative">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-theme-gray-dark" />
-          </div>
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
           <Input 
             type="text" 
-            placeholder="Search vendors by name, description, or tags" 
-            className="w-full pl-12 pr-4 py-4 text-lg border-2 border-theme-beige focus-visible:ring-theme-brown rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm"
+            placeholder="Search by name, description, or tags" 
+            className="w-full border-wednest-beige focus-visible:ring-wednest-sage"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:w-auto">
-          <div className="relative">
-            <label className="block text-sm font-semibold text-theme-brown-dark mb-2 uppercase tracking-wide">Category</label>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="border-2 border-theme-beige rounded-xl py-3 shadow-md hover:shadow-lg transition-all duration-300">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.value} value={category.value}>
-                    {category.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="border-wednest-beige">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.value} value={category.value}>
+                  {category.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           
-          <div className="relative">
-            <label className="block text-sm font-semibold text-theme-brown-dark mb-2 uppercase tracking-wide">Location</label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="border-2 border-theme-beige justify-between w-full rounded-xl py-3 shadow-md hover:shadow-lg transition-all duration-300">
-                  <span className="truncate">{selectedLocation}</span>
-                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[300px] p-0" align="start">
-                <Command>
-                  <CommandInput placeholder="Search locations..." />
-                  <CommandEmpty>No location found.</CommandEmpty>
-                  <CommandGroup>
-                    <ScrollArea className="h-64">
-                      {locations && locations.map((location) => (
-                        <CommandItem
-                          key={location}
-                          value={location}
-                          onSelect={() => {
-                            setSelectedLocation(location);
-                          }}
-                        >
-                          {location}
-                        </CommandItem>
-                      ))}
-                    </ScrollArea>
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="border-wednest-beige justify-between w-full">
+                <span className="truncate">{selectedLocation}</span>
+                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[300px] p-0" align="start">
+              <Command>
+                <CommandInput placeholder="Search locations..." />
+                <CommandEmpty>No location found.</CommandEmpty>
+                <CommandGroup>
+                  <ScrollArea className="h-64">
+                    {locations && locations.map((location) => (
+                      <CommandItem
+                        key={location}
+                        value={location}
+                        onSelect={() => {
+                          setSelectedLocation(location);
+                        }}
+                      >
+                        {location}
+                      </CommandItem>
+                    ))}
+                  </ScrollArea>
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
           
           <Button 
-            className="w-full bg-gradient-to-r from-theme-brown to-theme-brown-dark hover:from-theme-brown-dark hover:to-theme-brown text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="w-full bg-wednest-sage hover:bg-wednest-sage-dark text-white"
             onClick={handleSearch}
           >
-            <Search className="mr-2 h-5 w-5" /> Search Vendors
+            <Search className="mr-2 h-4 w-4" /> Search
           </Button>
         </div>
       </div>
@@ -152,65 +143,49 @@ const VendorSearchForm = ({
       <div className="flex items-center justify-between">
         <Button 
           variant="outline" 
-          className={`flex items-center font-semibold border-2 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-md ${
-            filtersExpanded 
-              ? 'bg-theme-brown text-white border-theme-brown hover:bg-theme-brown-dark' 
-              : 'text-theme-brown border-theme-brown hover:bg-theme-cream'
-          }`}
+          className="flex items-center text-wednest-brown-light border-wednest-beige hover:bg-wednest-cream"
           onClick={() => setFiltersExpanded(!filtersExpanded)}
         >
-          <Filter className="h-5 w-5 mr-2" />
-          {filtersExpanded ? 'Hide Advanced Filters' : 'Show Advanced Filters'}
+          <Filter className="h-4 w-4 mr-2" />
+          {filtersExpanded ? 'Hide Filters' : 'Show Advanced Filters'}
         </Button>
         
-        <div className="flex items-center space-x-3">
-          <span className="text-sm font-semibold text-theme-brown-dark mr-2 uppercase tracking-wide">View:</span>
-          <div className="flex items-center border-2 border-theme-beige rounded-full p-1 bg-white shadow-md">
-            <Button
-              variant={view === "grid" ? "default" : "ghost"}
-              size="sm"
-              className={`p-3 h-10 w-10 rounded-full transition-all duration-300 ${
-                view === "grid" 
-                  ? "bg-theme-brown text-white shadow-md" 
-                  : "hover:bg-theme-cream"
-              }`}
-              onClick={() => handleViewChange("grid")}
-            >
-              <Grid className="h-5 w-5" />
-              <span className="sr-only">Grid view</span>
-            </Button>
-            <Button
-              variant={view === "map" ? "default" : "ghost"}
-              size="sm"
-              className={`p-3 h-10 w-10 rounded-full transition-all duration-300 ${
-                view === "map" 
-                  ? "bg-theme-brown text-white shadow-md" 
-                  : "hover:bg-theme-cream"
-              }`}
-              onClick={() => handleViewChange("map")}
-            >
-              <Map className="h-5 w-5" />
-              <span className="sr-only">Map view</span>
-            </Button>
-          </div>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-wednest-brown-light mr-1">View:</span>
+          <Button
+            variant={view === "grid" ? "default" : "outline"}
+            size="sm"
+            className={`p-1 h-8 w-8 ${view === "grid" ? "bg-wednest-sage text-white" : "border-wednest-beige"}`}
+            onClick={() => handleViewChange("grid")}
+          >
+            <Grid className="h-4 w-4" />
+            <span className="sr-only">Grid view</span>
+          </Button>
+          <Button
+            variant={view === "map" ? "default" : "outline"}
+            size="sm"
+            className={`p-1 h-8 w-8 ${view === "map" ? "bg-wednest-sage text-white" : "border-wednest-beige"}`}
+            onClick={() => handleViewChange("map")}
+          >
+            <Map className="h-4 w-4" />
+            <span className="sr-only">Map view</span>
+          </Button>
         </div>
       </div>
       
-      {/* Enhanced Advanced filters */}
+      {/* Advanced filters */}
       {filtersExpanded && (
-        <div className="bg-gradient-to-r from-theme-cream/50 to-white rounded-2xl p-6 border-2 border-theme-beige/50 shadow-lg">
-          <VendorAdvancedFilters
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            selectedStyles={selectedStyles}
-            setSelectedStyles={setSelectedStyles}
-            availabilityFilter={availabilityFilter}
-            setAvailabilityFilter={setAvailabilityFilter}
-            ratingFilter={ratingFilter}
-            setRatingFilter={setRatingFilter}
-            onClear={handleClear}
-          />
-        </div>
+        <VendorAdvancedFilters
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          selectedStyles={selectedStyles}
+          setSelectedStyles={setSelectedStyles}
+          availabilityFilter={availabilityFilter}
+          setAvailabilityFilter={setAvailabilityFilter}
+          ratingFilter={ratingFilter}
+          setRatingFilter={setRatingFilter}
+          onClear={handleClear}
+        />
       )}
     </div>
   );

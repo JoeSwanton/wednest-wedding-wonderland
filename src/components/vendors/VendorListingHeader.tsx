@@ -13,9 +13,9 @@ const VendorListingHeader = ({
   selectedLocation 
 }: VendorListingHeaderProps) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 p-8 bg-gradient-to-r from-white via-theme-cream/50 to-white rounded-3xl border border-theme-beige/40 shadow-lg">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 p-6 bg-gradient-to-r from-theme-cream to-white rounded-2xl border border-theme-beige/30 shadow-sm">
       <div>
-        <h2 className="text-3xl md:text-4xl font-serif font-bold text-theme-brown-dark mb-3">
+        <h2 className="text-2xl md:text-3xl font-serif font-semibold text-theme-brown-dark mb-2">
           {selectedCategory && selectedCategory !== "all" 
             ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Vendors` 
             : "All Wedding Vendors"}
@@ -23,21 +23,21 @@ const VendorListingHeader = ({
             ? ` in ${selectedLocation}` 
             : ""}
         </h2>
-        <p className="text-theme-gray-dark text-lg font-medium">
+        <p className="text-theme-gray-dark text-base">
           Browse our curated selection of wedding professionals
         </p>
       </div>
       
-      <div className="flex items-center gap-4 mt-6 md:mt-0">
+      <div className="flex items-center gap-3 mt-4 md:mt-0">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="outline" 
-                size="lg" 
-                className="flex items-center gap-3 border-2 border-theme-brown text-theme-brown hover:bg-theme-brown hover:text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-md"
+                size="sm" 
+                className="flex items-center gap-2 border-theme-beige hover:bg-theme-cream"
               >
-                <SlidersHorizontal className="h-5 w-5" />
+                <SlidersHorizontal className="h-4 w-4" />
                 Filters
               </Button>
             </TooltipTrigger>
@@ -47,12 +47,12 @@ const VendorListingHeader = ({
           </Tooltip>
         </TooltipProvider>
         
-        <div className="flex items-center border-2 border-theme-beige rounded-full p-2 bg-white shadow-md">
+        <div className="flex items-center border border-theme-beige rounded-lg p-1 bg-white">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" className="px-4 py-2 hover:bg-theme-cream rounded-full transition-all duration-200">
-                  <Grid className="h-5 w-5" />
+                <Button variant="ghost" size="sm" className="px-3 hover:bg-theme-cream">
+                  <Grid className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -64,8 +64,8 @@ const VendorListingHeader = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" className="px-4 py-2 hover:bg-theme-cream rounded-full transition-all duration-200">
-                  <Map className="h-5 w-5" />
+                <Button variant="ghost" size="sm" className="px-3 hover:bg-theme-cream">
+                  <Map className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
