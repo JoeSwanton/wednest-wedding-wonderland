@@ -52,21 +52,21 @@ const VendorShowcase = () => {
   ];
 
   return (
-    <div className="bg-white border-b border-theme-beige/30">
+    <div className="bg-white border-b border-theme-beige/30 py-4">
       <div className="container mx-auto px-4 py-12 md:py-16">
-        {/* Stats Section */}
+        {/* Stats Section with Enhanced Styling */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
-              <div key={index} className="text-center group">
-                <div className="bg-theme-cream rounded-full p-4 w-16 h-16 mx-auto mb-3 group-hover:bg-theme-brown group-hover:text-white transition-colors duration-300">
-                  <IconComponent className="h-8 w-8" />
+              <div key={index} className="text-center group transform transition-transform hover:scale-105 duration-300">
+                <div className="bg-theme-cream rounded-full p-4 w-20 h-20 mx-auto mb-4 group-hover:bg-theme-brown group-hover:text-white transition-colors duration-300 flex items-center justify-center shadow-md">
+                  <IconComponent className="h-10 w-10" />
                 </div>
-                <div className="text-2xl md:text-3xl font-bold text-theme-brown-dark mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-theme-brown-dark mb-2">
                   {stat.number}
                 </div>
-                <div className="text-sm text-theme-gray-dark">
+                <div className="text-base text-theme-gray-dark font-medium">
                   {stat.label}
                 </div>
               </div>
@@ -74,11 +74,11 @@ const VendorShowcase = () => {
           })}
         </div>
 
-        {/* Featured Vendors Section */}
-        <div className="mb-8">
+        {/* Featured Vendors Section with Improved Card Design */}
+        <div className="mb-12">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl md:text-4xl font-serif text-theme-brown-dark mb-2">
+              <h2 className="text-3xl md:text-4xl font-serif text-theme-brown-dark mb-2 font-semibold">
                 Featured Vendors
               </h2>
               <p className="text-theme-gray-dark text-lg">
@@ -94,26 +94,26 @@ const VendorShowcase = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredVendors.map((vendor) => (
               <Link key={vendor.id} to={`/vendors/${vendor.id}`} className="group">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-theme-beige/30 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                  <div className="relative h-64 overflow-hidden">
+                <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-theme-beige/30 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="relative h-72 overflow-hidden">
                     <img 
                       src={vendor.image} 
                       alt={vendor.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-theme-brown text-white">
+                      <Badge className="bg-theme-brown text-white font-medium px-3 py-1.5 text-sm">
                         {vendor.type}
                       </Badge>
                     </div>
                     <div className="absolute top-4 right-4">
-                      <button className="bg-white/90 hover:bg-white p-2 rounded-full transition-colors duration-200">
-                        <Heart className="h-4 w-4 text-theme-gray-dark hover:text-red-500" />
+                      <button className="bg-white/90 hover:bg-white p-2 rounded-full transition-colors duration-200 shadow-sm">
+                        <Heart className="h-5 w-5 text-theme-gray-dark hover:text-red-500" />
                       </button>
                     </div>
-                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full flex items-center gap-1">
+                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1.5 rounded-full flex items-center gap-1 font-medium">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium">{vendor.rating}</span>
+                      <span>{vendor.rating}</span>
                     </div>
                   </div>
                   
@@ -121,30 +121,32 @@ const VendorShowcase = () => {
                     <h3 className="text-xl font-semibold text-theme-brown-dark mb-2 group-hover:text-theme-brown transition-colors">
                       {vendor.name}
                     </h3>
-                    <p className="text-theme-gray-dark mb-3 line-clamp-2">
+                    <p className="text-theme-gray-dark mb-4 line-clamp-2 text-base">
                       {vendor.description}
                     </p>
                     
                     <div className="flex items-center text-theme-gray-dark mb-4">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{vendor.location}</span>
+                      <MapPin className="h-4 w-4 mr-2" />
+                      <span>{vendor.location}</span>
                     </div>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {vendor.tags.slice(0, 2).map((tag, index) => (
-                        <Badge key={index} variant="outline" className="text-xs border-theme-beige text-theme-gray-dark">
+                      {vendor.tags.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="border-theme-beige text-theme-gray-dark text-sm">
                           {tag}
                         </Badge>
                       ))}
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="text-theme-brown-dark font-semibold">
-                        {vendor.price}
+                    <div className="flex items-center justify-between mt-5 pt-4 border-t border-theme-beige/30">
+                      <div className="bg-theme-cream/50 px-3 py-1 rounded-full">
+                        <div className="font-bold text-theme-brown-dark text-lg">
+                          {vendor.price}
+                        </div>
                       </div>
+                      
                       <Button 
-                        size="sm" 
-                        className="bg-theme-brown hover:bg-theme-brown-dark text-white px-4"
+                        className="bg-theme-brown hover:bg-theme-brown-dark text-white"
                       >
                         View Details
                       </Button>
@@ -156,26 +158,26 @@ const VendorShowcase = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-theme-brown to-theme-brown-dark rounded-2xl p-8 md:p-12 text-center text-white">
-          <h3 className="text-2xl md:text-3xl font-serif mb-4">
+        {/* Call to Action with Enhanced Design */}
+        <div className="bg-gradient-to-r from-theme-brown to-theme-brown-dark rounded-2xl p-8 md:p-12 text-center text-white shadow-lg">
+          <h3 className="text-3xl md:text-4xl font-serif mb-6 font-semibold">
             Ready to find your perfect vendors?
           </h3>
-          <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
+          <p className="text-white/90 text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
             Browse through our curated collection of wedding professionals, 
             or let us help you find exactly what you're looking for.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-white text-theme-brown hover:bg-theme-cream px-8"
+              className="bg-white text-theme-brown hover:bg-theme-cream px-8 font-medium text-base"
             >
               Browse All Vendors
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-theme-brown px-8"
+              className="border-white text-white hover:bg-white hover:text-theme-brown px-8 font-medium text-base"
             >
               Get Matched
             </Button>
