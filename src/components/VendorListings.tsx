@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
-import { Star, ArrowDown, ArrowUp, Filter, ArrowRight, ArrowLeft, SlidersHorizontal, MapPin } from "lucide-react";
+import { Star, ArrowDown, ArrowUp, Filter, ArrowRight, ArrowLeft, SlidersHorizontal, MapPin, Grid } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
 import {
@@ -96,21 +95,18 @@ const VendorListings = () => {
               </p>
             </div>
             
-            {/* Enhanced category navigation */}
-            <div className="hidden md:flex items-center gap-2">
-              <span className="text-sm text-theme-brown-light mr-2">
-                {displayIndex + 1} - {Math.min(displayIndex + 3, categories.length)} of {categories.length}
-              </span>
-              <div className="flex gap-1">
-                {categories.map((_, i) => (
-                  <div 
-                    key={i} 
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      categoryPage % categories.length === i ? 'bg-theme-brown' : 'bg-theme-beige'
-                    }`}
-                  />
-                ))}
-              </div>
+            {/* Enhanced Browse All CTA Button */}
+            <div className="hidden md:flex items-center gap-4">
+              <Link to="/vendors">
+                <Button 
+                  size="lg"
+                  className="bg-theme-brown hover:bg-theme-brown-dark text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2"
+                >
+                  <Grid className="h-5 w-5" />
+                  Browse All Categories
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           </div>
           
@@ -121,12 +117,12 @@ const VendorListings = () => {
                 {categories.map((category, index) => (
                   <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                     <Link to={`/vendors?category=${category.type.toLowerCase()}`} className="block group">
-                      <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                      <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-2 transform">
                         <div className="relative h-56">
                           <img 
                             src={category.image} 
                             alt={category.type} 
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                           {category.trending && (
                             <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
@@ -162,7 +158,7 @@ const VendorListings = () => {
               onClick={handlePrevCategoryPage} 
               variant="outline" 
               size="lg"
-              className="rounded-full h-14 w-14 mr-6 border-theme-beige hover:bg-theme-cream shadow-lg"
+              className="rounded-full h-14 w-14 mr-6 border-theme-beige hover:bg-theme-cream shadow-lg hover:scale-110 transition-all"
             >
               <ArrowLeft className="h-6 w-6 text-theme-brown" />
             </Button>
@@ -170,12 +166,12 @@ const VendorListings = () => {
             <div className="grid grid-cols-3 gap-6 flex-1">
               {currentCategories.map((category, index) => (
                 <Link to={`/vendors?category=${category.type.toLowerCase()}`} key={index} className="block group">
-                  <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                  <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-2 transform">
                     <div className="relative h-64">
                       <img 
                         src={category.image} 
                         alt={category.type} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       {category.trending && (
                         <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
@@ -204,10 +200,24 @@ const VendorListings = () => {
               onClick={handleNextCategoryPage} 
               variant="outline" 
               size="lg"
-              className="rounded-full h-14 w-14 ml-6 border-theme-beige hover:bg-theme-cream shadow-lg"
+              className="rounded-full h-14 w-14 ml-6 border-theme-beige hover:bg-theme-cream shadow-lg hover:scale-110 transition-all"
             >
               <ArrowRight className="h-6 w-6 text-theme-brown" />
             </Button>
+          </div>
+
+          {/* Mobile Browse All Button */}
+          <div className="block md:hidden mt-6 text-center">
+            <Link to="/vendors">
+              <Button 
+                size="lg"
+                className="bg-theme-brown hover:bg-theme-brown-dark text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center gap-2 mx-auto"
+              >
+                <Grid className="h-5 w-5" />
+                Browse All Categories
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
         

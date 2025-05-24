@@ -1,15 +1,19 @@
 
 import { useState } from "react";
-import { Star, Heart, MapPin, MessageCircle, DollarSign } from "lucide-react";
+import { Star, Heart, MapPin, MessageCircle, DollarSign, Filter, Zap, Clock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 const FeaturedVendorsNearYou = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState("top-rated");
   
-  const filters = ["All", "Venues", "Photographers", "Planners", "Florists", "Catering"];
+  const filters = [
+    { id: "top-rated", label: "⭐ Top Rated", icon: Star },
+    { id: "recently-added", label: "🆕 Recently Added", icon: TrendingUp },
+    { id: "fast-responders", label: "💬 Fast Responders", icon: Zap }
+  ];
   
   const vendors = [
     {
@@ -22,7 +26,10 @@ const FeaturedVendorsNearYou = () => {
       price: "From $150 per person",
       image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800&h=600",
       location: "Sydney CBD",
-      badge: "Couple Favourite"
+      badge: "Couple Favourite",
+      socialProof: "Booked 6x this week",
+      urgency: "Limited Dates Left",
+      responseTime: "Responds in 2 hours"
     },
     {
       id: 2,
@@ -34,7 +41,10 @@ const FeaturedVendorsNearYou = () => {
       price: "From $2,800 per event",
       image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&q=80&w=800&h=600",
       location: "Sydney",
-      badge: "Top Rated"
+      badge: "Top Rated",
+      socialProof: "Booked 4x this month",
+      urgency: "3 spots left this year",
+      responseTime: "Responds instantly"
     },
     {
       id: 3,
@@ -46,13 +56,12 @@ const FeaturedVendorsNearYou = () => {
       price: "From $180 per arrangement",
       image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&q=80&w=800&h=600",
       location: "Inner West",
-      badge: "Recently Booked"
+      badge: "Recently Booked",
+      socialProof: "Booked 8x this week",
+      urgency: "Available this weekend",
+      responseTime: "Responds in 1 hour"
     }
   ];
-
-  const filteredVendors = activeFilter === "all" 
-    ? vendors 
-    : vendors.filter(vendor => vendor.type.toLowerCase() === activeFilter.toLowerCase());
 
   return (
     <div className="w-full py-16 px-4 md:px-8 bg-theme-cream/30">
@@ -66,52 +75,61 @@ const FeaturedVendorsNearYou = () => {
           </p>
         </div>
         
-        {/* Filter Tags */}
+        {/* Enhanced Filter Toggle */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {filters.map((filter) => (
-            <Button
-              key={filter}
-              variant={activeFilter === filter.toLowerCase() ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveFilter(filter.toLowerCase())}
-              className={`rounded-full px-4 py-2 text-sm transition-all ${
-                activeFilter === filter.toLowerCase()
-                  ? "bg-theme-brown text-white"
-                  : "border-theme-beige text-theme-brown hover:bg-theme-cream"
-              }`}
-            >
-              {filter}
-            </Button>
-          ))}
+          {filters.map((filter) => {
+            const IconComponent = filter.icon;
+            return (
+              <Button
+                key={filter.id}
+                variant={activeFilter === filter.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveFilter(filter.id)}
+                className={`rounded-full px-4 py-2 text-sm transition-all flex items-center gap-2 ${
+                  activeFilter === filter.id
+                    ? "bg-theme-brown text-white shadow-lg transform scale-105"
+                    : "border-theme-beige text-theme-brown hover:bg-theme-cream hover:scale-105 hover:shadow-md"
+                }`}
+              >
+                <IconComponent className="h-4 w-4" />
+                {filter.label}
+              </Button>
+            );
+          })}
         </div>
 
-        {/* Vendor Grid */}
+        {/* Enhanced Vendor Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredVendors.map((vendor) => (
-            <Card key={vendor.id} className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group">
+          {vendors.map((vendor) => (
+            <Card key={vendor.id} className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group hover:scale-105 hover:-translate-y-2 transform">
               <div className="relative h-48">
                 <img 
                   src={vendor.image} 
                   alt={vendor.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
                 />
                 
-                {/* Badges */}
+                {/* Enhanced Badges */}
                 <div className="absolute top-4 left-4">
-                  <Badge className="bg-theme-brown text-white px-3 py-1 rounded-lg text-sm">
+                  <Badge className="bg-theme-brown text-white px-3 py-1 rounded-lg text-sm shadow-lg">
                     {vendor.type}
                   </Badge>
                 </div>
                 
                 <div className="absolute top-4 right-4 flex flex-col gap-2">
-                  <button className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all">
+                  <button className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-110">
                     <Heart className="h-4 w-4 text-theme-brown-light hover:text-red-500" />
                   </button>
                   {vendor.badge && (
-                    <Badge className="bg-green-500 text-white px-2 py-1 rounded-lg text-xs">
+                    <Badge className="bg-green-500 text-white px-2 py-1 rounded-lg text-xs shadow-lg">
                       {vendor.badge}
                     </Badge>
                   )}
+                </div>
+
+                {/* Social Proof Overlay */}
+                <div className="absolute bottom-4 left-4 bg-black/80 text-white px-3 py-1 rounded-lg text-xs font-semibold">
+                  🔥 {vendor.socialProof}
                 </div>
 
                 {/* Rating */}
@@ -122,11 +140,21 @@ const FeaturedVendorsNearYou = () => {
               </div>
               
               <div className="p-5">
-                <h3 className="text-lg font-semibold text-theme-brown mb-2">{vendor.name}</h3>
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-lg font-semibold text-theme-brown">{vendor.name}</h3>
+                  <Badge className="bg-red-100 text-red-700 px-2 py-1 rounded-lg text-xs">
+                    ⏰ {vendor.urgency}
+                  </Badge>
+                </div>
                 
-                <div className="flex items-center text-sm text-theme-brown-light mb-3">
+                <div className="flex items-center text-sm text-theme-brown-light mb-2">
                   <MapPin className="h-4 w-4 mr-1" />
                   <span>{vendor.location}</span>
+                </div>
+
+                <div className="flex items-center text-sm text-green-600 mb-3">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>{vendor.responseTime}</span>
                 </div>
 
                 {/* Review */}
@@ -147,7 +175,7 @@ const FeaturedVendorsNearYou = () => {
                     <span className="font-semibold text-sm">{vendor.price}</span>
                   </div>
                   <Link to={`/vendors/${vendor.id}`}>
-                    <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white text-sm px-4 py-2 rounded-xl">
+                    <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white text-sm px-4 py-2 rounded-xl hover:scale-105 hover:shadow-lg transition-all">
                       View Details
                     </Button>
                   </Link>
@@ -163,7 +191,7 @@ const FeaturedVendorsNearYou = () => {
             <Button 
               variant="outline" 
               size="lg"
-              className="border-theme-brown text-theme-brown hover:bg-theme-cream px-8 py-3 rounded-xl"
+              className="border-theme-brown text-theme-brown hover:bg-theme-cream px-8 py-3 rounded-xl hover:scale-105 hover:shadow-lg transition-all"
             >
               View All Featured Vendors
             </Button>

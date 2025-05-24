@@ -1,9 +1,10 @@
 
 import { useState, useEffect } from "react";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 const WhatCouplesAreSaying = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,7 +17,9 @@ const WhatCouplesAreSaying = () => {
       review: "Enosi made planning our wedding so much easier. We found our dream venue and photographer in just one weekend of searching.",
       rating: 5,
       weddingDate: "March 2024",
-      vendor: "Used for venue & photography",
+      vendor: "Grand Ballroom Sydney",
+      vendorType: "Venue",
+      vendorId: 1,
       verified: true
     },
     {
@@ -26,7 +29,9 @@ const WhatCouplesAreSaying = () => {
       review: "The price comparison feature saved us thousands. We could see all our options at once and make informed decisions.",
       rating: 5,
       weddingDate: "June 2024",
-      vendor: "Used for full wedding planning",
+      vendor: "Emma Rose Photography",
+      vendorType: "Photographer",
+      vendorId: 2,
       verified: true
     },
     {
@@ -36,7 +41,9 @@ const WhatCouplesAreSaying = () => {
       review: "Every vendor we booked through Enosi was professional and amazing. The quality verification really shows.",
       rating: 5,
       weddingDate: "September 2024",
-      vendor: "Used for catering & florals",
+      vendor: "Bloom & Botanical",
+      vendorType: "Florist",
+      vendorId: 3,
       verified: true
     },
     {
@@ -46,7 +53,9 @@ const WhatCouplesAreSaying = () => {
       review: "The timeline planning tool kept us organized throughout the entire process. Couldn't have done it without Enosi!",
       rating: 5,
       weddingDate: "November 2024",
-      vendor: "Used for entertainment & makeup",
+      vendor: "Sydney Wedding Services",
+      vendorType: "Entertainment",
+      vendorId: 4,
       verified: true
     }
   ];
@@ -81,9 +90,9 @@ const WhatCouplesAreSaying = () => {
           </p>
         </div>
 
-        {/* Main Testimonial Card */}
+        {/* Enhanced Carousel */}
         <div className="max-w-4xl mx-auto mb-8">
-          <Card className="p-8 md:p-12 border border-theme-beige rounded-2xl bg-white shadow-lg">
+          <Card className="p-8 md:p-12 border border-theme-beige rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
               {/* Profile Image */}
               <div className="flex-shrink-0">
@@ -121,31 +130,39 @@ const WhatCouplesAreSaying = () => {
                   <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 text-sm text-theme-brown-light">
                     <span>Wedding: {currentTestimonial.weddingDate}</span>
                     <span className="hidden md:block">•</span>
-                    <span>{currentTestimonial.vendor}</span>
+                    <div className="flex items-center gap-2">
+                      <span>Used: {currentTestimonial.vendor} ({currentTestimonial.vendorType})</span>
+                      <Link 
+                        to={`/vendors/${currentTestimonial.vendorId}`}
+                        className="inline-flex items-center text-theme-brown hover:text-theme-brown-dark transition-colors"
+                      >
+                        <ExternalLink className="h-4 w-4 ml-1" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Navigation */}
+            {/* Enhanced Navigation */}
             <div className="flex justify-center items-center mt-8 gap-4">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={prevTestimonial}
-                className="rounded-full w-10 h-10 p-0 border-theme-beige hover:bg-theme-cream"
+                className="rounded-full w-12 h-12 p-0 border-theme-beige hover:bg-theme-cream hover:scale-110 transition-all"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-5 w-5" />
               </Button>
 
-              {/* Dots */}
-              <div className="flex gap-2">
+              {/* Enhanced Dots */}
+              <div className="flex gap-3">
                 {testimonials.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      index === currentIndex ? 'bg-theme-brown' : 'bg-theme-beige'
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === currentIndex ? 'bg-theme-brown scale-125' : 'bg-theme-beige hover:bg-theme-brown/50 hover:scale-110'
                     }`}
                   />
                 ))}
@@ -155,29 +172,29 @@ const WhatCouplesAreSaying = () => {
                 variant="outline"
                 size="sm"
                 onClick={nextTestimonial}
-                className="rounded-full w-10 h-10 p-0 border-theme-beige hover:bg-theme-cream"
+                className="rounded-full w-12 h-12 p-0 border-theme-beige hover:bg-theme-cream hover:scale-110 transition-all"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
           </Card>
         </div>
 
-        {/* Trust Signals */}
+        {/* Enhanced Trust Signals */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div className="p-4">
+          <div className="p-4 hover:scale-105 transition-transform duration-300">
             <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">2,500+</div>
             <div className="text-sm text-theme-brown-light">Happy Couples</div>
           </div>
-          <div className="p-4">
+          <div className="p-4 hover:scale-105 transition-transform duration-300">
             <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">4.9★</div>
             <div className="text-sm text-theme-brown-light">Average Rating</div>
           </div>
-          <div className="p-4">
+          <div className="p-4 hover:scale-105 transition-transform duration-300">
             <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">1,200+</div>
             <div className="text-sm text-theme-brown-light">Verified Vendors</div>
           </div>
-          <div className="p-4">
+          <div className="p-4 hover:scale-105 transition-transform duration-300">
             <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">$2.8M+</div>
             <div className="text-sm text-theme-brown-light">Saved by Couples</div>
           </div>
