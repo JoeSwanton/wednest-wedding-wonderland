@@ -36,7 +36,7 @@ const VendorBrowseCategories = ({
 
   return (
     <div>
-      <h3 className="text-lg font-medium text-wednest-brown mb-3">
+      <h3 className="text-lg font-semibold text-theme-brown mb-4">
         Browse by Category
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -44,7 +44,7 @@ const VendorBrowseCategories = ({
           <Button 
             key={category.value} 
             variant="outline" 
-            className="border-wednest-beige text-wednest-brown-light hover:bg-wednest-cream hover:text-wednest-brown justify-center h-auto py-3"
+            className="border-theme-beige text-theme-brown hover:bg-theme-cream hover:border-theme-brown justify-center h-auto py-3"
             onClick={() => handleCategoryClick(category.value)}
           >
             {category.label}
@@ -53,7 +53,7 @@ const VendorBrowseCategories = ({
       </div>
       
       <div className="mt-8">
-        <h3 className="text-lg font-medium text-wednest-brown mb-3">
+        <h3 className="text-lg font-semibold text-theme-brown mb-4">
           Popular Locations
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -61,7 +61,7 @@ const VendorBrowseCategories = ({
             <Button 
               key={location} 
               variant="outline" 
-              className="border-wednest-beige text-wednest-brown-light hover:bg-wednest-cream hover:text-wednest-brown justify-center"
+              className="border-theme-beige text-theme-brown hover:bg-theme-cream hover:border-theme-brown justify-center"
               onClick={() => handleLocationClick(location)}
             >
               {location}
@@ -71,7 +71,7 @@ const VendorBrowseCategories = ({
       </div>
       
       <div className="mt-8">
-        <h3 className="text-lg font-medium text-wednest-brown mb-3">
+        <h3 className="text-lg font-semibold text-theme-brown mb-4">
           Popular Styles
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -79,7 +79,7 @@ const VendorBrowseCategories = ({
             <Button 
               key={style} 
               variant="outline" 
-              className="border-wednest-beige text-wednest-brown-light hover:bg-wednest-cream hover:text-wednest-brown justify-center"
+              className="border-theme-beige text-theme-brown hover:bg-theme-cream hover:border-theme-brown justify-center"
               onClick={() => handleStyleClick(style)}
             >
               {style}

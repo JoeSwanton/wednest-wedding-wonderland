@@ -51,78 +51,78 @@ const VendorFilters = ({
   if (activeFiltersCount === 0) return null;
 
   return (
-    <div className="mt-6 flex flex-wrap gap-2 items-center">
-      <span className="text-sm font-medium text-wednest-brown">Active Filters:</span>
+    <div className="mt-6 flex flex-wrap gap-2 items-center bg-theme-cream/50 p-4 rounded-lg border border-theme-beige">
+      <span className="text-sm font-medium text-theme-brown">Active Filters:</span>
       
       {searchQuery && (
-        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           {`Search: "${searchQuery}"`}
-          <button onClick={onClearSearch} className="ml-1 p-0.5 hover:bg-wednest-beige rounded">
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+          <button onClick={onClearSearch} className="ml-1 p-0.5 hover:bg-theme-beige rounded">
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       )}
       
       {selectedCategory && selectedCategory !== "all" && (
-        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           {`Category: ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`}
-          <button onClick={onClearCategory} className="ml-1 p-0.5 hover:bg-wednest-beige rounded">
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+          <button onClick={onClearCategory} className="ml-1 p-0.5 hover:bg-theme-beige rounded">
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       )}
       
       {selectedLocation && selectedLocation !== "Any Location" && (
-        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           <MapPin className="h-3.5 w-3.5 mr-0.5" />
           {selectedLocation}
-          <button onClick={onClearLocation} className="ml-1 p-0.5 hover:bg-wednest-beige rounded">
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+          <button onClick={onClearLocation} className="ml-1 p-0.5 hover:bg-theme-beige rounded">
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       )}
       
       {priceFilter && (
-        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           {`Price: ${priceFilter}`}
-          <button onClick={onClearPrice} className="ml-1 p-0.5 hover:bg-wednest-beige rounded">
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+          <button onClick={onClearPrice} className="ml-1 p-0.5 hover:bg-theme-beige rounded">
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       )}
       
       {styleFilter.map(style => (
-        <Badge key={style} variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge key={style} variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           {`Style: ${style}`}
           <button 
             onClick={() => onClearStyle(style)} 
-            className="ml-1 p-0.5 hover:bg-wednest-beige rounded"
+            className="ml-1 p-0.5 hover:bg-theme-beige rounded"
           >
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       ))}
       
       {availabilityFilter && (
-        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           {`Availability: ${availabilityFilter.charAt(0).toUpperCase() + availabilityFilter.slice(1)}`}
-          <button onClick={onClearAvailability} className="ml-1 p-0.5 hover:bg-wednest-beige rounded">
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+          <button onClick={onClearAvailability} className="ml-1 p-0.5 hover:bg-theme-beige rounded">
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       )}
       
       {ratingFilter > 0 && (
-        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-wednest-beige">
+        <Badge variant="outline" className="flex items-center gap-1 pl-2 pr-1 py-1.5 border-theme-beige bg-white">
           {`Rating: ${ratingFilter}+ Stars`}
-          <button onClick={onClearRating} className="ml-1 p-0.5 hover:bg-wednest-beige rounded">
-            <X className="h-3.5 w-3.5 text-wednest-brown-light" />
+          <button onClick={onClearRating} className="ml-1 p-0.5 hover:bg-theme-beige rounded">
+            <X className="h-3.5 w-3.5 text-theme-brown-light" />
           </button>
         </Badge>
       )}
       
       <button 
-        className="text-sm text-wednest-sage hover:text-wednest-sage-dark hover:underline"
+        className="text-sm text-theme-brown hover:text-theme-brown-dark hover:underline"
         onClick={onClearAll}
       >
         Clear All

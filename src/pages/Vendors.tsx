@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Separator } from "@/components/ui/separator";
 import VendorSearch from "@/components/VendorSearch";
 import VendorCards from "@/components/VendorCards";
 import VendorHeader from "@/components/vendors/VendorHeader";
@@ -73,8 +74,10 @@ const Vendors = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-theme-cream via-white to-theme-beige/30 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
+      <Separator className="bg-theme-brown h-[1px] w-full" />
+      
       <div className="flex-grow">
         <VendorHeader
           selectedCategory={selectedCategory}
@@ -86,7 +89,7 @@ const Vendors = () => {
         
         <div className="container mx-auto px-4 py-8 md:py-12">
           {/* Enhanced Search Section */}
-          <div className="bg-white rounded-2xl shadow-lg border border-theme-beige/50 overflow-hidden mb-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/50 overflow-hidden mb-8">
             <VendorSearch 
               onSearchChange={handleSearchChange}
               onCategoryChange={handleCategoryChange}

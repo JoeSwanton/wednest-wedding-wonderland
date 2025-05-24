@@ -13,9 +13,9 @@ const VendorListingHeader = ({
   selectedLocation 
 }: VendorListingHeaderProps) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 p-6 bg-gradient-to-r from-theme-cream to-white rounded-2xl border border-theme-beige/30 shadow-sm">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 p-6 bg-theme-cream rounded-xl border border-theme-beige">
       <div>
-        <h2 className="text-2xl md:text-3xl font-serif font-semibold text-theme-brown-dark mb-2">
+        <h2 className="text-2xl md:text-3xl font-serif text-theme-brown mb-2">
           {selectedCategory && selectedCategory !== "all" 
             ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Vendors` 
             : "All Wedding Vendors"}
@@ -23,7 +23,7 @@ const VendorListingHeader = ({
             ? ` in ${selectedLocation}` 
             : ""}
         </h2>
-        <p className="text-theme-gray-dark text-base">
+        <p className="text-theme-brown-light">
           Browse our curated selection of wedding professionals
         </p>
       </div>
@@ -35,7 +35,7 @@ const VendorListingHeader = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex items-center gap-2 border-theme-beige hover:bg-theme-cream"
+                className="flex items-center gap-2 border-theme-beige hover:bg-white"
               >
                 <SlidersHorizontal className="h-4 w-4" />
                 Filters
@@ -51,7 +51,7 @@ const VendorListingHeader = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" className="px-3 hover:bg-theme-cream">
+                <Button variant="ghost" size="sm" className="px-3 hover:bg-theme-cream text-theme-brown">
                   <Grid className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -64,7 +64,7 @@ const VendorListingHeader = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" className="px-3 hover:bg-theme-cream">
+                <Button variant="ghost" size="sm" className="px-3 hover:bg-theme-cream text-theme-brown">
                   <Map className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>

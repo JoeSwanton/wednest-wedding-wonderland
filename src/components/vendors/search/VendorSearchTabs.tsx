@@ -26,16 +26,16 @@ const VendorSearchTabs = ({
 }: VendorSearchTabsProps) => {
   return (
     <Tabs defaultValue="search">
-      <TabsList className="w-full border-b border-wednest-beige bg-transparent p-0 h-auto">
+      <TabsList className="w-full border-b border-theme-beige bg-transparent p-0 h-auto">
         <TabsTrigger 
           value="search" 
-          className="flex-1 py-3 rounded-none data-[state=active]:bg-wednest-cream data-[state=active]:shadow-none border-r border-wednest-beige"
+          className="flex-1 py-4 rounded-none data-[state=active]:bg-theme-cream data-[state=active]:shadow-none border-r border-theme-beige text-theme-brown"
         >
           Search Vendors
         </TabsTrigger>
         <TabsTrigger 
           value="browse" 
-          className="flex-1 py-3 rounded-none data-[state=active]:bg-wednest-cream data-[state=active]:shadow-none"
+          className="flex-1 py-4 rounded-none data-[state=active]:bg-theme-cream data-[state=active]:shadow-none text-theme-brown"
         >
           Browse by Category
         </TabsTrigger>
