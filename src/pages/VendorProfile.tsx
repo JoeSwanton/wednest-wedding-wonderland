@@ -6,17 +6,18 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, Calendar, Phone, Mail, Globe, Instagram, Facebook } from "lucide-react";
+import { MapPin, Star, Calendar, Phone, Mail, Globe, Instagram, Facebook, MessageSquare, ChevronRight, Home } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { VendorData } from "@/components/vendors/VendorCard";
 import { useToast } from "@/hooks/use-toast";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 const VendorProfile = () => {
   const { vendorId } = useParams();
   const [vendor, setVendor] = useState<VendorData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [portfolioImages, setPortfolioImages] = useState<Array<{url: string, caption: string}>>([]);
-  const [vendorPackages, setVendorPackages] = useState<Array<{name: string, priceRange: string, description: string, features: string[]}>>([]);
+  const [portfolioImages, setPortfolioImages] = useState<Array<{url: string, caption: string, category?: string}>>([]);
+  const [vendorPackages, setVendorPackages] = useState<Array<{name: string, priceRange: string, description: string, features: string[], isPopular?: boolean, isBudgetFriendly?: boolean}>>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -24,35 +25,41 @@ const VendorProfile = () => {
       try {
         setLoading(true);
         
-        // In a real implementation, this would fetch from the API
-        // For now, we'll use the mock data based on ID
         const { mockBusinesses } = await import("@/data/mockVendors");
         const foundVendor = mockBusinesses.find(v => v.id.toString() === vendorId);
         
         if (foundVendor) {
           setVendor(foundVendor);
           
-          // For demo purposes - in real implementation, these would come from Supabase
-          // Mock portfolio images
           setPortfolioImages([
-            { url: foundVendor.imageUrl, caption: "Portfolio image 1" },
-            { url: foundVendor.imageUrl, caption: "Portfolio image 2" },
-            { url: foundVendor.imageUrl, caption: "Portfolio image 3" }
+            { url: foundVendor.imageUrl, caption: "Ceremony Setup", category: "Ceremony" },
+            { url: foundVendor.imageUrl, caption: "Reception Decor", category: "Reception" },
+            { url: foundVendor.imageUrl, caption: "Dance Floor", category: "Entertainment" },
+            { url: foundVendor.imageUrl, caption: "Bridal Suite", category: "Preparation" },
+            { url: foundVendor.imageUrl, caption: "Cocktail Hour", category: "Reception" },
+            { url: foundVendor.imageUrl, caption: "Outdoor Setup", category: "Ceremony" }
           ]);
           
-          // Mock service packages
           setVendorPackages([
             { 
-              name: "Basic Package", 
-              priceRange: "$500-$1000", 
-              description: "Our starter package for those on a budget", 
-              features: ["Feature 1", "Feature 2", "Feature 3"]
+              name: "Essential Package", 
+              priceRange: "$800-$1,500", 
+              description: "Perfect for intimate celebrations with essential services", 
+              features: ["4-hour coverage", "Basic setup", "Standard equipment", "Email support"],
+              isBudgetFriendly: true
             },
             { 
               name: "Premium Package", 
-              priceRange: "$1000-$2500", 
-              description: "Our most popular comprehensive package", 
-              features: ["Feature 1", "Feature 2", "Feature 3", "Feature 4", "Feature 5"]
+              priceRange: "$2,000-$4,000", 
+              description: "Our most popular comprehensive package for memorable celebrations", 
+              features: ["8-hour coverage", "Premium setup & decor", "Professional equipment", "Dedicated coordinator", "Custom playlist", "Lighting package"],
+              isPopular: true
+            },
+            { 
+              name: "Luxury Experience", 
+              priceRange: "$4,500-$8,000", 
+              description: "The ultimate wedding experience with exclusive premium services", 
+              features: ["12-hour coverage", "Luxury setup & styling", "High-end equipment", "Personal wedding coordinator", "Custom entertainment", "Premium lighting & effects", "Complimentary consultation"]
             }
           ]);
         } else {
@@ -102,15 +109,15 @@ const VendorProfile = () => {
         <Navbar />
         <div className="flex-grow container mx-auto px-4 py-12">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-serif text-wednest-brown mb-4">
+            <h2 className="text-2xl font-serif text-theme-brown mb-4">
               Vendor Not Found
             </h2>
-            <p className="text-wednest-brown-light mb-6">
+            <p className="text-theme-gray-dark mb-6">
               We couldn't find the vendor you're looking for. They may have been removed or the URL might be incorrect.
             </p>
             <Button 
               onClick={() => window.history.back()}
-              className="bg-wednest-sage text-white hover:bg-wednest-sage/90"
+              className="bg-theme-brown text-white hover:bg-theme-brown-dark"
             >
               Go Back to Vendors
             </Button>
@@ -125,29 +132,57 @@ const VendorProfile = () => {
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <div className="flex-grow">
-        {/* Hero Section */}
-        <div className="relative h-64 md:h-96 bg-cover bg-center" style={{ backgroundImage: `url(${vendor.imageUrl})` }}>
-          <div className="absolute inset-0 bg-black/40"></div>
+        {/* Breadcrumb Navigation */}
+        <div className="bg-theme-cream py-3">
+          <div className="container mx-auto px-4">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/" className="flex items-center gap-1 text-theme-gray-dark hover:text-theme-brown">
+                    <Home className="h-4 w-4" />
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/vendors" className="text-theme-gray-dark hover:text-theme-brown">
+                    Vendors
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbPage className="text-theme-brown font-medium">
+                  {vendor.name}
+                </BreadcrumbPage>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </div>
+
+        {/* Hero Section with Dark Overlay */}
+        <div className="relative h-80 md:h-96 bg-cover bg-center" style={{ backgroundImage: `url(${vendor.imageUrl})` }}>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60"></div>
           <div className="container mx-auto h-full flex items-end">
-            <div className="p-6 md:p-12 text-white relative z-10">
-              <Badge 
-                variant="secondary"
-                className="mb-4 bg-wednest-sage text-white hover:bg-wednest-sage border-none"
-              >
-                {vendor.type}
-              </Badge>
-              <h1 className="text-3xl md:text-5xl font-serif mb-2">{vendor.name}</h1>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center text-sm">
-                  <MapPin className="h-4 w-4 mr-1" />
+            <div className="p-6 md:p-12 text-white relative z-10 w-full">
+              <div className="mb-4">
+                <Badge 
+                  variant="secondary"
+                  className="mb-3 bg-theme-brown text-white hover:bg-theme-brown-dark border-none px-3 py-1 text-sm font-medium"
+                >
+                  {vendor.type}
+                </Badge>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-4 leading-tight">{vendor.name}</h1>
+              <div className="flex flex-wrap items-center gap-6 mb-4">
+                <div className="flex items-center text-lg">
+                  <MapPin className="h-5 w-5 mr-2" />
                   <span>{vendor.location}</span>
                 </div>
-                <div className="flex items-center text-sm">
-                  <Star className="h-4 w-4 mr-1 fill-wednest-gold text-wednest-gold" />
+                <div className="flex items-center text-lg">
+                  <Star className="h-5 w-5 mr-2 fill-yellow-400 text-yellow-400" />
                   <span>{vendor.rating} Rating</span>
                 </div>
-                <div className="hidden md:flex items-center text-sm">
-                  <Calendar className="h-4 w-4 mr-1" />
+                <div className="hidden md:flex items-center text-lg">
+                  <Calendar className="h-5 w-5 mr-2" />
                   <span>Available {vendor.availability}</span>
                 </div>
               </div>
@@ -157,77 +192,109 @@ const VendorProfile = () => {
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column: Details */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg p-6 shadow-sm mb-8 border border-wednest-beige">
-                <h2 className="text-2xl font-serif text-wednest-brown mb-4">About {vendor.name}</h2>
-                <p className="text-wednest-brown-light mb-6">{vendor.description}</p>
+            <div className="lg:col-span-2 space-y-8">
+              {/* About Section */}
+              <div className="bg-white rounded-xl p-8 shadow-sm border border-theme-beige">
+                <h2 className="text-3xl font-serif text-theme-brown mb-6">About {vendor.name}</h2>
+                <p className="text-theme-gray-dark text-lg leading-relaxed mb-8">{vendor.description}</p>
                 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="border-l-2 border-wednest-sage pl-3">
-                    <div className="text-xs text-wednest-brown-light">Average Price</div>
-                    <div className="text-wednest-brown font-semibold">{vendor.price}</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-theme-cream p-4 rounded-lg border-l-4 border-theme-brown">
+                    <div className="text-sm text-theme-gray-dark mb-1 font-medium">Average Price</div>
+                    <div className="text-xl text-theme-brown font-bold">{vendor.price}</div>
                   </div>
-                  <div className="border-l-2 border-wednest-sage pl-3">
-                    <div className="text-xs text-wednest-brown-light">Availability</div>
-                    <div className="text-wednest-brown font-semibold">{vendor.availability}</div>
+                  <div className="bg-theme-cream p-4 rounded-lg border-l-4 border-theme-brown">
+                    <div className="text-sm text-theme-gray-dark mb-1 font-medium">Availability</div>
+                    <div className="text-xl text-theme-brown font-bold">{vendor.availability}</div>
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-1.5 mb-4">
+                <div className="flex flex-wrap gap-2">
                   {vendor.tags.map((tag, index) => (
-                    <Badge 
+                    <span 
                       key={index} 
-                      variant="secondary"
-                      className="rounded-md bg-wednest-cream text-wednest-brown-light hover:bg-wednest-beige"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-theme-cream text-theme-brown border border-theme-beige hover:bg-theme-beige transition-colors"
                     >
                       {tag}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               </div>
 
-              {/* Portfolio Images */}
-              <div className="bg-white rounded-lg p-6 shadow-sm mb-8 border border-wednest-beige">
-                <h2 className="text-2xl font-serif text-wednest-brown mb-4">Portfolio</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Portfolio Section */}
+              <div className="bg-white rounded-xl p-8 shadow-sm border border-theme-beige">
+                <h2 className="text-3xl font-serif text-theme-brown mb-6">Portfolio</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {portfolioImages.map((image, index) => (
-                    <div key={index} className="relative rounded-lg overflow-hidden h-48">
+                    <div key={index} className="group relative rounded-xl overflow-hidden h-56 bg-gray-100 shadow-md hover:shadow-lg transition-all duration-300">
                       <img 
                         src={image.url} 
                         alt={image.caption || `Portfolio image ${index + 1}`} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      {image.caption && (
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-sm">
-                          {image.caption}
-                        </div>
-                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        {image.category && (
+                          <span className="inline-block px-2 py-1 bg-theme-brown text-xs font-medium rounded mb-1">
+                            {image.category}
+                          </span>
+                        )}
+                        <p className="text-sm font-medium">{image.caption}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
               
               {/* Service Packages */}
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-wednest-beige">
-                <h2 className="text-2xl font-serif text-wednest-brown mb-4">Service Packages</h2>
-                <div className="space-y-6">
+              <div className="bg-white rounded-xl p-8 shadow-sm border border-theme-beige">
+                <h2 className="text-3xl font-serif text-theme-brown mb-6">Service Packages</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {vendorPackages.map((pkg, index) => (
-                    <div key={index} className="border border-wednest-beige rounded-lg p-4 hover:border-wednest-sage transition-colors">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-lg font-medium text-wednest-brown">{pkg.name}</h3>
-                        <span className="text-wednest-sage font-semibold">{pkg.priceRange}</span>
+                    <div key={index} className="relative bg-white border-2 border-theme-beige rounded-xl p-6 hover:border-theme-brown hover:shadow-md transition-all duration-300">
+                      {/* Popular/Budget badges */}
+                      {pkg.isPopular && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                          <span className="bg-theme-brown text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                            <Star className="h-4 w-4 fill-current" />
+                            Most Popular
+                          </span>
+                        </div>
+                      )}
+                      {pkg.isBudgetFriendly && (
+                        <div className="absolute -top-3 right-4">
+                          <span className="bg-theme-success text-white px-3 py-1 rounded-full text-xs font-semibold">
+                            Budget-Friendly
+                          </span>
+                        </div>
+                      )}
+                      
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-xl font-serif font-semibold text-theme-brown">{pkg.name}</h3>
+                        <span className="bg-theme-cream text-theme-brown px-3 py-1 rounded-full text-sm font-bold border border-theme-beige">
+                          {pkg.priceRange}
+                        </span>
                       </div>
-                      <p className="text-sm text-wednest-brown-light mb-3">{pkg.description}</p>
-                      <div className="space-y-1">
+                      
+                      <p className="text-theme-gray-dark mb-6 leading-relaxed">{pkg.description}</p>
+                      
+                      <div className="space-y-3 mb-6">
                         {pkg.features.map((feature, featureIndex) => (
-                          <div key={featureIndex} className="flex items-start gap-2 text-sm">
-                            <div className="w-1 h-1 rounded-full bg-wednest-sage mt-2"></div>
-                            <span className="text-wednest-brown-light">{feature}</span>
+                          <div key={featureIndex} className="flex items-start gap-3">
+                            <div className="w-2 h-2 rounded-full bg-theme-brown mt-2"></div>
+                            <span className="text-theme-gray-dark">{feature}</span>
                           </div>
                         ))}
                       </div>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="w-full border-theme-brown text-theme-brown hover:bg-theme-brown hover:text-white transition-colors"
+                      >
+                        Inquire About Package
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -236,44 +303,56 @@ const VendorProfile = () => {
 
             {/* Right Column: Contact Info & Call to Action */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg p-6 shadow-sm mb-8 border border-wednest-beige sticky top-24">
-                <h3 className="text-xl font-serif text-wednest-brown mb-4">Contact Information</h3>
+              <div className="bg-theme-cream rounded-xl p-8 shadow-sm border border-theme-beige sticky top-24">
+                <h3 className="text-2xl font-serif text-theme-brown mb-6">Contact Information</h3>
                 
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center gap-3">
-                    <Phone className="h-5 w-5 text-wednest-sage" />
-                    <span className="text-wednest-brown-light">0412 345 678</span>
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-center gap-4 p-3 bg-white rounded-lg border border-theme-beige">
+                    <Phone className="h-5 w-5 text-theme-brown" />
+                    <span className="text-theme-gray-dark font-medium">0412 345 678</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-wednest-sage" />
-                    <span className="text-wednest-brown-light">info@{vendor.name.toLowerCase().replace(/\s+/g, '')}.com</span>
+                  <div className="flex items-center gap-4 p-3 bg-white rounded-lg border border-theme-beige">
+                    <Mail className="h-5 w-5 text-theme-brown" />
+                    <span className="text-theme-gray-dark font-medium">info@{vendor.name.toLowerCase().replace(/\s+/g, '')}.com</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Globe className="h-5 w-5 text-wednest-sage" />
-                    <span className="text-wednest-brown-light">www.{vendor.name.toLowerCase().replace(/\s+/g, '')}.com</span>
+                  <div className="flex items-center gap-4 p-3 bg-white rounded-lg border border-theme-beige">
+                    <Globe className="h-5 w-5 text-theme-brown" />
+                    <span className="text-theme-gray-dark font-medium">www.{vendor.name.toLowerCase().replace(/\s+/g, '')}.com</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Instagram className="h-5 w-5 text-wednest-sage" />
-                    <span className="text-wednest-brown-light">@{vendor.name.toLowerCase().replace(/\s+/g, '')}</span>
+                  <div className="flex items-center gap-4 p-3 bg-white rounded-lg border border-theme-beige">
+                    <Instagram className="h-5 w-5 text-theme-brown" />
+                    <span className="text-theme-gray-dark font-medium">@{vendor.name.toLowerCase().replace(/\s+/g, '')}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Facebook className="h-5 w-5 text-wednest-sage" />
-                    <span className="text-wednest-brown-light">{vendor.name}</span>
+                  <div className="flex items-center gap-4 p-3 bg-white rounded-lg border border-theme-beige">
+                    <Facebook className="h-5 w-5 text-theme-brown" />
+                    <span className="text-theme-gray-dark font-medium">{vendor.name}</span>
                   </div>
                 </div>
                 
-                <Button 
-                  className="w-full bg-wednest-sage text-white hover:bg-wednest-sage/90 mb-3"
-                >
-                  Request a Quote
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full border-wednest-sage text-wednest-sage hover:bg-wednest-cream"
-                >
-                  Send a Message
-                </Button>
+                <div className="space-y-3">
+                  <Button 
+                    className="w-full bg-theme-brown text-white hover:bg-theme-brown-dark transition-colors text-base py-3 font-semibold"
+                  >
+                    <Calendar className="h-5 w-5 mr-2" />
+                    Check Availability
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-theme-brown text-theme-brown hover:bg-theme-brown hover:text-white transition-colors text-base py-3 font-semibold"
+                  >
+                    <MessageSquare className="h-5 w-5 mr-2" />
+                    Send a Message
+                  </Button>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="mt-8 pt-6 border-t border-theme-beige">
+                  <div className="text-center">
+                    <div className="text-sm text-theme-gray-dark mb-2">Response Time</div>
+                    <div className="text-lg font-bold text-theme-brown">Within 2 hours</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
