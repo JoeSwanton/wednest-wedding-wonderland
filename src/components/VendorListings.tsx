@@ -18,47 +18,47 @@ const VendorListings = () => {
   const [categoryPage, setCategoryPage] = useState(0);
   const [slideDirection, setSlideDirection] = useState("right");
   
-  // Enhanced wedding vendor categories with better visuals
+  // Enhanced wedding vendor categories with better visuals and proper photos
   const categories = [
     {
       type: "Venues",
       count: "245",
-      image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800&h=600",
       description: "Dream wedding locations",
       trending: true
     },
     {
       type: "Photographers",
       count: "189",
-      image: "https://images.unsplash.com/photo-1537633552122-d3b236552305?auto=format&fit=crop&q=80&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&q=80&w=800&h=600",
       description: "Capture your special moments",
       trending: false
     },
     {
       type: "Caterers",
       count: "156",
-      image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800&h=600",
       description: "Delicious wedding cuisine",
       trending: true
     },
     {
       type: "Florists",
       count: "132",
-      image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&q=80&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&q=80&w=800&h=600",
       description: "Beautiful floral arrangements",
       trending: false
     },
     {
       type: "Entertainment",
       count: "98",
-      image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&q=80&w=800&h=600",
       description: "Music & entertainment",
       trending: false
     },
     {
       type: "Planners",
       count: "76",
-      image: "https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&q=80&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=800&h=600",
       description: "Professional planning services",
       trending: true
     }
@@ -129,18 +129,21 @@ const VendorListings = () => {
                             className="w-full h-full object-cover"
                           />
                           {category.trending && (
-                            <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                            <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
                               Trending
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                          {/* Improved gradient overlay for better text readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                          {/* Additional overlay for better text contrast */}
+                          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/90 to-transparent" />
                         </div>
                         <div className="absolute bottom-0 left-0 w-full p-6 text-white">
-                          <h4 className="text-xl font-semibold mb-1">{category.type}</h4>
-                          <p className="text-white/90 text-sm mb-2">{category.description}</p>
+                          <h4 className="text-xl font-bold mb-1 text-white drop-shadow-lg">{category.type}</h4>
+                          <p className="text-white/95 text-sm mb-2 drop-shadow-md">{category.description}</p>
                           <div className="flex items-center gap-2">
-                            <span className="text-white/80 text-sm">{category.count} vendors</span>
-                            <ArrowRight className="h-4 w-4 text-white/80 group-hover:translate-x-1 transition-transform" />
+                            <span className="text-white/90 text-sm font-medium drop-shadow-md">{category.count} vendors</span>
+                            <ArrowRight className="h-4 w-4 text-white/90 group-hover:translate-x-1 transition-transform drop-shadow-md" />
                           </div>
                         </div>
                       </div>
@@ -175,18 +178,21 @@ const VendorListings = () => {
                         className="w-full h-full object-cover"
                       />
                       {category.trending && (
-                        <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                        <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
                           Trending
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      {/* Improved gradient overlay for better text readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                      {/* Additional overlay for better text contrast */}
+                      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/90 to-transparent" />
                     </div>
                     <div className="absolute bottom-0 left-0 w-full p-6 text-white">
-                      <h4 className="text-xl font-semibold mb-1">{category.type}</h4>
-                      <p className="text-white/90 text-sm mb-2">{category.description}</p>
+                      <h4 className="text-xl font-bold mb-1 text-white drop-shadow-lg">{category.type}</h4>
+                      <p className="text-white/95 text-sm mb-2 drop-shadow-md">{category.description}</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-white/80 text-sm">{category.count} vendors</span>
-                        <ArrowRight className="h-4 w-4 text-white/80 group-hover:translate-x-1 transition-transform" />
+                        <span className="text-white/90 text-sm font-medium drop-shadow-md">{category.count} vendors</span>
+                        <ArrowRight className="h-4 w-4 text-white/90 group-hover:translate-x-1 transition-transform drop-shadow-md" />
                       </div>
                     </div>
                   </div>
