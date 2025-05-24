@@ -15,6 +15,11 @@ import TimelineCreator from "@/components/customer/TimelineCreator";
 import TaskChecklist from "@/components/customer/TaskChecklist";
 import VendorContracts from "@/components/customer/VendorContracts";
 import DashboardHeader from "@/components/customer/DashboardHeader";
+import EnhancedBudgetSummaryCard from "@/components/dashboard/EnhancedBudgetSummaryCard";
+import EnhancedGuestListCard from "@/components/dashboard/EnhancedGuestListCard";
+import UpcomingTasksList from "@/components/dashboard/UpcomingTasksList";
+import UpcomingEventsList from "@/components/dashboard/UpcomingEventsList";
+import EnhancedVendorDashboardList from "@/components/dashboard/EnhancedVendorDashboardList";
 
 const CustomerDashboard = () => {
   const { user, userProfile, signOut } = useAuth();
@@ -41,72 +46,122 @@ const CustomerDashboard = () => {
       <DashboardHeader />
       
       {/* Dashboard Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {/* Quick Access Tiles */}
-        <h3 className="font-serif font-semibold text-xl text-theme-text-primary mb-4">Planning Tools</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <Button 
-            variant="outline" 
-            onClick={() => handleTabChange("budget")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 
-              ${activeTab === 'budget' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
-          >
-            <CreditCard className="h-6 w-6 text-theme-brown" />
-            <span className="font-medium text-sm">Budget</span>
-          </Button>
+      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+        {/* Planning Overview Section */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-serif font-semibold text-theme-text-primary">Your Planning Overview</h2>
           
-          <Button 
-            variant="outline" 
-            onClick={() => handleTabChange("guests")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
-              ${activeTab === 'guests' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
-          >
-            <Users className="h-6 w-6 text-theme-brown" />
-            <span className="font-medium text-sm">Guests</span>
-          </Button>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <EnhancedBudgetSummaryCard />
+            <EnhancedGuestListCard />
+            <div className="lg:col-span-1">
+              <UpcomingTasksList />
+            </div>
+          </div>
+        </section>
+
+        {/* Tasks & Events Section */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-serif font-semibold text-theme-text-primary">Tasks & Events</h2>
           
-          <Button 
-            variant="outline" 
-            onClick={() => handleTabChange("timeline")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
-              ${activeTab === 'timeline' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
-          >
-            <Calendar className="h-6 w-6 text-theme-brown" />
-            <span className="font-medium text-sm">Timeline</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            onClick={() => handleTabChange("checklist")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
-              ${activeTab === 'checklist' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
-          >
-            <CheckSquare className="h-6 w-6 text-theme-brown" />
-            <span className="font-medium text-sm">Checklist</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            onClick={() => handleTabChange("contracts")}
-            className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200
-              ${activeTab === 'contracts' ? 'border-theme-brown bg-theme-cream/20 shadow-card' : 'hover:shadow-card'}`}
-          >
-            <span className="text-2xl">📄</span>
-            <span className="font-medium text-sm">Contracts</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/vendors")}
-            className="h-28 flex flex-col items-center justify-center gap-2 hover:shadow-card transition-all duration-200"
-          >
-            <Search className="h-6 w-6 text-theme-brown" />
-            <span className="font-medium text-sm">Find Vendors</span>
-          </Button>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <UpcomingEventsList />
+            <Card className="shadow-sm border-theme-cream/30">
+              <CardHeader>
+                <CardTitle className="text-lg text-theme-brown">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-theme-brown-light/30 hover:bg-theme-cream/10">
+                  <Bell className="h-5 w-5 text-theme-brown" />
+                  <span className="text-sm font-medium">Set Reminders</span>
+                </Button>
+                
+                <Button className="h-20 flex flex-col items-center justify-center gap-2 bg-theme-sage hover:bg-theme-sage-dark text-white">
+                  <Plus className="h-5 w-5" />
+                  <span className="text-sm font-medium">Add Task</span>
+                </Button>
+                
+                <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-theme-brown-light/30 hover:bg-theme-cream/10">
+                  <Calendar className="h-5 w-5 text-theme-brown" />
+                  <span className="text-sm font-medium">Add Event</span>
+                </Button>
+                
+                <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-theme-brown-light/30 hover:bg-theme-cream/10">
+                  <Settings className="h-5 w-5 text-theme-brown" />
+                  <span className="text-sm font-medium">Settings</span>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Planning Tools Section */}
+        <section className="space-y-6">
+          <h3 className="font-serif font-semibold text-xl text-theme-text-primary">Planning Tools</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <Button 
+              variant="outline" 
+              onClick={() => handleTabChange("budget")}
+              className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 border-theme-brown-light/30 hover:shadow-md
+                ${activeTab === 'budget' ? 'border-theme-brown bg-theme-cream/20 shadow-md' : 'hover:bg-theme-cream/10'}`}
+            >
+              <CreditCard className="h-6 w-6 text-theme-brown" />
+              <span className="font-medium text-sm">Budget</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => handleTabChange("guests")}
+              className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 border-theme-brown-light/30 hover:shadow-md
+                ${activeTab === 'guests' ? 'border-theme-brown bg-theme-cream/20 shadow-md' : 'hover:bg-theme-cream/10'}`}
+            >
+              <Users className="h-6 w-6 text-theme-brown" />
+              <span className="font-medium text-sm">Guests</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => handleTabChange("timeline")}
+              className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 border-theme-brown-light/30 hover:shadow-md
+                ${activeTab === 'timeline' ? 'border-theme-brown bg-theme-cream/20 shadow-md' : 'hover:bg-theme-cream/10'}`}
+            >
+              <Calendar className="h-6 w-6 text-theme-brown" />
+              <span className="font-medium text-sm">Timeline</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => handleTabChange("checklist")}
+              className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 border-theme-brown-light/30 hover:shadow-md
+                ${activeTab === 'checklist' ? 'border-theme-brown bg-theme-cream/20 shadow-md' : 'hover:bg-theme-cream/10'}`}
+            >
+              <CheckSquare className="h-6 w-6 text-theme-brown" />
+              <span className="font-medium text-sm">Checklist</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => handleTabChange("contracts")}
+              className={`h-28 flex flex-col items-center justify-center gap-2 transition-all duration-200 border-theme-brown-light/30 hover:shadow-md
+                ${activeTab === 'contracts' ? 'border-theme-brown bg-theme-cream/20 shadow-md' : 'hover:bg-theme-cream/10'}`}
+            >
+              <span className="text-2xl">📄</span>
+              <span className="font-medium text-sm">Contracts</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => navigate("/vendors")}
+              className="h-28 flex flex-col items-center justify-center gap-2 border-theme-brown-light/30 hover:bg-theme-cream/10 hover:shadow-md transition-all duration-200"
+            >
+              <Search className="h-6 w-6 text-theme-brown" />
+              <span className="font-medium text-sm">Find Vendors</span>
+            </Button>
+          </div>
+        </section>
         
         {/* Tab Content */}
-        <Card className="bg-white rounded-lg shadow-card mb-8 animate-fade-in overflow-hidden">
+        <Card className="bg-white rounded-lg shadow-md border-theme-cream/30 animate-fade-in overflow-hidden">
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid grid-cols-5 bg-theme-cream/20 p-0 h-auto">
               <TabsTrigger 
@@ -164,32 +219,27 @@ const CustomerDashboard = () => {
             </div>
           </Tabs>
         </Card>
-        
-        {/* Bottom Action Bar */}
-        <Card className="shadow-card bg-white">
-          <CardHeader className="pb-0">
-            <CardTitle className="text-lg font-serif">Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap justify-center md:justify-start gap-x-4 md:gap-x-8">
-            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
-              <Bell className="h-5 w-5 text-theme-brown" />
-              <span className="text-xs font-medium">Reminders</span>
-            </Button>
-            
-            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
-              <Plus className="h-5 w-5 text-theme-brown" />
-              <span className="text-xs font-medium">Add Task</span>
-            </Button>
-            
-            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
-              <Calendar className="h-5 w-5 text-theme-brown" />
-              <span className="text-xs font-medium">Add Event</span>
-            </Button>
-            
-            <Button variant="ghost" className="flex flex-col items-center gap-1 h-auto py-4">
-              <Settings className="h-5 w-5 text-theme-brown" />
-              <span className="text-xs font-medium">Settings</span>
-            </Button>
+
+        {/* Vendors Section */}
+        <section className="space-y-6">
+          <EnhancedVendorDashboardList />
+        </section>
+
+        {/* Bottom CTA Banner */}
+        <Card className="bg-gradient-to-r from-theme-sage/10 to-theme-cream/10 border-theme-sage/20 shadow-sm">
+          <CardContent className="p-6 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="bg-theme-sage/20 rounded-full p-3">
+                <span className="text-2xl">💡</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-theme-brown mb-2">Need help with your planning?</h3>
+                <p className="text-theme-brown-light mb-4">Based on your preferences, we've curated personalized vendor recommendations just for you.</p>
+                <Button className="bg-theme-sage hover:bg-theme-sage-dark text-white px-6">
+                  View Recommendations
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </main>
