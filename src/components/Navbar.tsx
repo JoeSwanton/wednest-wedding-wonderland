@@ -53,7 +53,7 @@ const Navbar = () => {
       <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
         <Link to="/" className="flex items-center">
           <img 
-            src="/lovable-uploads/cdb359bf-eced-4476-b4fb-f2225b7f57aa.png" 
+            src="/lovable-uploads/1b729f6d-c99e-4727-8948-ba1a8dde4783.png" 
             alt="Enosi" 
             className="h-8 md:h-10 w-auto"
           />
@@ -65,7 +65,7 @@ const Navbar = () => {
   return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
         <img 
-          src="/lovable-uploads/cdb359bf-eced-4476-b4fb-f2225b7f57aa.png" 
+          src="/lovable-uploads/1b729f6d-c99e-4727-8948-ba1a8dde4783.png" 
           alt="Enosi" 
           className="h-8 md:h-10 w-auto"
         />
