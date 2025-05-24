@@ -53,9 +53,9 @@ const Navbar = () => {
       <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
         <Link to="/" className="flex items-center">
           <img 
-            src="/lovable-uploads/028f4373-e298-408c-a4e1-a464e260a43f.png" 
+            src="/lovable-uploads/c9665da3-f31f-4a4e-9e12-b580e1f44525.png" 
             alt="Enosi" 
-            className="h-7 md:h-9 w-auto"
+            className="h-6 md:h-7 w-auto"
           />
         </Link>
       </nav>
@@ -65,9 +65,9 @@ const Navbar = () => {
   return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
         <img 
-          src="/lovable-uploads/028f4373-e298-408c-a4e1-a464e260a43f.png" 
+          src="/lovable-uploads/c9665da3-f31f-4a4e-9e12-b580e1f44525.png" 
           alt="Enosi" 
-          className="h-8 md:h-10 w-auto"
+          className="h-6 md:h-7 w-auto"
         />
       </Link>
       
