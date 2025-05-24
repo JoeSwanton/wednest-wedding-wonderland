@@ -25,32 +25,32 @@ interface VendorCardProps {
 }
 
 const VendorCard = ({ vendor }: VendorCardProps) => {
-  // Format the price to show "From $X" or "From $X per event/guest"
+  // Format the price to show "From $X"
   const formatPrice = (price: string) => {
     if (price.includes('$')) return price;
     const priceNum = parseInt(price.replace(/[^0-9]/g, ''));
     if (vendor.type.toLowerCase() === 'venue' || vendor.type.toLowerCase() === 'catering') {
-      return `From $${priceNum} per event`;
+      return `From $${priceNum}`;
     } else if (vendor.type.toLowerCase() === 'photographer') {
-      return `From $${priceNum * 100} per event`;
+      return `From $${priceNum * 100}`;
     } else {
-      return `From $${priceNum * 10} per guest`;
+      return `From $${priceNum * 10}`;
     }
   };
 
-  // Get response time badge
+  // Get response time
   const getResponseTime = () => {
-    const times = ["Within 1 hour", "Within 2 hours", "Within 24 hours", "Within 48 hours"];
+    const times = ["1h", "2h", "24h", "48h"];
     return times[Math.floor(Math.random() * times.length)];
   };
 
   // Get booking urgency
   const getBookingUrgency = () => {
     const urgencies = [
-      "3 couples messaged today",
-      "Booked 2 times this week", 
-      "5 inquiries in last 24 hours",
-      "Popular choice this month"
+      "Booked 3x this week",
+      "Booked 2x this week", 
+      "5 inquiries today",
+      "Popular this month"
     ];
     return urgencies[Math.floor(Math.random() * urgencies.length)];
   };
@@ -59,26 +59,35 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
   const bookingUrgency = getBookingUrgency();
   const isTopRated = vendor.rating > 4.5;
   const isHighDemand = vendor.availability.includes("High") || Math.random() > 0.7;
-  const isVerified = Math.random() > 0.6; // 40% are verified
+  const isVerified = Math.random() > 0.6;
 
   return (
     <Card className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1">
-      {/* Enhanced image section with overlays */}
+      {/* Image section with simplified overlay */}
       <div className="relative h-56 bg-theme-cream overflow-hidden">
-        {/* Vendor type badge */}
-        <div className="absolute top-4 left-4 z-20">
-          <Badge className="bg-theme-brown text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow-lg">
-            {vendor.type}
-          </Badge>
-        </div>
-        
-        {/* Enhanced badges in top right */}
-        <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
-          {/* Favorite button */}
+        {/* Simplified header line - condensed badges */}
+        <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start">
+          <div className="flex items-center gap-2 text-sm">
+            <Badge className="bg-theme-brown text-white px-2 py-1 rounded-md text-xs font-medium">
+              {vendor.type}
+            </Badge>
+            <div className="flex items-center gap-1 bg-black/80 text-white px-2 py-1 rounded-md backdrop-blur-sm">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs font-medium">{vendor.rating}</span>
+            </div>
+            {isTopRated && isHighDemand && (
+              <div className="flex items-center gap-1 bg-red-500/90 text-white px-2 py-1 rounded-md text-xs font-medium">
+                <Award className="h-3 w-3" />
+                <TrendingUp className="h-3 w-3" />
+              </div>
+            )}
+          </div>
+          
+          {/* Favorite button - only on hover */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="p-2.5 rounded-full bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm transition-all group-hover:scale-110">
+                <button className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100">
                   <Heart className="h-4 w-4 text-theme-brown-light hover:text-red-500 transition-colors" />
                 </button>
               </TooltipTrigger>
@@ -87,14 +96,16 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
-          {/* Verified badge */}
-          {isVerified && (
+        </div>
+
+        {/* Verified badge */}
+        {isVerified && (
+          <div className="absolute top-4 right-4 z-20">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="bg-green-500 text-white p-1.5 rounded-full shadow-lg">
-                    <CheckCircle className="h-4 w-4" />
+                    <CheckCircle className="h-3 w-3" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -102,108 +113,69 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          )}
-        </div>
-
-        {/* Enhanced bottom badges */}
-        <div className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-end">
-          {/* Left side badges */}
-          <div className="flex flex-col gap-2">
-            {isTopRated && (
-              <div className="flex items-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow-lg">
-                <Award className="h-4 w-4 mr-1" />
-                Top Rated
-              </div>
-            )}
-            {isHighDemand && (
-              <div className="flex items-center bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow-lg">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                In Demand
-              </div>
-            )}
           </div>
-          
-          {/* Rating badge */}
-          <div className="bg-black/80 text-white px-3 py-1.5 rounded-lg flex items-center text-sm font-medium shadow-lg backdrop-blur-sm">
-            <Star className="h-4 w-4 mr-1 fill-yellow-400 text-yellow-400" />
-            <span>{vendor.rating}</span>
-          </div>
-        </div>
+        )}
 
-        {/* Image with enhanced hover effect */}
+        {/* Image with hover effect */}
         <img 
           src={vendor.imageUrl} 
           alt={`${vendor.name} - ${vendor.type}`} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
         />
-        
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
       
-      {/* Enhanced content section */}
-      <div className="p-5">
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1">
+      {/* Simplified content section */}
+      <div className="p-4">
+        {/* Title and pricing */}
+        <div className="mb-3">
+          <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1 mb-1">
             {vendor.name}
           </h3>
-        </div>
-        
-        {/* Location with enhanced styling */}
-        <div className="flex items-center text-sm text-theme-brown-light mb-3">
-          <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-          <span>{vendor.location}</span>
-        </div>
-        
-        {/* Enhanced tags */}
-        {vendor.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {vendor.tags.slice(0, 2).map((tag, index) => (
-              <Badge 
-                key={index} 
-                variant="outline" 
-                className="border-theme-beige text-theme-brown-light text-xs px-2 py-1 rounded-full bg-theme-cream/50"
-              >
-                {tag}
-              </Badge>
-            ))}
+          <div className="text-sm text-theme-brown-light font-medium">
+            {formatPrice(vendor.price)}
           </div>
-        )}
-        
-        {/* Response time indicator */}
-        <div className="flex items-center text-xs text-green-600 mb-3 bg-green-50 px-2 py-1 rounded-full w-fit">
-          <Clock className="h-3 w-3 mr-1" />
-          <span>Responds {responseTime.toLowerCase()}</span>
         </div>
         
-        {/* Enhanced price and CTA section */}
-        <div className="flex justify-between items-center mt-4 pt-4 border-t border-theme-beige">
-          <div>
-            <div className="text-xs text-theme-brown-light mb-1">Starting from</div>
-            <div className="font-bold text-lg text-theme-brown">{formatPrice(vendor.price)}</div>
+        {/* Location and limited tags */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center text-sm text-theme-brown-light">
+            <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+            <span>{vendor.location}</span>
           </div>
           
-          <Link to={`/vendors/${vendor.id}`}>
-            <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white text-sm px-6 py-2.5 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
-              Check Availability
-            </Button>
-          </Link>
-        </div>
-        
-        {/* Enhanced availability and social proof */}
-        <div className="mt-3 space-y-2">
-          {vendor.availability.includes("High") && (
-            <div className="text-xs text-green-600 flex items-center bg-green-50 px-2 py-1 rounded-lg">
-              <Calendar className="h-3 w-3 mr-2" />
-              High availability for your date
+          {/* Limit to 1-2 key traits */}
+          {vendor.tags.length > 0 && (
+            <div className="flex gap-1">
+              {vendor.tags.slice(0, 2).map((tag, index) => (
+                <Badge 
+                  key={index} 
+                  variant="outline" 
+                  className="border-theme-beige text-theme-brown-light text-xs px-2 py-0.5 rounded-full bg-theme-cream/30"
+                >
+                  {tag}
+                </Badge>
+              ))}
             </div>
           )}
-          
-          {/* Booking urgency */}
-          <div className="text-xs text-theme-brown-light bg-theme-cream px-2 py-1 rounded-lg">
+        </div>
+        
+        {/* Single key signal - response time OR booking activity */}
+        <div className="flex items-center justify-between text-xs mb-4">
+          <div className="flex items-center text-green-600 bg-green-50 px-2 py-1 rounded-full">
+            <Clock className="h-3 w-3 mr-1" />
+            <span>Responds in {responseTime}</span>
+          </div>
+          <div className="text-theme-brown-light bg-theme-cream px-2 py-1 rounded-full">
             {bookingUrgency}
           </div>
         </div>
+        
+        {/* Full-width subtle CTA button */}
+        <Link to={`/vendors/${vendor.id}`} className="block">
+          <Button className="w-full bg-theme-cream text-theme-brown border border-theme-beige hover:bg-theme-brown hover:text-white text-sm py-2.5 rounded-xl transition-all duration-300">
+            Check Availability
+          </Button>
+        </Link>
       </div>
     </Card>
   );
