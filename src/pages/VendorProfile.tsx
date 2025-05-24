@@ -11,7 +11,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { VendorData } from "@/components/vendors/VendorCard";
 import { useToast } from "@/hooks/use-toast";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import DynamicTextOverlay from "@/components/DynamicTextOverlay";
 
 const VendorProfile = () => {
   const { vendorId } = useParams();
@@ -159,37 +158,36 @@ const VendorProfile = () => {
           </div>
         </div>
 
-        {/* Hero Section with Dynamic Text Overlay */}
+        {/* Hero Section with Dark Overlay */}
         <div className="relative h-80 md:h-96 bg-cover bg-center" style={{ backgroundImage: `url(${vendor.imageUrl})` }}>
-          <DynamicTextOverlay backgroundImage={vendor.imageUrl} className="h-full">
-            <div className="container mx-auto h-full flex items-end">
-              <div className="p-6 md:p-12 w-full">
-                <div className="mb-4">
-                  <Badge 
-                    variant="secondary"
-                    className="mb-3 bg-theme-brown text-white hover:bg-theme-brown-dark border-none px-3 py-1 text-sm font-medium"
-                  >
-                    {vendor.type}
-                  </Badge>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60"></div>
+          <div className="container mx-auto h-full flex items-end">
+            <div className="p-6 md:p-12 text-white relative z-10 w-full">
+              <div className="mb-4">
+                <Badge 
+                  variant="secondary"
+                  className="mb-3 bg-theme-brown text-white hover:bg-theme-brown-dark border-none px-3 py-1 text-sm font-medium"
+                >
+                  {vendor.type}
+                </Badge>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-4 leading-tight">{vendor.name}</h1>
+              <div className="flex flex-wrap items-center gap-6 mb-4">
+                <div className="flex items-center text-lg">
+                  <MapPin className="h-5 w-5 mr-2" />
+                  <span>{vendor.location}</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-4 leading-tight">{vendor.name}</h1>
-                <div className="flex flex-wrap items-center gap-6 mb-4">
-                  <div className="flex items-center text-lg">
-                    <MapPin className="h-5 w-5 mr-2" />
-                    <span>{vendor.location}</span>
-                  </div>
-                  <div className="flex items-center text-lg">
-                    <Star className="h-5 w-5 mr-2 fill-yellow-400 text-yellow-400" />
-                    <span>{vendor.rating} Rating</span>
-                  </div>
-                  <div className="hidden md:flex items-center text-lg">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    <span>Available {vendor.availability}</span>
-                  </div>
+                <div className="flex items-center text-lg">
+                  <Star className="h-5 w-5 mr-2 fill-yellow-400 text-yellow-400" />
+                  <span>{vendor.rating} Rating</span>
+                </div>
+                <div className="hidden md:flex items-center text-lg">
+                  <Calendar className="h-5 w-5 mr-2" />
+                  <span>Available {vendor.availability}</span>
                 </div>
               </div>
             </div>
-          </DynamicTextOverlay>
+          </div>
         </div>
 
         {/* Main Content */}
