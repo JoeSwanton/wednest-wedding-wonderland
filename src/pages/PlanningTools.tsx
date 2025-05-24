@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
@@ -172,18 +173,28 @@ const PlanningTools = () => {
               </div>
             </div>
             
-            <div className="bg-theme-brown text-white p-8 rounded-md text-center">
-              <h2 className="text-3xl font-serif mb-4">Ready to Take Your Wedding Planning to the Next Level?</h2>
-              <p className="max-w-2xl mx-auto mb-8">
-                Create a free account to save your progress, access premium tools, and connect with top wedding vendors in your area.
-              </p>
-              <div className="flex justify-center gap-4">
-                <Button className="text-theme-brown bg-theme-white">
-                  Create Free Account
-                </Button>
-                <Button variant="outline" className="border-white hover:bg-theme-brown-dark font-normal text-theme-brown text-[[theme-brown-dark]] bg-theme-white">
-                  Learn More
-                </Button>
+            <div className="bg-gradient-to-br from-theme-brown via-theme-brown to-theme-brown-dark text-white p-10 md:p-12 rounded-lg shadow-lg border border-theme-brown/20">
+              <div className="max-w-4xl mx-auto text-center">
+                <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
+                  Ready to Take Your Wedding Planning to the Next Level?
+                </h2>
+                <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed font-medium">
+                  Create a free account to save your progress, access premium tools, and connect with top wedding vendors in your area.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
+                  <Button className="bg-white text-theme-brown hover:bg-theme-cream font-semibold px-8 py-3 text-lg rounded-md shadow-sm transition-all duration-200 hover:shadow-md">
+                    Create Free Account
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="border-white/30 text-white hover:bg-white/10 hover:border-white font-semibold px-8 py-3 text-lg rounded-md transition-all duration-200"
+                  >
+                    Learn More
+                  </Button>
+                </div>
+                <p className="text-sm text-white/70 mt-6 font-medium">
+                  Join thousands of couples planning their perfect day
+                </p>
               </div>
             </div>
           </TabsContent>
