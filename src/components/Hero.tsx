@@ -114,7 +114,7 @@ const Hero = () => {
                       value={inputValue}
                       onChange={handleInputChange}
                       placeholder="Where's your wedding?"
-                      className="w-full pl-12 pr-10 py-4 h-14 text-lg border-2 border-theme-beige/30 bg-white text-theme-brown hover:border-theme-brown/60 focus:border-theme-brown focus:ring-2 focus:ring-theme-brown/20 transition-all rounded-xl"
+                      className="w-full pl-12 pr-10 py-4 h-14 text-lg border-2 border-theme-beige/30 bg-white text-theme-brown placeholder:text-theme-brown-light hover:border-theme-brown/60 focus:border-theme-brown focus:ring-2 focus:ring-theme-brown/20 transition-all rounded-xl"
                       onFocus={() => setIsLocationOpen(true)}
                     />
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-theme-brown-light" />
@@ -165,11 +165,13 @@ const Hero = () => {
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full h-14 justify-between border-2 border-theme-beige/30 bg-white text-theme-brown hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-all rounded-xl text-lg"
+                    className="w-full h-14 justify-between border-2 border-theme-beige/30 bg-white text-theme-brown placeholder:text-theme-brown-light hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-all rounded-xl text-lg"
                   >
                     <div className="flex items-center">
                       <CalendarIcon className="mr-3 h-6 w-6 text-theme-brown-light" />
-                      <span className="truncate">{date ? format(date, "MMM dd, yyyy") : "Wedding date"}</span>
+                      <span className={cn("truncate", !date && "text-theme-brown-light")}>
+                        {date ? format(date, "MMM dd, yyyy") : "Wedding date"}
+                      </span>
                     </div>
                     <ChevronDown className="ml-2 h-5 w-5 text-theme-brown-light" />
                   </Button>
@@ -189,7 +191,7 @@ const Hero = () => {
             {/* Vendor Type - enhanced */}
             <div className="md:col-span-3">
               <Select value={vendorType} onValueChange={setVendorType}>
-                <SelectTrigger className="h-14 border-2 border-theme-beige/30 bg-white text-theme-brown hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-all rounded-xl text-lg">
+                <SelectTrigger className="h-14 border-2 border-theme-beige/30 bg-white text-theme-brown [&>span]:text-theme-brown-light hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-all rounded-xl text-lg">
                   <SelectValue placeholder="Vendor type" />
                 </SelectTrigger>
                 <SelectContent>
