@@ -1,3 +1,4 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -51,9 +52,11 @@ const Navbar = () => {
     return (
       <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
         <Link to="/" className="flex items-center">
-          <h1 className="text-xl md:text-2xl font-serif font-semibold text-slate-50">
-            Enosi
-          </h1>
+          <img 
+            src="/lovable-uploads/0dc2310f-640e-4fc8-9bd8-2aca741d4c9b.png" 
+            alt="Enosi" 
+            className="h-8 md:h-10 w-auto"
+          />
         </Link>
       </nav>
     );
@@ -61,9 +64,11 @@ const Navbar = () => {
 
   return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
-        <h1 className="text-xl md:text-2xl font-serif font-semibold text-slate-50">
-          Enosi
-        </h1>
+        <img 
+          src="/lovable-uploads/0dc2310f-640e-4fc8-9bd8-2aca741d4c9b.png" 
+          alt="Enosi" 
+          className="h-8 md:h-10 w-auto"
+        />
       </Link>
       
       {/* Desktop Menu */}
