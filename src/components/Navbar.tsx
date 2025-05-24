@@ -55,7 +55,7 @@ const Navbar = () => {
           <img 
             src="/lovable-uploads/028f4373-e298-408c-a4e1-a464e260a43f.png" 
             alt="Enosi" 
-            className="h-8 md:h-10 w-auto"
+            className="h-7 md:h-9 w-auto"
           />
         </Link>
       </nav>
