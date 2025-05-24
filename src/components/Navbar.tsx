@@ -55,7 +55,7 @@ const Navbar = () => {
           <img 
             src="/lovable-uploads/1b729f6d-c99e-4727-8948-ba1a8dde4783.png" 
             alt="Enosi" 
-            className="h-8 md:h-10 w-auto"
+            className="h-10 md:h-12 w-auto"
           />
         </Link>
       </nav>
@@ -67,7 +67,7 @@ const Navbar = () => {
         <img 
           src="/lovable-uploads/1b729f6d-c99e-4727-8948-ba1a8dde4783.png" 
           alt="Enosi" 
-          className="h-8 md:h-10 w-auto"
+          className="h-10 md:h-12 w-auto"
         />
       </Link>
       
