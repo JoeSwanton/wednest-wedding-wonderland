@@ -8,35 +8,30 @@ const TrendingDestinations = () => {
       name: "Sydney",
       vendorCount: "400+",
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=800&h=600",
-      trending: true,
       label: "Now Booking 2025"
     },
     {
       name: "Hunter Valley",
       vendorCount: "180+",
       image: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?auto=format&fit=crop&q=80&w=800&h=600",
-      trending: false,
       label: "Peak Season"
     },
     {
       name: "Byron Bay",
       vendorCount: "95+",
       image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=800&h=600",
-      trending: true,
       label: "Limited Dates"
     },
     {
       name: "Melbourne",
       vendorCount: "320+",
       image: "https://images.unsplash.com/photo-1514395462725-fb4566210144?auto=format&fit=crop&q=80&w=800&h=600",
-      trending: false,
       label: "Now Booking 2025"
     },
     {
       name: "Gold Coast",
       vendorCount: "150+",
       image: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&q=80&w=800&h=600",
-      trending: true,
       label: "Peak Season"
     }
   ];
@@ -67,11 +62,6 @@ const TrendingDestinations = () => {
                     alt={destination.name} 
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
-                  {destination.trending && (
-                    <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
-                      Trending
-                    </div>
-                  )}
                   <div className="absolute top-3 left-3 bg-theme-brown/90 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
                     {destination.label}
                   </div>

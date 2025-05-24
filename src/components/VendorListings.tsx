@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
@@ -16,52 +17,101 @@ const VendorListings = () => {
   const [sort, setSort] = useState("popular");
   const [categoryPage, setCategoryPage] = useState(0);
   const [slideDirection, setSlideDirection] = useState("right");
+  const [userLocation, setUserLocation] = useState("Sydney");
   
-  // Enhanced wedding vendor categories with better visuals and proper photos
+  // Enhanced wedding vendor categories with better visuals and proper photos - removed trending property
   const categories = [
     {
       type: "Venues",
       count: "245",
       image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800&h=600",
-      description: "Dream wedding locations",
-      trending: true
+      description: "Dream wedding locations"
     },
     {
       type: "Photographers",
       count: "189",
       image: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&q=80&w=800&h=600",
-      description: "Capture your special moments",
-      trending: false
+      description: "Capture your special moments"
     },
     {
       type: "Caterers",
       count: "156",
       image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800&h=600",
-      description: "Delicious wedding cuisine",
-      trending: true
+      description: "Delicious wedding cuisine"
     },
     {
       type: "Florists",
       count: "132",
       image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&q=80&w=800&h=600",
-      description: "Beautiful floral arrangements",
-      trending: false
+      description: "Beautiful floral arrangements"
     },
     {
       type: "Entertainment",
       count: "98",
       image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&q=80&w=800&h=600",
-      description: "Music & entertainment",
-      trending: false
+      description: "Music & entertainment"
     },
     {
       type: "Planners",
       count: "76",
       image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=800&h=600",
-      description: "Professional planning services",
-      trending: true
+      description: "Professional planning services"
     }
   ];
+
+  // Function to get user's location
+  useEffect(() => {
+    const getUserLocation = async () => {
+      try {
+        // Try to get user's location from browser geolocation
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                // Use reverse geocoding to get city name (this would normally require an API)
+                // For now, we'll use a simple mapping based on coordinates
+                const { latitude, longitude } = position.coords;
+                const detectedCity = getCityFromCoordinates(latitude, longitude);
+                setUserLocation(detectedCity);
+              } catch (error) {
+                console.log("Could not detect city from coordinates, using default");
+              }
+            },
+            (error) => {
+              console.log("Location access denied or failed, using default location");
+            }
+          );
+        }
+      } catch (error) {
+        console.log("Geolocation not supported, using default location");
+      }
+    };
+
+    getUserLocation();
+  }, []);
+
+  // Simple mapping of coordinates to major Australian cities
+  const getCityFromCoordinates = (lat: number, lng: number) => {
+    const cities = [
+      { name: "Sydney", lat: -33.8688, lng: 151.2093, radius: 100 },
+      { name: "Melbourne", lat: -37.8136, lng: 144.9631, radius: 100 },
+      { name: "Brisbane", lat: -27.4698, lng: 153.0251, radius: 100 },
+      { name: "Perth", lat: -31.9505, lng: 115.8605, radius: 100 },
+      { name: "Adelaide", lat: -34.9285, lng: 138.6007, radius: 100 },
+      { name: "Gold Coast", lat: -28.0167, lng: 153.4000, radius: 50 },
+      { name: "Canberra", lat: -35.2809, lng: 149.1300, radius: 50 },
+    ];
+
+    for (const city of cities) {
+      const distance = Math.sqrt(
+        Math.pow(lat - city.lat, 2) + Math.pow(lng - city.lng, 2)
+      );
+      if (distance <= city.radius / 111) { // Rough conversion to degrees
+        return city.name;
+      }
+    }
+    return "Sydney"; // Default fallback
+  };
 
   const displayIndex = categoryPage % categories.length;
   const currentCategories = [
@@ -124,11 +174,6 @@ const VendorListings = () => {
                             alt={category.type} 
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
-                          {category.trending && (
-                            <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                              Trending
-                            </div>
-                          )}
                           {/* Improved gradient overlay for better text readability */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                           {/* Additional overlay for better text contrast */}
@@ -173,11 +218,6 @@ const VendorListings = () => {
                         alt={category.type} 
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
-                      {category.trending && (
-                        <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                          Trending
-                        </div>
-                      )}
                       {/* Improved gradient overlay for better text readability */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                       {/* Additional overlay for better text contrast */}
@@ -221,12 +261,12 @@ const VendorListings = () => {
           </div>
         </div>
         
-        {/* Enhanced Popular Vendors Section */}
+        {/* Enhanced Popular Vendors Section - Now Dynamic */}
         <div className="mb-12">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div className="mb-4 md:mb-0">
               <h2 className="text-2xl md:text-3xl font-serif text-theme-brown mb-2">
-                Popular in Sydney
+                Popular in {userLocation}
               </h2>
               <p className="text-theme-brown-light text-lg">
                 Highly rated vendors available for your wedding date
@@ -280,16 +320,16 @@ const VendorListings = () => {
           <VendorCards />
         </div>
         
-        {/* Enhanced CTA Banner */}
+        {/* Enhanced CTA Banner - Now Dynamic */}
         <div className="mb-12">
           <div className="bg-gradient-to-r from-theme-brown to-theme-brown-dark rounded-2xl p-8 md:p-12 text-white text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.1),transparent_50%)]"></div>
             <div className="relative z-10">
               <h3 className="text-2xl md:text-3xl font-serif mb-4">
-                Discover All Sydney Wedding Vendors
+                Discover All {userLocation} Wedding Vendors
               </h3>
               <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
-                Browse our complete collection of verified wedding professionals in Sydney
+                Browse our complete collection of verified wedding professionals in {userLocation}
               </p>
               <Link to="/vendors">
                 <Button 
@@ -297,7 +337,7 @@ const VendorListings = () => {
                   className="bg-white text-theme-brown hover:bg-theme-cream px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                 >
                   <MapPin className="mr-2 h-5 w-5" />
-                  View All Sydney Vendors
+                  View All {userLocation} Vendors
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
