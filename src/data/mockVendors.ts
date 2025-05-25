@@ -13,7 +13,11 @@ export const mockBusinesses: VendorData[] = [
     description: "High-energy DJs who specialize in reading the crowd and creating the perfect dance floor atmosphere.",
     rating: 4.9,
     tags: ["High Energy", "Dance Floor Experts"],
-    imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 127,
+    yearsInBusiness: 8,
+    servicesOffered: ["DJ Services", "MC/Hosting", "Sound System", "Lighting Design", "Photo Booth", "Music Consultation"],
+    specialties: ["Wedding Ceremonies", "Reception Entertainment", "Corporate Events", "Birthday Parties"]
   },
   {
     id: 2,
@@ -25,7 +29,9 @@ export const mockBusinesses: VendorData[] = [
     description: "A beautiful garden estate with indoor and outdoor ceremony options.",
     rating: 4.8,
     tags: ["Garden", "Outdoor", "Indoor"],
-    imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 85,
+    yearsInBusiness: 12
   },
   {
     id: 3,
@@ -37,7 +43,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Award-winning photography team specializing in candid, natural wedding photos.",
     rating: 4.7,
     tags: ["Candid", "Natural", "Documentary"],
-    imageUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+    reviewCount: 92,
+    yearsInBusiness: 6
   },
   {
     id: 4,
@@ -49,7 +57,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Bespoke floral arrangements using locally sourced, seasonal blooms.",
     rating: 4.9,
     tags: ["Sustainable", "Local", "Custom"],
-    imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+    reviewCount: 64,
+    yearsInBusiness: 10
   },
   {
     id: 5,
@@ -61,7 +71,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Exquisite farm-to-table menus customized for your special day.",
     rating: 4.8,
     tags: ["Gourmet", "Farm-to-Table", "Custom Menus"],
-    imageUrl: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 78,
+    yearsInBusiness: 15
   },
   {
     id: 6,
@@ -73,7 +85,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Full-service planning team specializing in stress-free, seamless wedding experiences.",
     rating: 5.0,
     tags: ["Full Service", "Day-of Coordination", "Luxury"],
-    imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+    reviewCount: 45,
+    yearsInBusiness: 7
   },
   {
     id: 7,
@@ -85,7 +99,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Artisan wedding cakes and dessert tables with a focus on local, seasonal flavors.",
     rating: 4.7,
     tags: ["Custom Design", "Gluten-Free Options", "Dessert Table"],
-    imageUrl: "https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 33,
+    yearsInBusiness: 5
   },
   {
     id: 8,
@@ -97,7 +113,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Cinematic wedding films that capture the emotion and beauty of your special day.",
     rating: 4.9,
     tags: ["Cinematic", "Documentary", "Drone Footage"],
-    imageUrl: "https://images.unsplash.com/photo-1571727153934-b7db5101be96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1571727153934-b7db5101be96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 67,
+    yearsInBusiness: 9
   },
   {
     id: 9,
@@ -109,7 +127,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Stunning waterfront venue with panoramic harbor views and elegant ballrooms.",
     rating: 4.8,
     tags: ["Waterfront", "Ballroom", "City Views"],
-    imageUrl: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+    reviewCount: 156,
+    yearsInBusiness: 18
   },
   {
     id: 10,
@@ -121,7 +141,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Professional DJs and lighting specialists creating immersive entertainment experiences.",
     rating: 4.5,
     tags: ["DJ", "Lighting", "MC Services"],
-    imageUrl: "https://images.unsplash.com/photo-1516873240891-4bf014598ab4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1516873240891-4bf014598ab4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 41,
+    yearsInBusiness: 4
   },
   {
     id: 11,
@@ -133,7 +155,9 @@ export const mockBusinesses: VendorData[] = [
     description: "Expert makeup artists creating flawless, long-lasting looks for brides and bridal parties.",
     rating: 4.9,
     tags: ["Bridal Makeup", "Hair Styling", "On-Location"],
-    imageUrl: "https://images.unsplash.com/photo-1560869713-7d8c17c9e525?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1560869713-7d8c17c9e525?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    reviewCount: 73,
+    yearsInBusiness: 11
   },
   {
     id: 12,
@@ -145,6 +169,8 @@ export const mockBusinesses: VendorData[] = [
     description: "Classic and modern luxury vehicles for stylish wedding transportation.",
     rating: 4.6,
     tags: ["Classic Cars", "Limousines", "Luxury Vehicles"],
-    imageUrl: "https://images.unsplash.com/photo-1532202193792-e95ef22f1bce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1532202193792-e95ef22f1bce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
+    reviewCount: 28,
+    yearsInBusiness: 13
   }
 ];

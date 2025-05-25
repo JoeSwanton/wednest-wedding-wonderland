@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +18,11 @@ export interface VendorData {
   rating: number;
   tags: string[];
   imageUrl: string;
-  verified_vendor?: boolean; // Add this field for verified status
+  verified_vendor?: boolean;
+  reviewCount?: number;
+  yearsInBusiness?: number;
+  servicesOffered?: string[];
+  specialties?: string[];
 }
 
 interface VendorCardProps {
