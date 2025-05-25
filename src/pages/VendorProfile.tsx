@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Star, Heart, Share2, Award, Users, Clock, Music, Headphones, Mic, Speaker, Calendar as CalendarIcon, Phone, Mail, Globe, Instagram, CheckCircle, Shield, Zap, Camera, Volume2 } from "lucide-react";
+import { MapPin, Star, Heart, Share2, Award, Users, Clock, Music, Headphones, Mic, Speaker, Calendar as CalendarIcon, Phone, Mail, Globe, Instagram, CheckCircle, Shield, Zap, Camera, Volume2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { VendorData } from "@/components/vendors/VendorCard";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,6 +18,7 @@ const VendorProfile = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
 
   // Enhanced mock data for Rhythm Masters Entertainment
@@ -104,36 +105,39 @@ const VendorProfile = () => {
       name: "Emma & James",
       date: "October 2023",
       rating: 5,
-      comment: "Absolutely magical venue! The harbour views were stunning and Sarah was incredible to work with. Every detail was perfect and our guests are still talking about how beautiful everything was. Highly recommend!",
-      helpful: 16
+      comment: "Absolutely incredible DJ service! The music was perfect and kept everyone dancing all night. The sound quality was crystal clear and the lighting created such an amazing atmosphere. Highly recommend for any wedding!",
+      helpful: 16,
+      avatar: "E"
     },
     {
       id: 2,
       name: "Jessica & David",
       date: "September 2023",
       rating: 5,
-      comment: "We eloped here with the most beautiful gardens and harbour views. The staff were professional and accommodating. The photos turned out amazing with all the gorgeous backdrops. Worth every penny!",
-      helpful: 12
+      comment: "Professional, punctual, and absolutely fantastic. They read the crowd perfectly and adjusted the music throughout the night. The MC services were top-notch and helped our reception flow seamlessly.",
+      helpful: 12,
+      avatar: "J"
     },
     {
       id: 3,
       name: "Sophie & Michael",
       date: "August 2023",
       rating: 5,
-      comment: "Beautiful venue with great facilities. The only minor issue was some noise from nearby boats during the ceremony, but overall it was a wonderful day. The sunset photos were incredible!",
-      helpful: 8
+      comment: "Best decision we made for our wedding! The team was incredibly organized and the equipment was top quality. They even helped coordinate our special moments. Worth every penny!",
+      helpful: 8,
+      avatar: "S"
     }
   ];
 
   const amenities = [
-    { icon: Music, label: "Professional DJ Equipment" },
-    { icon: Mic, label: "Wireless Microphones" },
-    { icon: Speaker, label: "Premium Sound System" },
-    { icon: Headphones, label: "DJ Monitoring" },
-    { icon: Zap, label: "Professional Lighting" },
-    { icon: Camera, label: "Photo Booth Available" },
-    { icon: Volume2, label: "MC Services" },
-    { icon: CheckCircle, label: "Backup Equipment" }
+    { icon: Music, label: "Professional DJ Equipment", description: "High-end mixing decks and controllers" },
+    { icon: Mic, label: "Wireless Microphones", description: "Multiple wireless mic systems" },
+    { icon: Speaker, label: "Premium Sound System", description: "Crystal clear audio for any venue size" },
+    { icon: Zap, label: "Professional Lighting", description: "Dynamic lighting design and effects" },
+    { icon: Camera, label: "Photo Booth Available", description: "Interactive photo booth setup" },
+    { icon: Volume2, label: "MC Services", description: "Professional event hosting" },
+    { icon: CheckCircle, label: "Backup Equipment", description: "Full backup systems for reliability" },
+    { icon: Shield, label: "Fully Insured", description: "Comprehensive public liability coverage" }
   ];
 
   useEffect(() => {
@@ -143,6 +147,14 @@ const VendorProfile = () => {
       setLoading(false);
     }, 500);
   }, [vendorId]);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % portfolioImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + portfolioImages.length) % portfolioImages.length);
+  };
 
   if (loading) {
     return (
@@ -178,112 +190,139 @@ const VendorProfile = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
       
-      {/* Hero Image Gallery */}
-      <div className="relative">
-        <div className="grid grid-cols-4 gap-2 h-96">
-          <div className="col-span-2 relative overflow-hidden rounded-l-xl">
+      {/* Hero Image Gallery - Airbnb Style */}
+      <div className="relative max-w-7xl mx-auto px-6 py-6">
+        <div className="grid grid-cols-4 gap-2 h-[400px] rounded-xl overflow-hidden">
+          <div className="col-span-2 relative">
             <img 
               src={portfolioImages[0].url} 
               alt="Main venue image"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
+              onClick={() => setShowAllPhotos(true)}
             />
           </div>
           <div className="grid grid-rows-2 gap-2">
-            <div className="relative overflow-hidden">
-              <img 
-                src={portfolioImages[1].url} 
-                alt="Venue image 2"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div className="relative overflow-hidden">
-              <img 
-                src={portfolioImages[2].url} 
-                alt="Venue image 3"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-              />
-            </div>
+            <img 
+              src={portfolioImages[1].url} 
+              alt="Venue image 2"
+              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
+              onClick={() => setShowAllPhotos(true)}
+            />
+            <img 
+              src={portfolioImages[2].url} 
+              alt="Venue image 3"
+              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
+              onClick={() => setShowAllPhotos(true)}
+            />
           </div>
           <div className="grid grid-rows-2 gap-2">
-            <div className="relative overflow-hidden">
-              <img 
-                src={portfolioImages[3].url} 
-                alt="Venue image 4"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div className="relative overflow-hidden rounded-r-xl">
+            <img 
+              src={portfolioImages[3].url} 
+              alt="Venue image 4"
+              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
+              onClick={() => setShowAllPhotos(true)}
+            />
+            <div className="relative">
               <img 
                 src={portfolioImages[4].url} 
                 alt="Venue image 5"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <Button 
-                  variant="outline" 
-                  className="bg-white text-black hover:bg-gray-100"
-                  onClick={() => setShowAllPhotos(true)}
-                >
-                  +2 photos
+              <div 
+                className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center cursor-pointer hover:bg-opacity-40 transition-all"
+                onClick={() => setShowAllPhotos(true)}
+              >
+                <Button variant="outline" className="bg-white text-black hover:bg-gray-100">
+                  Show all photos
                 </Button>
               </div>
             </div>
           </div>
         </div>
-        
-        <Button 
-          variant="outline" 
-          className="absolute bottom-4 right-4 bg-white hover:bg-gray-100"
-          onClick={() => setShowAllPhotos(true)}
-        >
-          Show all photos
-        </Button>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Photo Gallery Modal */}
+      {showAllPhotos && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+          <div className="relative max-w-4xl mx-auto p-4">
+            <button 
+              onClick={() => setShowAllPhotos(false)}
+              className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full hover:bg-gray-100"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            
+            <div className="relative">
+              <img 
+                src={portfolioImages[currentImageIndex].url}
+                alt={portfolioImages[currentImageIndex].caption}
+                className="w-full max-h-[80vh] object-contain rounded-lg"
+              />
+              
+              <button 
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full hover:bg-gray-100"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              
+              <button 
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full hover:bg-gray-100"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+              
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg">
+                {portfolioImages[currentImageIndex].caption} ({currentImageIndex + 1} of {portfolioImages.length})
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content - Airbnb Layout */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Header Section */}
+            {/* Header Section - Airbnb Style */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-theme-brown text-white">{vendor.type}</Badge>
-                    {vendor.verified_vendor && (
-                      <Badge className="bg-green-100 text-green-800 flex items-center gap-1">
-                        <Shield className="h-3 w-3" />
-                        Verified
-                      </Badge>
-                    )}
-                  </div>
-                  <h1 className="text-3xl font-serif text-theme-brown">{vendor.name}</h1>
-                  <div className="flex items-center gap-4 text-gray-600">
+                <div className="space-y-3">
+                  <h1 className="text-3xl font-normal text-gray-900">{vendor.name}</h1>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">{vendor.rating}</span>
-                      <span>({vendor.reviewCount} reviews)</span>
+                      <Star className="h-4 w-4 fill-black text-black" />
+                      <span className="font-medium text-black">{vendor.rating}</span>
+                      <span className="underline">({vendor.reviewCount} reviews)</span>
                     </div>
+                    <span>•</span>
                     <div className="flex items-center gap-1">
                       <MapPin className="h-4 w-4" />
-                      <span>{vendor.location}</span>
+                      <span className="underline">{vendor.location}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Award className="h-4 w-4" />
-                      <span>{vendor.yearsInBusiness} years experience</span>
-                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
+                      <Shield className="h-3 w-3 mr-1" />
+                      Verified Vendor
+                    </Badge>
+                    <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+                      <Award className="h-3 w-3 mr-1" />
+                      Super Vendor
+                    </Badge>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
                     <Share2 className="h-4 w-4 mr-2" />
                     Share
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
                     <Heart className="h-4 w-4 mr-2" />
                     Save
                   </Button>
@@ -298,60 +337,86 @@ const VendorProfile = () => {
               <img 
                 src="/lovable-uploads/0b425f13-91ab-40a4-b531-432a9f4a7c2b.png"
                 alt="Rhythm Masters Entertainment Profile"
-                className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
+                className="w-full max-w-4xl mx-auto rounded-xl shadow-sm"
               />
             </div>
 
-            {/* About Section */}
+            {/* About Section - Airbnb Style */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-serif text-theme-brown">About this vendor</h2>
-              <p className="text-gray-700 text-lg leading-relaxed">Premier wedding DJ and entertainment specialists creating unforgettable celebrations across Sydney. With over 8 years of experience, we bring the perfect blend of music, lighting, and atmosphere to make your special day extraordinary.</p>
-              
-              {/* What this vendor offers */}
               <div className="space-y-4">
-                <h3 className="text-xl font-serif text-theme-brown">What this vendor offers</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {amenities.map((amenity, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <amenity.icon className="h-5 w-5 text-theme-brown" />
-                      <span className="text-sm text-gray-700">{amenity.label}</span>
-                    </div>
-                  ))}
+                <h2 className="text-2xl font-normal text-gray-900">About this vendor</h2>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  Premier wedding DJ and entertainment specialists creating unforgettable celebrations across Sydney. With over 8 years of experience, we bring the perfect blend of music, lighting, and atmosphere to make your special day extraordinary.
+                </p>
+              </div>
+              
+              {/* Host Info - Airbnb Style */}
+              <div className="flex items-center gap-4 p-6 border border-gray-200 rounded-xl">
+                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  RM
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-900">Hosted by Rhythm Masters</h3>
+                  <p className="text-sm text-gray-600">{vendor.yearsInBusiness} years hosting events • 200+ events completed</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm text-gray-700">{vendor.reviewCount} reviews</span>
+                    <span className="text-sm text-gray-500">•</span>
+                    <span className="text-sm text-gray-700">Identity verified</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             <Separator />
 
-            {/* Service Packages */}
+            {/* What this vendor offers - Grid Style */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-serif text-theme-brown">Packages & Pricing</h2>
-              <div className="space-y-4">
+              <h2 className="text-2xl font-normal text-gray-900">What this vendor offers</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {amenities.map((amenity, index) => (
+                  <div key={index} className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
+                    <amenity.icon className="h-6 w-6 text-gray-700 mt-1 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">{amenity.label}</h3>
+                      <p className="text-sm text-gray-600">{amenity.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Service Packages - Cards Style */}
+            <div className="space-y-6">
+              <h2 className="text-2xl font-normal text-gray-900">Service packages</h2>
+              <div className="grid grid-cols-1 gap-6">
                 {servicePackages.map((pkg, index) => (
-                  <Card key={index} className={`${pkg.popular ? 'border-theme-brown border-2' : ''}`}>
+                  <Card key={index} className={`border-2 transition-all hover:shadow-lg ${pkg.popular ? 'border-black' : 'border-gray-200'}`}>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-xl font-serif text-theme-brown">{pkg.name}</h3>
+                          <div className="flex items-center gap-3 mb-3">
+                            <h3 className="text-xl font-medium text-gray-900">{pkg.name}</h3>
                             {pkg.popular && (
-                              <Badge className="bg-theme-brown text-white">Most Popular</Badge>
+                              <Badge className="bg-black text-white">Most Popular</Badge>
                             )}
                           </div>
                           <p className="text-gray-600 mb-4">{pkg.description}</p>
-                          <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div className="space-y-2">
                             {pkg.features.map((feature, featureIndex) => (
-                              <div key={featureIndex} className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                <span>{feature}</span>
+                              <div key={featureIndex} className="flex items-center gap-2 text-sm">
+                                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                <span className="text-gray-700">{feature}</span>
                               </div>
                             ))}
                           </div>
                         </div>
-                        <div className="text-right ml-6">
-                          <div className="text-2xl font-bold text-theme-brown">{pkg.price}</div>
-                          <div className="text-sm text-gray-500">{pkg.duration}</div>
-                          <Button className="mt-4 bg-theme-brown hover:bg-theme-brown-dark">
+                        <div className="text-right ml-8">
+                          <div className="text-2xl font-semibold text-gray-900">{pkg.price}</div>
+                          <div className="text-sm text-gray-500 mb-4">{pkg.duration}</div>
+                          <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 py-2">
                             Select Package
                           </Button>
                         </div>
@@ -364,171 +429,182 @@ const VendorProfile = () => {
 
             <Separator />
 
-            {/* Reviews Section */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-serif text-theme-brown">
-                  <Star className="inline h-6 w-6 fill-yellow-400 text-yellow-400 mr-2" />
+            {/* Reviews Section - Airbnb Style */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-normal text-gray-900 mb-6">
+                  <Star className="inline h-6 w-6 fill-black text-black mr-2" />
                   {vendor.rating} · {vendor.reviewCount} reviews
                 </h2>
               </div>
               
-              {/* Review Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+              {/* Review Categories */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 {[
-                  { label: "Location", rating: 4.9 },
-                  { label: "Value", rating: 4.8 },
-                  { label: "Communication", rating: 5.0 },
-                  { label: "Service", rating: 4.7 },
-                  { label: "Overall Experience", rating: 4.9 },
-                  { label: "Cleanliness", rating: 4.8 }
-                ].map((stat, index) => (
-                  <div key={index} className="text-center">
-                    <div className="text-sm text-gray-600">{stat.label}</div>
-                    <div className="font-medium">{stat.rating}</div>
+                  { label: "Professionalism", rating: 4.9 },
+                  { label: "Music Quality", rating: 5.0 },
+                  { label: "Equipment", rating: 4.8 },
+                  { label: "Communication", rating: 4.9 },
+                  { label: "Value for Money", rating: 4.7 },
+                  { label: "Overall Experience", rating: 4.9 }
+                ].map((category, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-700">{category.label}</span>
+                      <span className="text-sm font-medium">{category.rating}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1">
+                      <div 
+                        className="bg-black h-1 rounded-full" 
+                        style={{ width: `${(category.rating / 5) * 100}%` }}
+                      ></div>
+                    </div>
                   </div>
                 ))}
               </div>
 
               {/* Individual Reviews */}
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {reviews.map((review) => (
-                  <div key={review.id} className="border-b border-gray-200 pb-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-theme-brown rounded-full flex items-center justify-center text-white font-medium">
-                        {review.name.split(' ')[0][0]}
+                  <div key={review.id} className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-medium">
+                        {review.avatar}
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-medium">{review.name}</span>
-                          <div className="flex">
-                            {[...Array(review.rating)].map((_, i) => (
-                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                          <span className="text-gray-500 text-sm">{review.date}</span>
-                        </div>
-                        <p className="text-gray-700 mb-2">{review.comment}</p>
-                        <div className="text-sm text-gray-500">
-                          Helpful ({review.helpful})
-                        </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{review.name}</div>
+                        <div className="text-sm text-gray-500">{review.date}</div>
                       </div>
                     </div>
+                    <div className="flex mb-2">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-black text-black" />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 text-sm leading-relaxed">{review.comment}</p>
                   </div>
                 ))}
               </div>
               
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="border-black text-black hover:bg-gray-50">
                 Show all {vendor.reviewCount} reviews
               </Button>
             </div>
           </div>
 
-          {/* Right Column - Booking Sidebar */}
+          {/* Right Column - Booking Card - Airbnb Style */}
           <div className="lg:col-span-1">
             <div className="sticky top-6">
-              <Card className="border-2 border-gray-200 shadow-lg">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-2xl font-bold text-theme-brown">{vendor.price.split(' - ')[0]}</div>
-                      <div className="text-sm text-gray-500">starting from</div>
+              <Card className="border border-gray-300 shadow-xl rounded-xl overflow-hidden">
+                <CardContent className="p-6 space-y-6">
+                  {/* Price Section */}
+                  <div className="space-y-2">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-semibold text-gray-900">{vendor.price.split(' - ')[0]}</span>
+                      <span className="text-gray-600">starting from</span>
                     </div>
-                    <div className="text-right">
+                    <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-4 w-4 fill-black text-black" />
                         <span className="font-medium">{vendor.rating}</span>
                       </div>
-                      <div className="text-sm text-gray-500">({vendor.reviewCount} reviews)</div>
+                      <span className="text-gray-500">·</span>
+                      <span className="text-sm text-gray-500 underline">({vendor.reviewCount} reviews)</span>
                     </div>
                   </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  {/* Event Details */}
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">Event Date</label>
-                      <div className="mt-1 p-3 border rounded-lg bg-gray-50">
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={setSelectedDate}
-                          disabled={(date) => date < new Date()}
-                          className="w-full"
-                        />
+
+                  {/* Booking Form */}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-2 border border-gray-300 rounded-lg overflow-hidden">
+                      <div className="p-3 border-b border-gray-300">
+                        <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">Event Date</label>
+                        <div className="text-sm text-gray-900">Add date</div>
+                      </div>
+                      <div className="p-3">
+                        <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">Guests</label>
+                        <div className="text-sm text-gray-900">Add guest count</div>
                       </div>
                     </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">Number of Guests</label>
-                      <select className="mt-1 w-full p-3 border rounded-lg">
-                        <option>100 guests</option>
-                        <option>50-100 guests</option>
-                        <option>100-200 guests</option>
-                        <option>200+ guests</option>
-                      </select>
+
+                    <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 text-base font-medium">
+                      Check availability
+                    </Button>
+
+                    <p className="text-center text-sm text-gray-500">You won't be charged yet</p>
+                  </div>
+
+                  <Separator />
+
+                  {/* Pricing Breakdown */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-700 underline">$1,200 x 1 day</span>
+                      <span className="text-gray-900">$1,200</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-700 underline">Service fee</span>
+                      <span className="text-gray-900">$150</span>
+                    </div>
+                    <Separator />
+                    <div className="flex justify-between font-medium">
+                      <span className="text-gray-900">Total</span>
+                      <span className="text-gray-900">$1,350</span>
                     </div>
                   </div>
 
-                  {/* Availability Status */}
-                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                    <div className="flex items-center gap-2 text-green-700">
-                      <CheckCircle className="h-4 w-4" />
-                      <span className="font-medium">Quick Response</span>
-                    </div>
-                    <p className="text-sm text-green-600 mt-1">Usually responds within 4 hours</p>
-                  </div>
+                  <Separator />
 
-                  {/* Verification Badge */}
-                  <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center gap-2 text-blue-700">
-                      <Shield className="h-4 w-4" />
-                      <span className="font-medium">Verified Vendor</span>
+                  {/* Vendor Info */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        RM
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">Rhythm Masters</div>
+                        <div className="text-sm text-gray-500">Super Vendor</div>
+                      </div>
                     </div>
-                    <p className="text-sm text-blue-600 mt-1">Licensed and verified by Enosi</p>
-                  </div>
 
-                  {/* Super Vendor Badge */}
-                  <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <div className="flex items-center gap-2 text-yellow-700">
-                      <Award className="h-4 w-4" />
-                      <span className="font-medium">Super Vendor</span>
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="font-medium text-gray-900">{vendor.reviewCount}</div>
+                        <div className="text-xs text-gray-500">Reviews</div>
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{vendor.rating}</div>
+                        <div className="text-xs text-gray-500">Rating</div>
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{vendor.yearsInBusiness}</div>
+                        <div className="text-xs text-gray-500">Years</div>
+                      </div>
                     </div>
-                    <p className="text-sm text-yellow-600 mt-1">Top-rated with excellent reviews</p>
+
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span>Usually responds within 2 hours</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Shield className="h-4 w-4 text-blue-500" />
+                        <span>Verified vendor</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Award className="h-4 w-4 text-purple-500" />
+                        <span>Super Vendor status</span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-3">
-                    <Button className="w-full bg-theme-brown hover:bg-theme-brown-dark text-white py-3">
-                      Check Availability
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button variant="outline" className="border-black text-black hover:bg-gray-50">
+                      Message
                     </Button>
-                    <Button variant="outline" className="w-full border-theme-brown text-theme-brown hover:bg-theme-brown hover:text-white py-3">
-                      Save to Favourites
+                    <Button variant="outline" className="border-black text-black hover:bg-gray-50">
+                      Save
                     </Button>
-                    <Button variant="outline" className="w-full py-3">
-                      Share
-                    </Button>
-                  </div>
-
-                  {/* Contact Information */}
-                  <Separator />
-                  <div className="space-y-3">
-                    <h3 className="font-medium text-theme-brown">Contact Information</h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-gray-400" />
-                        <span>04 1976 5432</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-gray-400" />
-                        <span>events@harborviewgardens.com.au</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Globe className="h-4 w-4 text-gray-400" />
-                        <span>harborviewgardens.com.au</span>
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
