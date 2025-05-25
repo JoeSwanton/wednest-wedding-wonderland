@@ -1,4 +1,3 @@
-
 import React from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -114,16 +113,19 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
       <div className="p-4">
         {/* Title and pricing */}
         <div className="mb-3">
-          <div className="flex items-start justify-between">
-            <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1 mb-1">
-              {vendor.name}
-            </h3>
-            {/* Verified badge moved here for better visibility */}
+          <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1 mb-1">
+            {vendor.name}
+          </h3>
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-theme-brown-light font-medium">
+              {formatPrice(vendor.price)}
+            </div>
+            {/* Verified badge moved to pricing line */}
             {isVerified && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium ml-2">
+                    <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
                       <CheckCircle className="h-3 w-3" />
                       <span>Verified</span>
                     </div>
@@ -135,9 +137,6 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
               </TooltipProvider>
             )}
           </div>
-          <div className="text-sm text-theme-brown-light font-medium">
-            {formatPrice(vendor.price)}
-          </div>
         </div>
         
         {/* Location and limited tags */}
@@ -147,14 +146,14 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
             <span>{vendor.location}</span>
           </div>
           
-          {/* Limit to 1-2 key traits */}
+          {/* Limit to 1-2 key traits on single line */}
           {vendor.tags.length > 0 && (
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-nowrap">
               {vendor.tags.slice(0, 2).map((tag, index) => (
                 <Badge 
                   key={index} 
                   variant="outline" 
-                  className="border-theme-beige text-theme-brown-light text-xs px-2 py-0.5 rounded-full bg-theme-cream/30"
+                  className="border-theme-beige text-theme-brown-light text-xs px-2 py-0.5 rounded-full bg-theme-cream/30 whitespace-nowrap"
                 >
                   {tag}
                 </Badge>
