@@ -293,10 +293,19 @@ const VendorProfile = () => {
 
             <Separator />
 
+            {/* Vendor Profile Image */}
+            <div className="w-full">
+              <img 
+                src="/lovable-uploads/0b425f13-91ab-40a4-b531-432a9f4a7c2b.png"
+                alt="Rhythm Masters Entertainment Profile"
+                className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
+              />
+            </div>
+
             {/* About Section */}
             <div className="space-y-6">
               <h2 className="text-2xl font-serif text-theme-brown">About this vendor</h2>
-              <p className="text-gray-700 text-lg leading-relaxed">{vendor.description}</p>
+              <p className="text-gray-700 text-lg leading-relaxed">Premier wedding DJ and entertainment specialists creating unforgettable celebrations across Sydney. With over 8 years of experience, we bring the perfect blend of music, lighting, and atmosphere to make your special day extraordinary.</p>
               
               {/* What this vendor offers */}
               <div className="space-y-4">
