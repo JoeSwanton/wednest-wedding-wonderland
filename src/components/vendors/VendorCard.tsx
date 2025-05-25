@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useSavedVendors } from "@/hooks/useSavedVendors";
 
 export interface VendorData {
   id: number;
@@ -25,6 +26,9 @@ interface VendorCardProps {
 }
 
 const VendorCard = ({ vendor }: VendorCardProps) => {
+  const { savedVendors, toggleSaveVendor } = useSavedVendors();
+  const isSaved = savedVendors.includes(vendor.id);
+
   // Format the price to show "From $X"
   const formatPrice = (price: string) => {
     if (price.includes('$')) return price;
@@ -55,6 +59,12 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
     return urgencies[Math.floor(Math.random() * urgencies.length)];
   };
 
+  const handleSaveVendor = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleSaveVendor(vendor.id);
+  };
+
   const responseTime = getResponseTime();
   const bookingUrgency = getBookingUrgency();
   const isTopRated = vendor.rating > 4.5;
@@ -62,7 +72,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
   const isVerified = Math.random() > 0.6;
 
   return (
-    <Card className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1">
+    <Card className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1 h-full flex flex-col">
       {/* Image section with simplified overlay */}
       <div className="relative h-56 bg-theme-cream overflow-hidden">
         {/* Simplified header line - condensed badges */}
@@ -87,12 +97,15 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100">
-                  <Heart className="h-4 w-4 text-theme-brown-light hover:text-red-500 transition-colors" />
+                <button 
+                  onClick={handleSaveVendor}
+                  className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <Heart className={`h-4 w-4 transition-colors ${isSaved ? 'text-red-500 fill-red-500' : 'text-theme-brown-light hover:text-red-500'}`} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Save to favorites</p>
+                <p>{isSaved ? 'Remove from favorites' : 'Save to favorites'}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -110,8 +123,8 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
         />
       </div>
       
-      {/* Simplified content section */}
-      <div className="p-4">
+      {/* Content section - flex-grow to push button to bottom */}
+      <div className="p-4 flex-grow flex flex-col">
         {/* Title and pricing */}
         <div className="mb-3">
           <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1 mb-1">
@@ -175,12 +188,14 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           </div>
         </div>
         
-        {/* Full-width subtle CTA button */}
-        <Link to={`/vendors/${vendor.id}`} className="block">
-          <Button className="w-full bg-theme-cream text-theme-brown border border-theme-beige hover:bg-theme-brown hover:text-white text-sm py-2.5 rounded-xl transition-all duration-300">
-            Check Availability
-          </Button>
-        </Link>
+        {/* Full-width CTA button - pushed to bottom with mt-auto */}
+        <div className="mt-auto">
+          <Link to={`/vendors/${vendor.id}`} className="block">
+            <Button className="w-full bg-theme-cream text-theme-brown border border-theme-beige hover:bg-theme-brown hover:text-white text-sm py-2.5 rounded-xl transition-all duration-300">
+              Check Availability
+            </Button>
+          </Link>
+        </div>
       </div>
     </Card>
   );
