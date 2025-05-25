@@ -30,6 +30,9 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   const [businessName, setBusinessName] = useState("");
   const [businessCategory, setBusinessCategory] = useState("photography");
 
+  // Check if email is admin email
+  const isAdminEmail = email === "admin@enosi.com";
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -44,9 +47,14 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     try {
       console.log("Starting sign up process");
       console.log("User type selected:", userType);
+      console.log("Is admin email:", isAdminEmail);
       
-      // Prepare metadata based on user type
-      const metadata = {
+      // Prepare metadata based on user type or admin status
+      const metadata = isAdminEmail ? {
+        full_name: fullName,
+        user_type: 'admin',
+        is_admin: true
+      } : {
         full_name: fullName,
         user_type: userType,
         ...(userType === 'vendor' && {
@@ -75,7 +83,9 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
       if (data.user) {
         toast({
           title: "Registration successful!",
-          description: "Please check your email to confirm your account.",
+          description: isAdminEmail 
+            ? "Admin account created successfully." 
+            : "Please check your email to confirm your account.",
         });
         
         // Let the auth state change listener handle the redirection
@@ -112,25 +122,36 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         </Alert>
       )}
 
-      {/* User type selector */}
-      <Tabs 
-        defaultValue={userType} 
-        className="w-full" 
-        onValueChange={setUserType}
-      >
-        <TabsList className="grid grid-cols-2 mb-6">
-          <TabsTrigger value="couple" className="text-center">Couple</TabsTrigger>
-          <TabsTrigger value="vendor" className="text-center">Vendor</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="couple" className="space-y-4">
-          <CoupleSignUpInfo />
-        </TabsContent>
-        
-        <TabsContent value="vendor" className="space-y-4">
-          <VendorSignUpInfo />
-        </TabsContent>
-      </Tabs>
+      {/* Show admin notice if admin email */}
+      {isAdminEmail && (
+        <Alert>
+          <AlertDescription>
+            Admin account detected. Role selection will be bypassed.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* User type selector - hide for admin emails */}
+      {!isAdminEmail && (
+        <Tabs 
+          defaultValue={userType} 
+          className="w-full" 
+          onValueChange={setUserType}
+        >
+          <TabsList className="grid grid-cols-2 mb-6">
+            <TabsTrigger value="couple" className="text-center">Couple</TabsTrigger>
+            <TabsTrigger value="vendor" className="text-center">Vendor</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="couple" className="space-y-4">
+            <CoupleSignUpInfo />
+          </TabsContent>
+          
+          <TabsContent value="vendor" className="space-y-4">
+            <VendorSignUpInfo />
+          </TabsContent>
+        </Tabs>
+      )}
       
       <form onSubmit={handleSignUp} className="space-y-4">
         <CommonSignUpFields 
@@ -142,10 +163,10 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
           setPassword={setPassword}
           confirmPassword={confirmPassword}
           setConfirmPassword={setConfirmPassword}
-          userType={userType}
+          userType={isAdminEmail ? "admin" : userType}
         />
 
-        {userType === "vendor" && (
+        {userType === "vendor" && !isAdminEmail && (
           <VendorSignUpFields 
             businessName={businessName}
             setBusinessName={setBusinessName}
@@ -156,7 +177,7 @@ const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         
         <AuthFooter 
           loading={loading}
-          userType={userType}
+          userType={isAdminEmail ? "admin" : userType}
           onSwitchToSignIn={onSwitchToSignIn}
           handleGoogleSignIn={handleGoogleSignIn}
         />

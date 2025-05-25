@@ -11,7 +11,17 @@ export const useProfileManagement = (user: User | null) => {
   const extractProfileFromMetadata = (user: User | null) => {
     if (!user) return null;
     
-    const { full_name, user_type, business_name, business_category } = user.user_metadata || {};
+    const { full_name, user_type, business_name, business_category, is_admin } = user.user_metadata || {};
+    
+    // Handle admin users
+    if (is_admin || user_type === 'admin') {
+      return { 
+        full_name, 
+        user_role: 'admin' as "couple" | "vendor" | "admin", 
+        is_admin: true
+      };
+    }
+    
     return { 
       full_name, 
       user_role: user_type as "couple" | "vendor", 
@@ -21,8 +31,13 @@ export const useProfileManagement = (user: User | null) => {
   };
 
   // Update profile with additional data from Supabase
-  const fetchAdditionalProfileData = async (userId: string, userRole: "couple" | "vendor") => {
+  const fetchAdditionalProfileData = async (userId: string, userRole: "couple" | "vendor" | "admin") => {
     try {
+      // Skip additional data fetch for admin users
+      if (userRole === 'admin') {
+        return;
+      }
+      
       if (userRole === 'couple') {
         const { data: weddingDetails, error } = await supabase
           .from('wedding_details')
