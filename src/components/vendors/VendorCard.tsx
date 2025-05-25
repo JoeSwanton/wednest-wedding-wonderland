@@ -1,3 +1,4 @@
+
 import React from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -120,22 +121,6 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
             <div className="text-sm text-theme-brown-light font-medium">
               {formatPrice(vendor.price)}
             </div>
-            {/* Verified badge moved to pricing line */}
-            {isVerified && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                      <CheckCircle className="h-3 w-3" />
-                      <span>Verified</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Verified by Enosi</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
           </div>
         </div>
         
@@ -144,6 +129,25 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
           <span className="whitespace-nowrap overflow-hidden text-ellipsis">{vendor.location}</span>
         </div>
+        
+        {/* Verified badge above tags */}
+        {isVerified && (
+          <div className="mb-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium w-fit">
+                    <CheckCircle className="h-3 w-3" />
+                    <span>Verified by Enosi</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Verified by Enosi</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
         
         {/* Tags on separate line below location */}
         {vendor.tags.length > 0 && (

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import VendorCards from "./VendorCards";
@@ -318,31 +317,6 @@ const VendorListings = () => {
           </div>
 
           <VendorCards />
-        </div>
-        
-        {/* Enhanced CTA Banner - Now Dynamic */}
-        <div className="mb-12">
-          <div className="bg-gradient-to-r from-theme-brown to-theme-brown-dark rounded-2xl p-8 md:p-12 text-white text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-            <div className="relative z-10">
-              <h3 className="text-2xl md:text-3xl font-serif mb-4">
-                Discover All {userLocation} Wedding Vendors
-              </h3>
-              <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
-                Browse our complete collection of verified wedding professionals in {userLocation}
-              </p>
-              <Link to="/vendors">
-                <Button 
-                  size="lg" 
-                  className="bg-white text-theme-brown hover:bg-theme-cream px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
-                >
-                  <MapPin className="mr-2 h-5 w-5" />
-                  View All {userLocation} Vendors
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
         </div>
         
         {/* Enhanced Recently Viewed Section */}
