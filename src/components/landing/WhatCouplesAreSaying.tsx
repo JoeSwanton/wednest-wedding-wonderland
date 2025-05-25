@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -60,7 +59,6 @@ const WhatCouplesAreSaying = () => {
     }
   ];
 
-  // Auto-rotate testimonials
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -90,11 +88,9 @@ const WhatCouplesAreSaying = () => {
           </p>
         </div>
 
-        {/* Enhanced Carousel */}
         <div className="max-w-4xl mx-auto mb-8">
           <Card className="p-8 md:p-12 border border-theme-beige rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-              {/* Profile Image */}
               <div className="flex-shrink-0">
                 <div className="relative">
                   <img 
@@ -110,21 +106,17 @@ const WhatCouplesAreSaying = () => {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="flex-1 text-center md:text-left">
-                {/* Rating */}
                 <div className="flex justify-center md:justify-start items-center mb-4">
                   {[...Array(currentTestimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-1" />
                   ))}
                 </div>
 
-                {/* Review */}
                 <blockquote className="text-lg md:text-xl text-theme-brown mb-6 italic leading-relaxed">
                   "{currentTestimonial.review}"
                 </blockquote>
 
-                {/* Details */}
                 <div className="space-y-2">
                   <h4 className="text-xl font-semibold text-theme-brown">{currentTestimonial.names}</h4>
                   <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 text-sm text-theme-brown-light">
@@ -144,7 +136,6 @@ const WhatCouplesAreSaying = () => {
               </div>
             </div>
 
-            {/* Enhanced Navigation */}
             <div className="flex justify-center items-center mt-8 gap-4">
               <Button
                 variant="outline"
@@ -155,7 +146,6 @@ const WhatCouplesAreSaying = () => {
                 <ChevronLeft className="h-5 w-5" />
               </Button>
 
-              {/* Enhanced Dots */}
               <div className="flex gap-3">
                 {testimonials.map((_, index) => (
                   <button
@@ -180,14 +170,13 @@ const WhatCouplesAreSaying = () => {
           </Card>
         </div>
 
-        {/* Enhanced Trust Signals */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="p-4 hover:scale-105 transition-transform duration-300">
             <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">2,500+</div>
             <div className="text-sm text-theme-brown-light">Happy Couples</div>
           </div>
           <div className="p-4 hover:scale-105 transition-transform duration-300">
-            <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">4.9★</div>
+            <div className="text-2xl md:text-3xl font-bold text-theme-brown mb-2">4.9</div>
             <div className="text-sm text-theme-brown-light">Average Rating</div>
           </div>
           <div className="p-4 hover:scale-105 transition-transform duration-300">

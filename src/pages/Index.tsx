@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import TrendingDestinations from "@/components/landing/TrendingDestinations";
@@ -6,6 +7,7 @@ import FeaturedVendorsNearYou from "@/components/landing/FeaturedVendorsNearYou"
 import PlanByTimeline from "@/components/landing/PlanByTimeline";
 import LastMinuteDeals from "@/components/landing/LastMinuteDeals";
 import WhatCouplesAreSaying from "@/components/landing/WhatCouplesAreSaying";
+import CreateAccountCTA from "@/components/landing/CreateAccountCTA";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 
@@ -35,6 +37,9 @@ const Index = () => {
         
         {/* Testimonials - Near footer */}
         <WhatCouplesAreSaying />
+        
+        {/* Create Account CTA - Bottom of page */}
+        <CreateAccountCTA />
       </main>
       <Footer />
     </div>

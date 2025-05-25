@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Star, Heart, MapPin, MessageCircle, DollarSign, Filter, Zap, Clock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,9 +9,9 @@ const FeaturedVendorsNearYou = () => {
   const [activeFilter, setActiveFilter] = useState("top-rated");
   
   const filters = [
-    { id: "top-rated", label: "⭐ Top Rated", icon: Star },
-    { id: "recently-added", label: "🆕 Recently Added", icon: TrendingUp },
-    { id: "fast-responders", label: "💬 Fast Responders", icon: Zap }
+    { id: "top-rated", label: "Top Rated", icon: Star },
+    { id: "recently-added", label: "Recently Added", icon: TrendingUp },
+    { id: "fast-responders", label: "Fast Responders", icon: Zap }
   ];
   
   const vendors = [
@@ -75,7 +74,6 @@ const FeaturedVendorsNearYou = () => {
           </p>
         </div>
         
-        {/* Enhanced Filter Toggle */}
         <div className="flex flex-wrap gap-2 mb-8">
           {filters.map((filter) => {
             const IconComponent = filter.icon;
@@ -98,7 +96,6 @@ const FeaturedVendorsNearYou = () => {
           })}
         </div>
 
-        {/* Enhanced Vendor Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vendors.map((vendor) => (
             <Card key={vendor.id} className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group hover:scale-105 hover:-translate-y-2 transform">
@@ -109,7 +106,6 @@ const FeaturedVendorsNearYou = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
                 />
                 
-                {/* Enhanced Badges */}
                 <div className="absolute top-4 left-4">
                   <Badge className="bg-theme-brown text-white px-3 py-1 rounded-lg text-sm shadow-lg">
                     {vendor.type}
@@ -127,12 +123,10 @@ const FeaturedVendorsNearYou = () => {
                   )}
                 </div>
 
-                {/* Social Proof Overlay */}
                 <div className="absolute bottom-4 left-4 bg-black/80 text-white px-3 py-1 rounded-lg text-xs font-semibold">
-                  🔥 {vendor.socialProof}
+                  {vendor.socialProof}
                 </div>
 
-                {/* Rating */}
                 <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1 rounded-lg flex items-center text-sm">
                   <Star className="h-4 w-4 mr-1 fill-yellow-400 text-yellow-400" />
                   <span>{vendor.rating}</span>
@@ -143,7 +137,7 @@ const FeaturedVendorsNearYou = () => {
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-lg font-semibold text-theme-brown">{vendor.name}</h3>
                   <Badge className="bg-red-100 text-red-700 px-2 py-1 rounded-lg text-xs">
-                    ⏰ {vendor.urgency}
+                    {vendor.urgency}
                   </Badge>
                 </div>
                 
@@ -157,7 +151,6 @@ const FeaturedVendorsNearYou = () => {
                   <span>{vendor.responseTime}</span>
                 </div>
 
-                {/* Review */}
                 <div className="bg-theme-cream/50 rounded-lg p-3 mb-4">
                   <div className="flex items-center mb-2">
                     <MessageCircle className="h-4 w-4 text-theme-brown-light mr-2" />
@@ -168,7 +161,6 @@ const FeaturedVendorsNearYou = () => {
                   </div>
                 </div>
 
-                {/* Price and CTA */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center text-theme-brown">
                     <DollarSign className="h-4 w-4 mr-1" />
@@ -185,7 +177,6 @@ const FeaturedVendorsNearYou = () => {
           ))}
         </div>
 
-        {/* View More */}
         <div className="text-center mt-8">
           <Link to="/vendors">
             <Button 
