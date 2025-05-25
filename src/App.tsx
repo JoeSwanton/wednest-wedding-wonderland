@@ -13,6 +13,7 @@ import Inspiration from "./pages/Inspiration";
 import Blog from "./pages/Blog";
 import Vendors from "./pages/Vendors";
 import VendorProfile from "./pages/VendorProfile";
+import SavedVendors from "./pages/SavedVendors";
 
 // Import AuthProvider
 import { AuthProvider } from "./contexts/AuthContext";
@@ -56,6 +57,7 @@ function App() {
             <Route path="/auth" element={<Auth />} />
             <Route path="/vendors" element={<Vendors />} />
             <Route path="/vendors/:vendorId" element={<VendorProfile />} />
+            <Route path="/saved-vendors" element={<SavedVendors />} />
             <Route path="/planning-tools" element={<PlanningTools />} />
             <Route path="/planning-tools/budget-calculator" element={<WeddingBudgetCalculator />} />
             <Route path="/inspiration" element={<Inspiration />} />
