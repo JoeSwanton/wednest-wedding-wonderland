@@ -98,29 +98,15 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           </TooltipProvider>
         </div>
 
-        {/* Verified badge */}
-        {isVerified && (
-          <div className="absolute top-4 right-4 z-20">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="bg-green-500 text-white p-1.5 rounded-full shadow-lg">
-                    <CheckCircle className="h-3 w-3" />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Verified by Enosi</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
-
-        {/* Image with hover effect */}
+        {/* Image with hover effect and fallback */}
         <img 
           src={vendor.imageUrl} 
           alt={`${vendor.name} - ${vendor.type}`} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = `https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800&h=600`;
+          }}
         />
       </div>
       
@@ -128,9 +114,27 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
       <div className="p-4">
         {/* Title and pricing */}
         <div className="mb-3">
-          <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1 mb-1">
-            {vendor.name}
-          </h3>
+          <div className="flex items-start justify-between">
+            <h3 className="text-lg font-semibold text-theme-brown group-hover:text-theme-brown-dark transition-colors line-clamp-1 mb-1">
+              {vendor.name}
+            </h3>
+            {/* Verified badge moved here for better visibility */}
+            {isVerified && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium ml-2">
+                      <CheckCircle className="h-3 w-3" />
+                      <span>Verified</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Verified by Enosi</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
           <div className="text-sm text-theme-brown-light font-medium">
             {formatPrice(vendor.price)}
           </div>
