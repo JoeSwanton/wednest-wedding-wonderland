@@ -53,13 +53,55 @@ const mockInquiries = [
 ];
 
 const VendorDashboard = () => {
-  const { userProfile } = useAuth();
-  const businessName = userProfile?.business_name || "Your Business";
+  const { userProfile, loading, user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedMonth, setSelectedMonth] = useState<Date | undefined>(new Date());
   
+  console.log("VendorDashboard: userProfile:", userProfile);
+  console.log("VendorDashboard: loading:", loading);
+  console.log("VendorDashboard: user:", user);
+
+  // Show loading state
+  if (loading) {
+    console.log("VendorDashboard: showing loading state");
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
+  // If no user or not a vendor, show error state
+  if (!user) {
+    console.log("VendorDashboard: no user found");
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
+          <p className="text-gray-600">Please sign in to access the vendor dashboard.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (userProfile?.user_role !== 'vendor') {
+    console.log("VendorDashboard: user is not a vendor, role:", userProfile?.user_role);
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Access Denied</h2>
+          <p className="text-gray-600">This area is only accessible to vendors.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const businessName = userProfile?.business_name || "Your Business";
+  
   // Create array of dates for bookings to highlight on calendar
   const bookedDates = mockBookings.map(booking => booking.date);
+
+  console.log("VendorDashboard: rendering dashboard for:", businessName);
 
   return (
     <VendorLayout title="Dashboard">
