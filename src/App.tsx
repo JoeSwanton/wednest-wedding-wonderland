@@ -38,6 +38,10 @@ const VendorSubscription = lazy(() => import("./pages/vendor/VendorSubscription"
 const VendorBusinessProfile = lazy(() => import("./pages/vendor/VendorBusinessProfile"));
 const VendorOnboarding = lazy(() => import("./pages/vendor/VendorOnboarding"));
 
+// Lazy loaded admin pages
+const VendorList = lazy(() => import("./pages/admin/VendorList"));
+const VendorReview = lazy(() => import("./pages/admin/VendorReview"));
+
 // Lazy load ProtectedRoute
 const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 
@@ -88,6 +92,10 @@ function App() {
               <Route path="/vendor/subscription" element={<VendorSubscription />} />
               <Route path="/vendor/business-profile" element={<VendorBusinessProfile />} />
               <Route path="/vendor/onboarding" element={<VendorOnboarding />} />
+              
+              {/* Admin routes */}
+              <Route path="/admin/vendors" element={<VendorList />} />
+              <Route path="/admin/vendor-review/:vendorId" element={<VendorReview />} />
             </Route>
             
             {/* 404 route */}

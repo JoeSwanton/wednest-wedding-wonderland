@@ -246,6 +246,7 @@ export type Database = {
           tagline: string | null
           updated_at: string
           user_id: string
+          verified_vendor: boolean | null
           website: string | null
           willing_to_travel: boolean | null
           years_in_business: number | null
@@ -276,6 +277,7 @@ export type Database = {
           tagline?: string | null
           updated_at?: string
           user_id: string
+          verified_vendor?: boolean | null
           website?: string | null
           willing_to_travel?: boolean | null
           years_in_business?: number | null
@@ -306,6 +308,7 @@ export type Database = {
           tagline?: string | null
           updated_at?: string
           user_id?: string
+          verified_vendor?: boolean | null
           website?: string | null
           willing_to_travel?: boolean | null
           years_in_business?: number | null
@@ -324,6 +327,58 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "vendor_view"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_status_logs: {
+        Row: {
+          changed_by: string | null
+          created_at: string | null
+          feedback: string | null
+          id: string
+          new_status: string | null
+          old_status: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          new_status?: string | null
+          old_status?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          new_status?: string | null
+          old_status?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_status_logs_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "couple_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_status_logs_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "vendor_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_status_logs_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }

@@ -249,6 +249,22 @@ const VendorOnboarding = () => {
           bio: formData.bio
         }
       });
+
+      // Trigger admin notification by calling the edge function directly
+      // The database trigger will also fire, but this ensures immediate notification
+      try {
+        await supabase.functions.invoke('notify-admin-vendor', {
+          body: {
+            vendor_id: user.id,
+            business_name: formData.businessName,
+            business_email: formData.businessEmail,
+            business_category: formData.businessCategory
+          }
+        });
+      } catch (notificationError) {
+        console.error('Error sending admin notification:', notificationError);
+        // Don't fail the onboarding if notification fails
+      }
       
       // Log successful completion
       await logOnboardingStep('OnboardingSubmission', {
@@ -258,7 +274,7 @@ const VendorOnboarding = () => {
       
       toast({
         title: "Onboarding Complete",
-        description: "Your vendor profile has been submitted for review."
+        description: "Your vendor profile has been submitted for review. You'll receive an email once it's approved."
       });
       
       navigate("/vendor/dashboard");

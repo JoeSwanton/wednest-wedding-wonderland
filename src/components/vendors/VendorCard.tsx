@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ export interface VendorData {
   rating: number;
   tags: string[];
   imageUrl: string;
+  verified_vendor?: boolean; // Add this field for verified status
 }
 
 interface VendorCardProps {
@@ -65,7 +67,8 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
   const bookingUrgency = getBookingUrgency();
   const isTopRated = vendor.rating > 4.5;
   const isHighDemand = vendor.availability.includes("High") || Math.random() > 0.7;
-  const isVerified = Math.random() > 0.6;
+  // Use the actual verified_vendor field from the vendor data, fallback to random for mock data
+  const isVerified = vendor.verified_vendor !== undefined ? vendor.verified_vendor : Math.random() > 0.6;
 
   const handleSaveVendor = (e: React.MouseEvent) => {
     e.preventDefault();
