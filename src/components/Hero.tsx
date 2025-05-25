@@ -17,8 +17,10 @@ const Hero = () => {
   const [vendorType, setVendorType] = useState("");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
   const locationInputRef = useRef<HTMLInputElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   // Major Australian locations for suggestions
   const australianLocations = ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Newcastle", "Canberra", "Wollongong", "Hobart", "Geelong", "Townsville", "Cairns", "Darwin", "Toowoomba", "Ballarat", "Bendigo", "Launceston", "Mackay", "Rockhampton", "Bunbury", "Bundaberg", "Hervey Bay", "Wagga Wagga", "Albury", "Mildura", "Shepparton", "Gladstone", "Coffs Harbour", "Port Macquarie"];
@@ -27,9 +29,6 @@ const Hero = () => {
   const filteredLocations = australianLocations.filter(loc => 
     loc.toLowerCase().includes(inputValue.toLowerCase())
   );
-
-  // Show suggestions only when user has typed something
-  const showSuggestions = inputValue.length > 0 && isLocationOpen;
 
   const handleSearch = () => {
     // Build query parameters
@@ -46,6 +45,7 @@ const Hero = () => {
     setLocation(selectedLocation);
     setInputValue(selectedLocation);
     setIsLocationOpen(false);
+    setShowSuggestions(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,8 +53,28 @@ const Hero = () => {
     setInputValue(value);
     setLocation(value);
     
-    // Open the dropdown when user types
-    if (value && !isLocationOpen) {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // Only show suggestions if user has typed at least 2 characters
+    if (value.length >= 2) {
+      // Add a small delay to avoid interrupting typing
+      timeoutRef.current = setTimeout(() => {
+        setShowSuggestions(true);
+        setIsLocationOpen(true);
+      }, 300);
+    } else {
+      setShowSuggestions(false);
+      setIsLocationOpen(false);
+    }
+  };
+
+  const handleInputFocus = () => {
+    // Only open if there's enough text and matching suggestions
+    if (inputValue.length >= 2 && filteredLocations.length > 0) {
+      setShowSuggestions(true);
       setIsLocationOpen(true);
     }
   };
@@ -62,10 +82,21 @@ const Hero = () => {
   const clearInput = () => {
     setInputValue("");
     setLocation("");
+    setShowSuggestions(false);
+    setIsLocationOpen(false);
     if (locationInputRef.current) {
       locationInputRef.current.focus();
     }
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="w-full bg-theme-brown py-16 md:py-24 px-4 md:px-8 text-white relative overflow-hidden">
@@ -113,9 +144,9 @@ const Hero = () => {
                       ref={locationInputRef}
                       value={inputValue}
                       onChange={handleInputChange}
+                      onFocus={handleInputFocus}
                       placeholder="Where's your wedding?"
                       className="w-full pl-12 pr-10 py-4 h-14 text-lg border-2 border-theme-beige/30 bg-white text-theme-brown placeholder:text-theme-brown-light hover:border-theme-brown/60 focus:border-theme-brown focus:ring-2 focus:ring-theme-brown/20 transition-all rounded-xl"
-                      onFocus={() => setIsLocationOpen(true)}
                     />
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-theme-brown-light" />
                     {inputValue && (
@@ -129,29 +160,27 @@ const Hero = () => {
                     )}
                   </div>
                 </PopoverTrigger>
-                {showSuggestions && (
+                {showSuggestions && filteredLocations.length > 0 && (
                   <PopoverContent className="w-[calc(100vw-2rem)] md:w-[400px] p-0" align="start">
                     <Command>
                       <CommandList>
                         <CommandEmpty>No location found.</CommandEmpty>
-                        {filteredLocations.length > 0 && (
-                          <CommandGroup heading="Popular wedding destinations">
-                            {filteredLocations.slice(0, 6).map((location, index) => (
-                              <CommandItem
-                                key={`location-${index}`}
-                                value={location}
-                                onSelect={() => handleLocationSelect(location)}
-                                className="flex items-center py-3 cursor-pointer"
-                              >
-                                <MapPin className="h-5 w-5 text-theme-brown-light mr-3 flex-shrink-0" />
-                                <div>
-                                  <div className="font-medium">{location}</div>
-                                  <div className="text-sm text-theme-brown-light">Australia</div>
-                                </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        )}
+                        <CommandGroup heading="Popular wedding destinations">
+                          {filteredLocations.slice(0, 6).map((location, index) => (
+                            <CommandItem
+                              key={`location-${index}`}
+                              value={location}
+                              onSelect={() => handleLocationSelect(location)}
+                              className="flex items-center py-3 cursor-pointer"
+                            >
+                              <MapPin className="h-5 w-5 text-theme-brown-light mr-3 flex-shrink-0" />
+                              <div>
+                                <div className="font-medium">{location}</div>
+                                <div className="text-sm text-theme-brown-light">Australia</div>
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
                       </CommandList>
                     </Command>
                   </PopoverContent>
