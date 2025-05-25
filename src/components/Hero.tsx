@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,6 @@ const Hero = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
   const locationInputRef = useRef<HTMLInputElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
 
   // Major Australian locations for suggestions
   const australianLocations = ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Newcastle", "Canberra", "Wollongong", "Hobart", "Geelong", "Townsville", "Cairns", "Darwin", "Toowoomba", "Ballarat", "Bendigo", "Launceston", "Mackay", "Rockhampton", "Bunbury", "Bundaberg", "Hervey Bay", "Wagga Wagga", "Albury", "Mildura", "Shepparton", "Gladstone", "Coffs Harbour", "Port Macquarie"];
@@ -53,18 +51,10 @@ const Hero = () => {
     setInputValue(value);
     setLocation(value);
     
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    
-    // Only show suggestions if user has typed at least 2 characters
+    // Show suggestions immediately if user has typed at least 2 characters
     if (value.length >= 2) {
-      // Add a small delay to avoid interrupting typing
-      timeoutRef.current = setTimeout(() => {
-        setShowSuggestions(true);
-        setIsLocationOpen(true);
-      }, 300);
+      setShowSuggestions(true);
+      setIsLocationOpen(true);
     } else {
       setShowSuggestions(false);
       setIsLocationOpen(false);
