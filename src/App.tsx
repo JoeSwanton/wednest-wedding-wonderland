@@ -24,6 +24,14 @@ const Questionnaire = lazy(() => import("./pages/Questionnaire"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const CustomerDashboard = lazy(() => import("./pages/CustomerDashboard"));
 
+// Lazy loaded couples dashboard pages
+const Checklist = lazy(() => import("./pages/Checklist"));
+const Budget = lazy(() => import("./pages/Budget"));
+const GuestList = lazy(() => import("./pages/GuestList"));
+const Timeline = lazy(() => import("./pages/Timeline"));
+const Messages = lazy(() => import("./pages/Messages"));
+const Settings = lazy(() => import("./pages/Settings"));
+
 // Lazy loaded vendor pages
 const VendorDashboard = lazy(() => import("./pages/vendor/VendorDashboard"));
 const VendorBookings = lazy(() => import("./pages/vendor/VendorBookings"));
@@ -77,6 +85,14 @@ function App() {
               <Route path="/questionnaire" element={<Questionnaire />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+              
+              {/* Couples dashboard pages */}
+              <Route path="/checklist" element={<Checklist />} />
+              <Route path="/budget" element={<Budget />} />
+              <Route path="/guest-list" element={<GuestList />} />
+              <Route path="/timeline" element={<Timeline />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/settings" element={<Settings />} />
               
               {/* Vendor routes */}
               <Route path="/vendor" element={<VendorDashboard />} />
