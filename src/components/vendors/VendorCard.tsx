@@ -139,28 +139,26 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           </div>
         </div>
         
-        {/* Location and limited tags */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center text-sm text-theme-brown-light">
-            <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-            <span>{vendor.location}</span>
-          </div>
-          
-          {/* Limit to 1-2 key traits on single line */}
-          {vendor.tags.length > 0 && (
-            <div className="flex gap-1 flex-nowrap">
-              {vendor.tags.slice(0, 2).map((tag, index) => (
-                <Badge 
-                  key={index} 
-                  variant="outline" 
-                  className="border-theme-beige text-theme-brown-light text-xs px-2 py-0.5 rounded-full bg-theme-cream/30 whitespace-nowrap"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
+        {/* Location - full width on its own line */}
+        <div className="flex items-center text-sm text-theme-brown-light mb-2">
+          <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis">{vendor.location}</span>
         </div>
+        
+        {/* Tags on separate line below location */}
+        {vendor.tags.length > 0 && (
+          <div className="flex gap-1 flex-wrap mb-3">
+            {vendor.tags.slice(0, 2).map((tag, index) => (
+              <Badge 
+                key={index} 
+                variant="outline" 
+                className="border-theme-beige text-theme-brown-light text-xs px-2 py-0.5 rounded-full bg-theme-cream/30 whitespace-nowrap"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
         
         {/* Single key signal - response time OR booking activity */}
         <div className="flex items-center justify-between text-xs mb-4">
