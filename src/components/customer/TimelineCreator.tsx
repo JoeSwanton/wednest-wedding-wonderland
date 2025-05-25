@@ -8,49 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Clock, Download, User, X, GripVertical } from "lucide-react";
 
-// Sample data - would be replaced with actual user data from backend
-const initialEvents = [
-  { 
-    id: 1, 
-    time: "09:00", 
-    title: "Hair & Makeup", 
-    description: "For bride and bridesmaids", 
-    location: "Bridal Suite",
-    assignedTo: "Beauty Team"
-  },
-  { 
-    id: 2, 
-    time: "13:00", 
-    title: "First Look Photos", 
-    description: "Private moment with photographer", 
-    location: "Garden Gazebo",
-    assignedTo: "Photographer"
-  },
-  { 
-    id: 3, 
-    time: "15:00", 
-    title: "Ceremony", 
-    description: "Wedding ceremony begins", 
-    location: "Main Hall",
-    assignedTo: "All Vendors"
-  },
-  { 
-    id: 4, 
-    time: "16:00", 
-    title: "Cocktail Hour", 
-    description: "Drinks and canapés", 
-    location: "Terrace",
-    assignedTo: "Caterer"
-  },
-  { 
-    id: 5, 
-    time: "17:30", 
-    title: "Reception Dinner", 
-    description: "Formal dinner service", 
-    location: "Ballroom",
-    assignedTo: "Catering Team"
-  },
-];
+// Empty initial events - no mock data
+const initialEvents: any[] = [];
 
 const TimelineCreator = () => {
   const [events, setEvents] = useState(initialEvents);
@@ -62,17 +21,17 @@ const TimelineCreator = () => {
     location: "", 
     assignedTo: ""
   });
-  const [timelineDate, setTimelineDate] = useState("2024-06-15"); // Example wedding date
+  const [timelineDate, setTimelineDate] = useState(""); // Empty date initially
   
   const handleAddEvent = () => {
     if (newEvent.time && newEvent.title) {
       setEvents([
-        ...events.sort((a, b) => a.time.localeCompare(b.time)),
+        ...events.sort((a: any, b: any) => a.time.localeCompare(b.time)),
         {
           id: events.length + 1,
           ...newEvent
         }
-      ].sort((a, b) => a.time.localeCompare(b.time)));
+      ].sort((a: any, b: any) => a.time.localeCompare(b.time)));
       
       setNewEvent({ time: "", title: "", description: "", location: "", assignedTo: "" });
       setShowAddForm(false);
@@ -80,7 +39,7 @@ const TimelineCreator = () => {
   };
   
   const handleDeleteEvent = (id: number) => {
-    setEvents(events.filter(event => event.id !== id));
+    setEvents(events.filter((event: any) => event.id !== id));
   };
   
   return (
@@ -99,6 +58,7 @@ const TimelineCreator = () => {
                   value={timelineDate}
                   onChange={(e) => setTimelineDate(e.target.value)}
                   className="w-auto"
+                  placeholder="Select wedding date"
                 />
               </div>
             </div>
@@ -186,18 +146,20 @@ const TimelineCreator = () => {
         <CardHeader>
           <CardTitle>Wedding Day Schedule</CardTitle>
           <CardDescription>
-            Timeline for {new Date(timelineDate).toLocaleDateString('en-US', {
+            {timelineDate ? `Timeline for ${new Date(timelineDate).toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: 'numeric'
-            })}
+            })}` : 'Select a date to start planning your timeline'}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {events.length === 0 ? (
             <div className="py-8 text-center">
-              <p className="text-muted-foreground">No events added yet. Create your first timeline event.</p>
+              <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground mb-2">No events added yet</p>
+              <p className="text-sm text-muted-foreground">Create your first timeline event to get started!</p>
             </div>
           ) : (
             <div className="relative">
@@ -206,7 +168,7 @@ const TimelineCreator = () => {
               
               {/* Timeline events */}
               <div className="space-y-4">
-                {events.sort((a, b) => a.time.localeCompare(b.time)).map((event, index) => (
+                {events.sort((a: any, b: any) => a.time.localeCompare(b.time)).map((event: any, index: number) => (
                   <div key={event.id}>
                     <div className="flex gap-4">
                       {/* Time marker */}
@@ -220,7 +182,7 @@ const TimelineCreator = () => {
                           <div className="flex flex-col">
                             <div className="flex items-center gap-2">
                               <span className="font-bold">
-                                {event.time.split(':').map((part, i) => 
+                                {event.time.split(':').map((part: string, i: number) => 
                                   parseInt(part)).join(':')
                                 }
                               </span>

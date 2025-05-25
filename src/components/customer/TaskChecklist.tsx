@@ -7,53 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Download, Filter, Calendar, Tag } from "lucide-react";
+import { PlusCircle, Download, Filter, Calendar, Tag, CheckSquare } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Sample data - would be replaced with actual user data from backend
-const initialTasks = [
-  { 
-    id: 1, 
-    title: "Book venue", 
-    status: "completed", 
-    dueDate: "2023-12-15",
-    category: "venue",
-    notes: "Deposit paid, contract signed" 
-  },
-  { 
-    id: 2, 
-    title: "Hire photographer", 
-    status: "in-progress", 
-    dueDate: "2024-01-20",
-    category: "photography",
-    notes: "Meeting with Jane next week" 
-  },
-  { 
-    id: 3, 
-    title: "Order wedding cake", 
-    status: "to-do", 
-    dueDate: "2024-02-10",
-    category: "catering",
-    notes: "" 
-  },
-  { 
-    id: 4, 
-    title: "Book florist", 
-    status: "to-do", 
-    dueDate: "2024-01-05",
-    category: "decor",
-    notes: "Get quotes from at least 3 vendors" 
-  },
-  { 
-    id: 5, 
-    title: "Send save-the-dates", 
-    status: "completed", 
-    dueDate: "2023-11-01",
-    category: "stationery",
-    notes: "All cards sent out on October 25" 
-  },
-];
+// Empty initial tasks - no mock data
+const initialTasks: any[] = [];
 
 const categories = [
   "venue", "catering", "photography", "decor", "attire", 
@@ -75,14 +34,14 @@ const TaskChecklist = () => {
   // Filter tasks based on status
   const filteredTasks = filter === "all" 
     ? tasks 
-    : tasks.filter(task => task.status === filter);
+    : tasks.filter((task: any) => task.status === filter);
   
   // Calculate progress
-  const completedTasks = tasks.filter(task => task.status === "completed").length;
-  const progressPercentage = (completedTasks / tasks.length) * 100;
+  const completedTasks = tasks.filter((task: any) => task.status === "completed").length;
+  const progressPercentage = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
   
   const handleStatusChange = (taskId: number, status: string) => {
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map((task: any) => 
       task.id === taskId ? { ...task, status } : task
     ));
   };
@@ -255,7 +214,9 @@ const TaskList = ({ tasks, onStatusChange }: any) => {
   if (tasks.length === 0) {
     return (
       <div className="py-8 text-center border rounded-md">
-        <p className="text-muted-foreground">No tasks found in this category.</p>
+        <CheckSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <p className="text-muted-foreground mb-2">No tasks found</p>
+        <p className="text-sm text-muted-foreground">Add your first task to get started with planning!</p>
       </div>
     );
   }

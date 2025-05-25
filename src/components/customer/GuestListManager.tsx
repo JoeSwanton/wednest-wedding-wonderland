@@ -6,16 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Upload, Download, Search, Edit, Trash2, User } from "lucide-react";
+import { PlusCircle, Upload, Download, Search, Edit, Trash2, User, Users } from "lucide-react";
 
-// Sample data - would be replaced with actual user data from backend
-const initialGuests = [
-  { id: 1, name: "John Smith", email: "john@example.com", phone: "555-123-4567", rsvp: "Yes", tags: ["Family"], plusOne: true },
-  { id: 2, name: "Jane Doe", email: "jane@example.com", phone: "555-987-6543", rsvp: "No", tags: ["Friends"], plusOne: false },
-  { id: 3, name: "Robert Johnson", email: "robert@example.com", phone: "555-567-8901", rsvp: "Maybe", tags: ["VIP", "Family"], plusOne: true },
-  { id: 4, name: "Emily Williams", email: "emily@example.com", phone: "555-345-6789", rsvp: "Yes", tags: ["Friends"], plusOne: false },
-  { id: 5, name: "Michael Brown", email: "michael@example.com", phone: "555-901-2345", rsvp: "Awaiting", tags: ["Work"], plusOne: false },
-];
+// Empty initial guests - no mock data
+const initialGuests: any[] = [];
 
 const GuestListManager = () => {
   const [guests, setGuests] = useState(initialGuests);
@@ -25,18 +19,18 @@ const GuestListManager = () => {
   
   // Count RSVPs
   const rsvpCounts = {
-    attending: guests.filter(g => g.rsvp === "Yes").length,
-    declined: guests.filter(g => g.rsvp === "No").length,
-    maybe: guests.filter(g => g.rsvp === "Maybe").length,
-    awaiting: guests.filter(g => g.rsvp === "Awaiting").length,
+    attending: guests.filter((g: any) => g.rsvp === "Yes").length,
+    declined: guests.filter((g: any) => g.rsvp === "No").length,
+    maybe: guests.filter((g: any) => g.rsvp === "Maybe").length,
+    awaiting: guests.filter((g: any) => g.rsvp === "Awaiting").length,
     total: guests.length,
-    plusOnes: guests.filter(g => g.plusOne).length
+    plusOnes: guests.filter((g: any) => g.plusOne).length
   };
   
   const totalAttending = rsvpCounts.attending + rsvpCounts.plusOnes;
   
   // Filter guests based on search and tab
-  const filteredGuests = guests.filter(guest => 
+  const filteredGuests = guests.filter((guest: any) => 
     guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     guest.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -201,64 +195,66 @@ const GuestListManager = () => {
             </Select>
           </div>
           
-          <div className="border rounded-md overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="px-4 py-2 text-left">Name</th>
-                  <th className="px-4 py-2 text-left">Email</th>
-                  <th className="px-4 py-2 text-left">RSVP</th>
-                  <th className="px-4 py-2 text-left">Tags</th>
-                  <th className="px-4 py-2 text-center">+1</th>
-                  <th className="px-4 py-2 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredGuests.length > 0 ? filteredGuests.map((guest) => (
-                  <tr key={guest.id} className="border-t">
-                    <td className="px-4 py-2">{guest.name}</td>
-                    <td className="px-4 py-2">{guest.email}</td>
-                    <td className="px-4 py-2">
-                      <Badge className={`
-                        ${guest.rsvp === "Yes" ? "bg-green-100 text-green-800" : ""}
-                        ${guest.rsvp === "No" ? "bg-red-100 text-red-800" : ""}
-                        ${guest.rsvp === "Maybe" ? "bg-yellow-100 text-yellow-800" : ""}
-                        ${guest.rsvp === "Awaiting" ? "bg-gray-100 text-gray-800" : ""}
-                      `}>
-                        {guest.rsvp}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-2">
-                      <div className="flex gap-1 flex-wrap">
-                        {guest.tags.map((tag, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">{tag}</Badge>
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      {guest.plusOne ? <span className="text-green-500">✓</span> : "—"}
-                    </td>
-                    <td className="px-4 py-2">
-                      <div className="flex justify-center gap-2">
-                        <Button variant="ghost" size="icon" title="Edit">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" title="Delete">
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                )) : (
+          {filteredGuests.length === 0 ? (
+            <div className="text-center py-8 border rounded-md">
+              <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground mb-2">No guests added yet</p>
+              <p className="text-sm text-muted-foreground">Add your first guest to get started!</p>
+            </div>
+          ) : (
+            <div className="border rounded-md overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-muted">
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                      No guests found. Add a guest to get started.
-                    </td>
+                    <th className="px-4 py-2 text-left">Name</th>
+                    <th className="px-4 py-2 text-left">Email</th>
+                    <th className="px-4 py-2 text-left">RSVP</th>
+                    <th className="px-4 py-2 text-left">Tags</th>
+                    <th className="px-4 py-2 text-center">+1</th>
+                    <th className="px-4 py-2 text-center">Actions</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredGuests.map((guest: any) => (
+                    <tr key={guest.id} className="border-t">
+                      <td className="px-4 py-2">{guest.name}</td>
+                      <td className="px-4 py-2">{guest.email}</td>
+                      <td className="px-4 py-2">
+                        <Badge className={`
+                          ${guest.rsvp === "Yes" ? "bg-green-100 text-green-800" : ""}
+                          ${guest.rsvp === "No" ? "bg-red-100 text-red-800" : ""}
+                          ${guest.rsvp === "Maybe" ? "bg-yellow-100 text-yellow-800" : ""}
+                          ${guest.rsvp === "Awaiting" ? "bg-gray-100 text-gray-800" : ""}
+                        `}>
+                          {guest.rsvp}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-2">
+                        <div className="flex gap-1 flex-wrap">
+                          {guest.tags.map((tag: string, idx: number) => (
+                            <Badge key={idx} variant="outline" className="text-xs">{tag}</Badge>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {guest.plusOne ? <span className="text-green-500">✓</span> : "—"}
+                      </td>
+                      <td className="px-4 py-2">
+                        <div className="flex justify-center gap-2">
+                          <Button variant="ghost" size="icon" title="Edit">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" title="Delete">
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardContent>
         <CardFooter className="flex justify-between">
           <p className="text-sm text-muted-foreground">Total: {filteredGuests.length} guests</p>

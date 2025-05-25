@@ -23,143 +23,8 @@ interface TimelineEvent {
 const Timeline = () => {
   const { user } = useAuth();
   
-  const [events, setEvents] = useState<TimelineEvent[]>([
-    {
-      id: "1",
-      time: "08:00",
-      title: "Hair & Makeup",
-      description: "Bridal party preparation",
-      location: "Bridal Suite - Grand Hotel",
-      duration: 180,
-      category: "preparation",
-      attendees: ["Bride", "Maid of Honor", "Bridesmaids"],
-      notes: "Hair stylist arrives first, makeup artist at 9:00 AM"
-    },
-    {
-      id: "2",
-      time: "10:30",
-      title: "Groom Preparation",
-      description: "Getting ready with groomsmen",
-      location: "Groom's Suite - Grand Hotel",
-      duration: 90,
-      category: "preparation",
-      attendees: ["Groom", "Best Man", "Groomsmen"]
-    },
-    {
-      id: "3",
-      time: "11:30",
-      title: "First Look Photos",
-      description: "Private moment before ceremony",
-      location: "Hotel Gardens",
-      duration: 30,
-      category: "photos",
-      attendees: ["Bride", "Groom", "Photographer"]
-    },
-    {
-      id: "4",
-      time: "12:00",
-      title: "Wedding Party Photos",
-      description: "Group photos with bridal party",
-      location: "Hotel Gardens",
-      duration: 60,
-      category: "photos",
-      attendees: ["Wedding Party", "Photographer"]
-    },
-    {
-      id: "5",
-      time: "13:30",
-      title: "Transport to Ceremony",
-      description: "Bridal party travels to venue",
-      duration: 30,
-      category: "transport"
-    },
-    {
-      id: "6",
-      time: "14:00",
-      title: "Guest Arrival",
-      description: "Guests arrive and are seated",
-      location: "St. Mary's Church",
-      duration: 30,
-      category: "ceremony",
-      notes: "Ushers will seat guests"
-    },
-    {
-      id: "7",
-      time: "14:30",
-      title: "Wedding Ceremony",
-      description: "The main event!",
-      location: "St. Mary's Church",
-      duration: 45,
-      category: "ceremony",
-      attendees: ["All guests"]
-    },
-    {
-      id: "8",
-      time: "15:15",
-      title: "Congratulations & Photos",
-      description: "Family and group photos",
-      location: "Church Steps",
-      duration: 45,
-      category: "photos"
-    },
-    {
-      id: "9",
-      time: "16:30",
-      title: "Cocktail Hour",
-      description: "Drinks and canapés",
-      location: "Reception Venue - Terrace",
-      duration: 60,
-      category: "reception",
-      notes: "String quartet performance"
-    },
-    {
-      id: "10",
-      time: "17:30",
-      title: "Reception Dinner",
-      description: "Three-course meal",
-      location: "Main Reception Hall",
-      duration: 120,
-      category: "reception"
-    },
-    {
-      id: "11",
-      time: "19:30",
-      title: "Speeches",
-      description: "Toasts and speeches",
-      location: "Main Reception Hall",
-      duration: 30,
-      category: "reception",
-      attendees: ["Father of Bride", "Best Man", "Groom"]
-    },
-    {
-      id: "12",
-      time: "20:00",
-      title: "First Dance",
-      description: "Couple's first dance",
-      location: "Dance Floor",
-      duration: 15,
-      category: "party"
-    },
-    {
-      id: "13",
-      time: "20:15",
-      title: "Dancing & Celebration",
-      description: "Party time!",
-      location: "Dance Floor",
-      duration: 165,
-      category: "party",
-      notes: "DJ starts, open bar continues"
-    },
-    {
-      id: "14",
-      time: "23:00",
-      title: "Last Dance & Farewell",
-      description: "Final dance and goodbyes",
-      location: "Dance Floor",
-      duration: 30,
-      category: "party"
-    }
-  ]);
+  // Empty timeline events - no mock data
+  const [events, setEvents] = useState<TimelineEvent[]>([]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -245,68 +110,80 @@ const Timeline = () => {
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                {events.map((event, index) => (
-                  <div key={event.id} className="relative">
-                    {/* Timeline connector */}
-                    {index < events.length - 1 && (
-                      <div className="absolute left-6 top-12 w-0.5 h-16 bg-theme-cream"></div>
-                    )}
-                    
-                    <div className="flex gap-4">
-                      {/* Time marker */}
-                      <div className="flex flex-col items-center min-w-[60px]">
-                        <div className="bg-theme-brown text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold text-sm">
-                          {event.time}
-                        </div>
-                        <div className="text-xs text-theme-brown-light mt-1">
-                          {formatDuration(event.duration)}
-                        </div>
-                      </div>
+              {events.length === 0 ? (
+                <div className="text-center py-8">
+                  <Clock className="h-12 w-12 text-theme-brown-light mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-theme-brown mb-2">No events scheduled yet</h3>
+                  <p className="text-theme-brown-light mb-4">Create your perfect wedding day timeline by adding your first event.</p>
+                  <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Your First Event
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {events.map((event, index) => (
+                    <div key={event.id} className="relative">
+                      {/* Timeline connector */}
+                      {index < events.length - 1 && (
+                        <div className="absolute left-6 top-12 w-0.5 h-16 bg-theme-cream"></div>
+                      )}
                       
-                      {/* Event details */}
-                      <div className="flex-1 border border-theme-cream/50 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <h4 className="font-semibold text-theme-brown">{event.title}</h4>
-                            <Badge variant="outline" className={getCategoryColor(event.category)}>
-                              <span className="mr-1">{getCategoryIcon(event.category)}</span>
-                              {event.category}
-                            </Badge>
+                      <div className="flex gap-4">
+                        {/* Time marker */}
+                        <div className="flex flex-col items-center min-w-[60px]">
+                          <div className="bg-theme-brown text-white rounded-full w-12 h-12 flex items-center justify-center font-semibold text-sm">
+                            {event.time}
                           </div>
-                          <Button variant="outline" size="sm">
-                            Edit
-                          </Button>
+                          <div className="text-xs text-theme-brown-light mt-1">
+                            {formatDuration(event.duration)}
+                          </div>
                         </div>
                         
-                        <p className="text-theme-brown-light mb-3">{event.description}</p>
-                        
-                        {event.location && (
-                          <div className="flex items-center gap-2 text-sm text-theme-brown-light mb-2">
-                            <MapPin className="h-4 w-4" />
-                            <span>{event.location}</span>
+                        {/* Event details */}
+                        <div className="flex-1 border border-theme-cream/50 rounded-lg p-4">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <h4 className="font-semibold text-theme-brown">{event.title}</h4>
+                              <Badge variant="outline" className={getCategoryColor(event.category)}>
+                                <span className="mr-1">{getCategoryIcon(event.category)}</span>
+                                {event.category}
+                              </Badge>
+                            </div>
+                            <Button variant="outline" size="sm">
+                              Edit
+                            </Button>
                           </div>
-                        )}
-                        
-                        {event.attendees && event.attendees.length > 0 && (
-                          <div className="flex items-center gap-2 text-sm text-theme-brown-light mb-2">
-                            <Users className="h-4 w-4" />
-                            <span>{event.attendees.join(", ")}</span>
-                          </div>
-                        )}
-                        
-                        {event.notes && (
-                          <div className="mt-3 p-3 bg-theme-cream/20 rounded-md">
-                            <p className="text-sm text-theme-brown-light">
-                              <strong>Notes:</strong> {event.notes}
-                            </p>
-                          </div>
-                        )}
+                          
+                          <p className="text-theme-brown-light mb-3">{event.description}</p>
+                          
+                          {event.location && (
+                            <div className="flex items-center gap-2 text-sm text-theme-brown-light mb-2">
+                              <MapPin className="h-4 w-4" />
+                              <span>{event.location}</span>
+                            </div>
+                          )}
+                          
+                          {event.attendees && event.attendees.length > 0 && (
+                            <div className="flex items-center gap-2 text-sm text-theme-brown-light mb-2">
+                              <Users className="h-4 w-4" />
+                              <span>{event.attendees.join(", ")}</span>
+                            </div>
+                          )}
+                          
+                          {event.notes && (
+                            <div className="mt-3 p-3 bg-theme-cream/20 rounded-md">
+                              <p className="text-sm text-theme-brown-light">
+                                <strong>Notes:</strong> {event.notes}
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

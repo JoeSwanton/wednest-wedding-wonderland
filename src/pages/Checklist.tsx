@@ -24,54 +24,8 @@ const Checklist = () => {
   const { user } = useAuth();
   const [filter, setFilter] = useState<"all" | "pending" | "completed">("all");
   
-  // Mock checklist data
-  const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>([
-    {
-      id: "1",
-      title: "Book venue",
-      category: "Venue",
-      priority: "high",
-      dueDate: "2025-08-01",
-      completed: false,
-      description: "Research and book the perfect venue for your ceremony and reception"
-    },
-    {
-      id: "2",
-      title: "Choose photographer",
-      category: "Photography",
-      priority: "high",
-      dueDate: "2025-08-15",
-      completed: true,
-      description: "Find a photographer whose style matches your vision"
-    },
-    {
-      id: "3",
-      title: "Send save the dates",
-      category: "Invitations",
-      priority: "medium",
-      dueDate: "2025-09-01",
-      completed: false,
-      description: "Send save the date cards to your guest list"
-    },
-    {
-      id: "4",
-      title: "Order wedding dress",
-      category: "Attire",
-      priority: "high",
-      dueDate: "2025-07-01",
-      completed: false,
-      description: "Order your wedding dress with time for alterations"
-    },
-    {
-      id: "5",
-      title: "Book florist",
-      category: "Flowers",
-      priority: "medium",
-      dueDate: "2025-09-15",
-      completed: false,
-      description: "Choose flowers for bouquet, boutonnieres, and decorations"
-    }
-  ]);
+  // Empty checklist - no mock data
+  const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>([]);
 
   const toggleItem = (id: string) => {
     setChecklistItems(items =>
@@ -89,7 +43,7 @@ const Checklist = () => {
 
   const completedCount = checklistItems.filter(item => item.completed).length;
   const totalCount = checklistItems.length;
-  const completionPercentage = Math.round((completedCount / totalCount) * 100);
+  const completionPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -157,45 +111,59 @@ const Checklist = () => {
 
           {/* Checklist Items */}
           <div className="space-y-4">
-            {filteredItems.map((item) => (
-              <Card key={item.id} className={`bg-white border-theme-cream shadow-sm transition-all ${
-                item.completed ? 'opacity-75' : ''
-              }`}>
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-4">
-                    <Checkbox
-                      checked={item.completed}
-                      onCheckedChange={() => toggleItem(item.id)}
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`font-medium ${
-                          item.completed ? 'line-through text-theme-brown-light' : 'text-theme-brown'
-                        }`}>
-                          {item.title}
-                        </h4>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className={getPriorityColor(item.priority)}>
-                            {item.priority} priority
-                          </Badge>
-                          <Badge variant="outline" className="border-theme-beige text-theme-brown-light">
-                            {item.category}
-                          </Badge>
-                        </div>
-                      </div>
-                      {item.description && (
-                        <p className="text-sm text-theme-brown-light mb-2">{item.description}</p>
-                      )}
-                      <div className="flex items-center gap-2 text-sm text-theme-brown-light">
-                        <Clock className="h-4 w-4" />
-                        <span>Due: {new Date(item.dueDate).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  </div>
+            {filteredItems.length === 0 ? (
+              <Card className="bg-white border-theme-cream shadow-sm">
+                <CardContent className="p-8 text-center">
+                  <CheckSquare className="h-12 w-12 text-theme-brown-light mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-theme-brown mb-2">No tasks yet</h3>
+                  <p className="text-theme-brown-light mb-4">Start planning your perfect wedding by adding your first task.</p>
+                  <Button className="bg-theme-brown text-white hover:bg-theme-brown-dark">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Your First Task
+                  </Button>
                 </CardContent>
               </Card>
-            ))}
+            ) : (
+              filteredItems.map((item) => (
+                <Card key={item.id} className={`bg-white border-theme-cream shadow-sm transition-all ${
+                  item.completed ? 'opacity-75' : ''
+                }`}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-4">
+                      <Checkbox
+                        checked={item.completed}
+                        onCheckedChange={() => toggleItem(item.id)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className={`font-medium ${
+                            item.completed ? 'line-through text-theme-brown-light' : 'text-theme-brown'
+                          }`}>
+                            {item.title}
+                          </h4>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className={getPriorityColor(item.priority)}>
+                              {item.priority} priority
+                            </Badge>
+                            <Badge variant="outline" className="border-theme-beige text-theme-brown-light">
+                              {item.category}
+                            </Badge>
+                          </div>
+                        </div>
+                        {item.description && (
+                          <p className="text-sm text-theme-brown-light mb-2">{item.description}</p>
+                        )}
+                        <div className="flex items-center gap-2 text-sm text-theme-brown-light">
+                          <Clock className="h-4 w-4" />
+                          <span>Due: {new Date(item.dueDate).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
 
           {/* Add Task Button */}
