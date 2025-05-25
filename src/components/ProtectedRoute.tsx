@@ -11,8 +11,11 @@ const ProtectedRoute = () => {
   const [vendorOnboarded, setVendorOnboarded] = useState<boolean | null>(null);
   const [checkingOnboarding, setCheckingOnboarding] = useState(false);
   const [checkTimeout, setCheckTimeout] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [checkingAdmin, setCheckingAdmin] = useState(false);
 
   const isVendorRoute = location.pathname.startsWith("/vendor");
+  const isAdminRoute = location.pathname.startsWith("/admin");
   const isOnboardingRoute = location.pathname === "/vendor/onboarding";
   const isAuthRoute = location.pathname === "/auth";
   const isProfileRoute = location.pathname === "/profile";
@@ -20,15 +23,43 @@ const ProtectedRoute = () => {
   // Add timeout to prevent infinite loading
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (checkingOnboarding) {
-        console.log("Forcing timeout on vendor onboarding check");
+      if (checkingOnboarding || checkingAdmin) {
+        console.log("Forcing timeout on checks");
         setCheckingOnboarding(false);
+        setCheckingAdmin(false);
         setCheckTimeout(true);
       }
     }, 3000);
 
     return () => clearTimeout(timeoutId);
-  }, [checkingOnboarding]);
+  }, [checkingOnboarding, checkingAdmin]);
+
+  // Check admin status
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user && !isAuthRoute && isAdmin === null && !checkingAdmin) {
+        setCheckingAdmin(true);
+        try {
+          const { data, error } = await supabase
+            .rpc('is_admin', { uid: user.id });
+
+          if (error) {
+            console.error('Error checking admin status:', error);
+            setIsAdmin(false);
+          } else {
+            setIsAdmin(data || false);
+          }
+        } catch (error) {
+          console.error('Error in admin check:', error);
+          setIsAdmin(false);
+        } finally {
+          setCheckingAdmin(false);
+        }
+      }
+    };
+
+    checkAdminStatus();
+  }, [user, isAuthRoute, isAdmin, checkingAdmin]);
 
   useEffect(() => {
     const checkVendorOnboarding = async () => {
@@ -84,7 +115,7 @@ const ProtectedRoute = () => {
   }
 
   // If loading, show loading screen, but only if not on auth or onboarding pages
-  if ((loading || (checkingOnboarding && !checkTimeout)) && !isOnboardingRoute && !isAuthRoute) {
+  if ((loading || (checkingOnboarding && !checkTimeout) || (checkingAdmin && !checkTimeout)) && !isOnboardingRoute && !isAuthRoute) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
@@ -96,6 +127,16 @@ const ProtectedRoute = () => {
   // Authentication checks
   if (!user) return <Navigate to="/auth" replace />;
 
+  // Admin route protection
+  if (isAdminRoute && isAdmin === false) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Redirect non-admin users away from admin routes
+  if (isAdminRoute && !isAdmin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   // Vendor-specific checks
   if (
     userProfile?.user_role === "vendor" &&
@@ -106,13 +147,15 @@ const ProtectedRoute = () => {
     return <Navigate to="/vendor/onboarding" replace />;
   }
 
-  // Role-based routing
-  if (isVendorRoute && userProfile?.user_role !== "vendor") {
-    return <Navigate to="/dashboard" replace />;
-  }
+  // Role-based routing (skip for admin users)
+  if (!isAdmin) {
+    if (isVendorRoute && userProfile?.user_role !== "vendor") {
+      return <Navigate to="/dashboard" replace />;
+    }
 
-  if (!isVendorRoute && !isProfileRoute && userProfile?.user_role === "vendor") {
-    return <Navigate to="/vendor/dashboard" replace />;
+    if (!isVendorRoute && !isProfileRoute && !isAdminRoute && userProfile?.user_role === "vendor") {
+      return <Navigate to="/vendor/dashboard" replace />;
+    }
   }
 
   return <Outlet />;

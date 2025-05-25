@@ -33,7 +33,23 @@ export const useAuthRedirection = () => {
     // If on the auth page, only redirect on explicit sign-in event
     if (location.pathname === '/auth') {
       if (user && userProfile && event === 'SIGNED_IN') {
-        console.log("Signed in from auth page, redirecting based on role");
+        console.log("Signed in from auth page, checking admin status");
+        
+        // Check if user is admin first
+        try {
+          const { data: isAdminUser, error } = await supabase
+            .rpc('is_admin', { uid: user.id });
+            
+          if (!error && isAdminUser) {
+            console.log("Admin user detected, redirecting to vendor applications");
+            navigate('/admin/vendors');
+            return;
+          }
+        } catch (error) {
+          console.error("Error checking admin status:", error);
+        }
+        
+        // Regular user redirect logic
         if (userProfile.user_role === 'vendor') {
           navigate('/vendor/dashboard');
         } else {
