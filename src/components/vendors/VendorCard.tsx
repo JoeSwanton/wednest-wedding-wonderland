@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,38 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
   const isCouple = userProfile?.user_role === 'couple';
   const isSaved = isVendorSaved(vendor.id);
 
+  // Create stable calculations based on vendor ID to prevent random changes on re-render
+  const stableCalculations = useMemo(() => {
+    // Use vendor ID as seed for consistent "random" values
+    const seed = vendor.id;
+    
+    // Response time calculation based on vendor ID
+    const times = ["1h", "2h", "24h", "48h"];
+    const responseTime = times[seed % times.length];
+    
+    // Booking urgency calculation based on vendor ID
+    const urgencies = [
+      "Booked 3x this week",
+      "Booked 2x this week", 
+      "5 inquiries today",
+      "Popular this month"
+    ];
+    const bookingUrgency = urgencies[(seed * 3) % urgencies.length];
+    
+    // Stable high demand calculation
+    const isHighDemand = vendor.availability.includes("High") || (seed % 10) < 7;
+    
+    // Use the actual verified_vendor field from the vendor data, fallback to stable calculation for mock data
+    const isVerified = vendor.verified_vendor !== undefined ? vendor.verified_vendor : (seed % 10) < 6;
+    
+    return {
+      responseTime,
+      bookingUrgency,
+      isHighDemand,
+      isVerified
+    };
+  }, [vendor.id, vendor.availability, vendor.verified_vendor]);
+
   // Format the price to show "From $X"
   const formatPrice = (price: string) => {
     if (price.includes('$')) return price;
@@ -46,29 +78,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
     }
   };
 
-  // Get response time
-  const getResponseTime = () => {
-    const times = ["1h", "2h", "24h", "48h"];
-    return times[Math.floor(Math.random() * times.length)];
-  };
-
-  // Get booking urgency
-  const getBookingUrgency = () => {
-    const urgencies = [
-      "Booked 3x this week",
-      "Booked 2x this week", 
-      "5 inquiries today",
-      "Popular this month"
-    ];
-    return urgencies[Math.floor(Math.random() * urgencies.length)];
-  };
-
-  const responseTime = getResponseTime();
-  const bookingUrgency = getBookingUrgency();
   const isTopRated = vendor.rating > 4.5;
-  const isHighDemand = vendor.availability.includes("High") || Math.random() > 0.7;
-  // Use the actual verified_vendor field from the vendor data, fallback to random for mock data
-  const isVerified = vendor.verified_vendor !== undefined ? vendor.verified_vendor : Math.random() > 0.6;
 
   const handleSaveVendor = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -92,7 +102,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
               <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
               <span className="text-xs font-medium">{vendor.rating}</span>
             </div>
-            {isTopRated && isHighDemand && (
+            {isTopRated && stableCalculations.isHighDemand && (
               <div className="flex items-center gap-1 bg-red-500/90 text-white px-2 py-1 rounded-md text-xs font-medium">
                 <Award className="h-3 w-3" />
                 <TrendingUp className="h-3 w-3" />
@@ -160,7 +170,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
         </div>
         
         {/* Verified badge above tags */}
-        {isVerified && (
+        {stableCalculations.isVerified && (
           <div className="mb-2">
             <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium w-fit">
               <CheckCircle className="h-3 w-3" />
@@ -188,10 +198,10 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
         <div className="flex items-center justify-between text-xs mb-4 flex-1">
           <div className="flex items-center text-green-600 bg-green-50 px-2 py-1 rounded-full">
             <Clock className="h-3 w-3 mr-1" />
-            <span>Responds in {responseTime}</span>
+            <span>Responds in {stableCalculations.responseTime}</span>
           </div>
           <div className="text-theme-brown-light bg-theme-cream px-2 py-1 rounded-full">
-            {bookingUrgency}
+            {stableCalculations.bookingUrgency}
           </div>
         </div>
         
