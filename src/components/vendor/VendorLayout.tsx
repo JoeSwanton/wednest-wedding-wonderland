@@ -16,32 +16,15 @@ const VendorLayout = ({ children, title }: VendorLayoutProps) => {
   const { user, userProfile, loading } = useAuth();
   const navigate = useNavigate();
   
-  console.log("VendorLayout: user:", user);
-  console.log("VendorLayout: userProfile:", userProfile);
-  console.log("VendorLayout: loading:", loading);
-  
   // Protect vendor routes - redirect non-vendors away
   useEffect(() => {
-    console.log("VendorLayout: useEffect triggered", { loading, user: !!user, userRole: userProfile?.user_role });
-    
-    if (!loading) {
-      if (!user) {
-        console.log("VendorLayout: No user, redirecting to auth");
-        navigate('/auth');
-        return;
-      }
-      
-      if (userProfile && userProfile.user_role !== 'vendor') {
-        console.log("VendorLayout: User is not vendor, redirecting to dashboard");
-        navigate('/dashboard');
-        return;
-      }
+    if (!loading && (!user || userProfile?.user_role !== 'vendor')) {
+      navigate('/auth');
     }
   }, [user, userProfile, loading, navigate]);
   
   // Show loading state
   if (loading) {
-    console.log("VendorLayout: showing loading state");
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
@@ -49,29 +32,10 @@ const VendorLayout = ({ children, title }: VendorLayoutProps) => {
     );
   }
   
-  // If not logged in, don't render anything (redirect will handle it)
-  if (!user) {
-    console.log("VendorLayout: No user, not rendering");
+  // If not logged in or not a vendor, don't render anything (redirect will handle it)
+  if (!user || userProfile?.user_role !== 'vendor') {
     return null;
   }
-
-  // If userProfile is still loading but we have a user, show loading
-  if (!userProfile) {
-    console.log("VendorLayout: No userProfile yet, showing loading");
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-wednest-sage border-t-transparent rounded-full"></div>
-      </div>
-    );
-  }
-
-  // If not a vendor, don't render anything (redirect will handle it)
-  if (userProfile.user_role !== 'vendor') {
-    console.log("VendorLayout: Not a vendor, not rendering");
-    return null;
-  }
-
-  console.log("VendorLayout: rendering layout");
 
   return (
     <SidebarProvider>
