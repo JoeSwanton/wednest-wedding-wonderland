@@ -1,11 +1,9 @@
-
 import React, { useState } from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSavedVendors } from "@/hooks/useSavedVendors";
 
@@ -29,6 +27,7 @@ interface VendorCardProps {
 const VendorCard = ({ vendor }: VendorCardProps) => {
   const { userProfile } = useAuth();
   const { savedVendors, toggleSavedVendor, isVendorSaved } = useSavedVendors();
+  const [showTooltip, setShowTooltip] = useState(false);
   const isCouple = userProfile?.user_role === 'couple';
   const isSaved = isVendorSaved(vendor.id);
 
@@ -100,25 +99,28 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
           
           {/* Favorite button - only show for couples and always visible */}
           {isCouple && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button 
-                    onClick={handleSaveVendor}
-                    className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm transition-all"
-                  >
-                    <Heart className={`h-4 w-4 transition-colors ${
-                      isSaved 
-                        ? 'text-red-500 fill-red-500' 
-                        : 'text-theme-brown-light hover:text-red-500'
-                    }`} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{isSaved ? 'Remove from saved' : 'Save vendor'}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <div className="relative">
+              <button 
+                onClick={handleSaveVendor}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm transition-all"
+              >
+                <Heart className={`h-4 w-4 transition-colors ${
+                  isSaved 
+                    ? 'text-red-500 fill-red-500' 
+                    : 'text-theme-brown-light hover:text-red-500'
+                }`} />
+              </button>
+              
+              {/* Tooltip */}
+              {showTooltip && (
+                <div className="absolute top-full right-0 mt-2 px-2 py-1 bg-black/80 text-white text-xs rounded backdrop-blur-sm z-50 whitespace-nowrap">
+                  {isSaved ? 'Remove from saved' : 'Save vendor'}
+                  <div className="absolute -top-1 right-3 w-2 h-2 bg-black/80 rotate-45"></div>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
@@ -157,19 +159,10 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
         {/* Verified badge above tags */}
         {isVerified && (
           <div className="mb-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium w-fit">
-                    <CheckCircle className="h-3 w-3" />
-                    <span>Verified by Enosi</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Verified by Enosi</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium w-fit">
+              <CheckCircle className="h-3 w-3" />
+              <span>Verified by Enosi</span>
+            </div>
           </div>
         )}
         
