@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle } from "lucide-react";
 
@@ -83,10 +82,7 @@ const ServicePackages = () => {
                 </div>
                 <div className="text-right ml-8">
                   <div className="text-2xl font-semibold text-theme-text-primary">{pkg.price}</div>
-                  <div className="text-sm text-theme-text-secondary mb-4">{pkg.duration}</div>
-                  <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white px-6 py-2">
-                    Select Package
-                  </Button>
+                  <div className="text-sm text-theme-text-secondary">{pkg.duration}</div>
                 </div>
               </div>
             </CardContent>

@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Star, CheckCircle, Shield, Award } from "lucide-react";
+import { CalendarIcon, Star, CheckCircle, Shield, Award, Share, Save } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { useSavedVendors } from "@/hooks/useSavedVendors";
 
 interface BookingCardProps {
   vendor: any;
@@ -17,6 +19,8 @@ interface BookingCardProps {
 const BookingCard = ({ vendor, onReviewCountClick }: BookingCardProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedPackage, setSelectedPackage] = useState<{name: string, price: string} | null>(null);
+  const { toast } = useToast();
+  const { toggleSavedVendor, isVendorSaved } = useSavedVendors();
 
   const servicePackages = [
     {
@@ -42,6 +46,42 @@ const BookingCard = ({ vendor, onReviewCountClick }: BookingCardProps) => {
 
   const getDisplayPrice = () => {
     return selectedPackage ? selectedPackage.price : vendor.price.split(' - ')[0];
+  };
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: vendor.name,
+          text: `Check out ${vendor.name} - ${vendor.type}`,
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Link copied!",
+          description: "The vendor profile link has been copied to your clipboard.",
+        });
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      toast({
+        title: "Share failed",
+        description: "Unable to share this vendor profile.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSave = () => {
+    toggleSavedVendor(vendor);
+    const isSaved = isVendorSaved(vendor.id);
+    toast({
+      title: isSaved ? "Vendor removed" : "Vendor saved!",
+      description: isSaved 
+        ? "This vendor has been removed from your saved list."
+        : "This vendor has been added to your saved list.",
+    });
   };
 
   return (
@@ -144,15 +184,8 @@ const BookingCard = ({ vendor, onReviewCountClick }: BookingCardProps) => {
 
           <Separator />
 
-          {/* Pricing Breakdown */}
+          {/* Total Only */}
           <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-theme-text-secondary underline">
-                {getDisplayPrice()} x 1 day
-              </span>
-              <span className="text-theme-text-primary">{getDisplayPrice()}</span>
-            </div>
-            <Separator />
             <div className="flex justify-between font-medium">
               <span className="text-theme-text-primary">Total</span>
               <span className="text-theme-text-primary">{getDisplayPrice()}</span>
@@ -206,11 +239,21 @@ const BookingCard = ({ vendor, onReviewCountClick }: BookingCardProps) => {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-gray-50">
-              Message
+            <Button 
+              variant="outline" 
+              className="border-theme-brown text-theme-brown hover:bg-gray-50"
+              onClick={handleShare}
+            >
+              <Share className="h-4 w-4 mr-2" />
+              Share
             </Button>
-            <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-gray-50">
-              Save
+            <Button 
+              variant="outline" 
+              className="border-theme-brown text-theme-brown hover:bg-gray-50"
+              onClick={handleSave}
+            >
+              <Save className="h-4 w-4 mr-2" />
+              {isVendorSaved(vendor.id) ? 'Saved' : 'Save'}
             </Button>
           </div>
         </CardContent>

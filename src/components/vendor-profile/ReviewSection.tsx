@@ -108,6 +108,9 @@ const ReviewSection = ({ vendor }: ReviewSectionProps) => {
         ))}
       </div>
 
+      {/* Divider between categories and reviews */}
+      <Separator />
+
       {/* Individual Reviews */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {displayedReviews.map((review) => (
