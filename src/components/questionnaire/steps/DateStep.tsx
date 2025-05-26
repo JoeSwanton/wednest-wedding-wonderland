@@ -131,7 +131,7 @@ const DateStep = ({ data, updateData, onNext, onBack }: DateStepProps) => {
             <span className="font-medium text-theme-text-primary group-hover:text-theme-brown transition-colors">
               We haven't decided yet
             </span>
-          </RadioGroupItem>
+          </motion.label>
         </RadioGroup>
       </motion.div>
 
