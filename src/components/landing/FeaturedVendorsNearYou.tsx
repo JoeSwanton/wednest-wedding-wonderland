@@ -1,12 +1,18 @@
+
 import { useState } from "react";
 import { Star, Heart, MapPin, MessageCircle, DollarSign, Filter, Zap, Clock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSavedVendors } from "@/hooks/useSavedVendors";
 
 const FeaturedVendorsNearYou = () => {
   const [activeFilter, setActiveFilter] = useState("top-rated");
+  const { userProfile } = useAuth();
+  const { toggleSavedVendor, isVendorSaved } = useSavedVendors();
+  const isCouple = userProfile?.user_role === 'couple';
   
   const filters = [
     { id: "top-rated", label: "Top Rated", icon: Star },
@@ -62,6 +68,14 @@ const FeaturedVendorsNearYou = () => {
     }
   ];
 
+  const handleSaveVendor = (e: React.MouseEvent, vendor: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isCouple) {
+      toggleSavedVendor(vendor);
+    }
+  };
+
   return (
     <div className="w-full py-16 px-4 md:px-8 bg-theme-cream/30">
       <div className="max-w-7xl mx-auto">
@@ -113,9 +127,18 @@ const FeaturedVendorsNearYou = () => {
                 </div>
                 
                 <div className="absolute top-4 right-4 flex flex-col gap-2">
-                  <button className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-110">
-                    <Heart className="h-4 w-4 text-theme-brown-light hover:text-red-500" />
-                  </button>
+                  {isCouple && (
+                    <button 
+                      onClick={(e) => handleSaveVendor(e, vendor)}
+                      className="p-2 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-110"
+                    >
+                      <Heart className={`h-4 w-4 transition-colors ${
+                        isVendorSaved(vendor.id) 
+                          ? 'text-red-500 fill-red-500' 
+                          : 'text-theme-brown-light hover:text-red-500'
+                      }`} />
+                    </button>
+                  )}
                   {vendor.badge && (
                     <Badge className="bg-green-500 text-white px-2 py-1 rounded-lg text-xs shadow-lg">
                       {vendor.badge}

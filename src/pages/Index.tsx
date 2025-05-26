@@ -10,8 +10,11 @@ import WhatCouplesAreSaying from "@/components/landing/WhatCouplesAreSaying";
 import CreateAccountCTA from "@/components/landing/CreateAccountCTA";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
@@ -38,8 +41,8 @@ const Index = () => {
         {/* Testimonials - Near footer */}
         <WhatCouplesAreSaying />
         
-        {/* Create Account CTA - Bottom of page */}
-        <CreateAccountCTA />
+        {/* Create Account CTA - Only show when user is not signed in */}
+        {!user && <CreateAccountCTA />}
       </main>
       <Footer />
     </div>
