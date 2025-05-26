@@ -1,32 +1,23 @@
 
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { MapPin, Star, Heart, Share2, Award, Users, Clock, Music, Headphones, Mic, Speaker, Calendar as CalendarIcon, Phone, Mail, Globe, Instagram, CheckCircle, Shield, Zap, Camera, Volume2, ChevronLeft, ChevronRight, X, ArrowLeft } from "lucide-react";
 import { VendorData } from "@/components/vendors/VendorCard";
-import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+
+// Import the new components
+import PhotoGallery from "@/components/vendor-profile/PhotoGallery";
+import VendorHeader from "@/components/vendor-profile/VendorHeader";
+import VendorAmenities from "@/components/vendor-profile/VendorAmenities";
+import ServicePackages from "@/components/vendor-profile/ServicePackages";
+import ReviewSection from "@/components/vendor-profile/ReviewSection";
+import BookingCard from "@/components/vendor-profile/BookingCard";
 
 const VendorProfile = () => {
   const { vendorId } = useParams();
-  const navigate = useNavigate();
   const [vendor, setVendor] = useState<VendorData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [guestCount, setGuestCount] = useState<string>("");
-  const [showAllPhotos, setShowAllPhotos] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showAllReviews, setShowAllReviews] = useState(false);
-  const { toast } = useToast();
 
   // Enhanced mock data for Rhythm Masters Entertainment
   const rhythmMastersData = {
@@ -56,126 +47,6 @@ const VendorProfile = () => {
     { url: "https://images.unsplash.com/photo-1571609830506-5c7b46df1eaa?auto=format&fit=crop&w=800&q=80", caption: "Corporate Event" }
   ];
 
-  const servicePackages = [
-    {
-      name: "Essential Package",
-      price: "$1,200",
-      duration: "5 hours",
-      description: "Perfect for intimate celebrations",
-      features: [
-        "Professional DJ for 5 hours",
-        "Basic sound system",
-        "Microphone for speeches",
-        "Music consultation",
-        "Basic lighting"
-      ],
-      popular: false
-    },
-    {
-      name: "Premium Package",
-      price: "$2,200",
-      duration: "7 hours",
-      description: "Our most popular package",
-      features: [
-        "Professional DJ for 7 hours",
-        "Premium sound system",
-        "Wireless microphones",
-        "MC services",
-        "Enhanced lighting package",
-        "Music consultation & playlist",
-        "First dance coordination"
-      ],
-      popular: true
-    },
-    {
-      name: "Luxury Experience",
-      price: "$3,500",
-      duration: "8 hours",
-      description: "The ultimate entertainment experience",
-      features: [
-        "Professional DJ for 8 hours",
-        "Premium sound & lighting",
-        "Multiple wireless microphones",
-        "Professional MC services",
-        "Dance floor lighting",
-        "Photo booth setup",
-        "Custom playlist creation",
-        "Ceremony sound setup"
-      ],
-      popular: false
-    }
-  ];
-
-  const allReviews = [
-    {
-      id: 1,
-      name: "Emma & James",
-      date: "October 2023",
-      rating: 5,
-      comment: "Absolutely incredible DJ service! The music was perfect and kept everyone dancing all night. The sound quality was crystal clear and the lighting created such an amazing atmosphere. Highly recommend for any wedding!",
-      helpful: 16,
-      avatar: "E"
-    },
-    {
-      id: 2,
-      name: "Jessica & David",
-      date: "September 2023",
-      rating: 5,
-      comment: "Professional, punctual, and absolutely fantastic. They read the crowd perfectly and adjusted the music throughout the night. The MC services were top-notch and helped our reception flow seamlessly.",
-      helpful: 12,
-      avatar: "J"
-    },
-    {
-      id: 3,
-      name: "Sophie & Michael",
-      date: "August 2023",
-      rating: 5,
-      comment: "Best decision we made for our wedding! The team was incredibly organized and the equipment was top quality. They even helped coordinate our special moments. Worth every penny!",
-      helpful: 8,
-      avatar: "S"
-    },
-    {
-      id: 4,
-      name: "Rachel & Tom",
-      date: "July 2023",
-      rating: 5,
-      comment: "Amazing service from start to finish! Great communication throughout the planning process and flawless execution on the day. Everyone was raving about the music selection.",
-      helpful: 14,
-      avatar: "R"
-    },
-    {
-      id: 5,
-      name: "Lisa & Mark",
-      date: "June 2023",
-      rating: 4,
-      comment: "Really good DJ service. Music was great and they were very professional. Only minor issue was the setup took a bit longer than expected, but overall very happy.",
-      helpful: 6,
-      avatar: "L"
-    },
-    {
-      id: 6,
-      name: "Amy & Chris",
-      date: "May 2023",
-      rating: 5,
-      comment: "Exceeded all our expectations! The lighting effects were stunning and the music kept the dance floor packed all night. Highly professional team.",
-      helpful: 9,
-      avatar: "A"
-    }
-  ];
-
-  const displayedReviews = showAllReviews ? allReviews : allReviews.slice(0, 3);
-
-  const amenities = [
-    { icon: Music, label: "Professional DJ Equipment", description: "High-end mixing decks and controllers" },
-    { icon: Mic, label: "Wireless Microphones", description: "Multiple wireless mic systems" },
-    { icon: Speaker, label: "Premium Sound System", description: "Crystal clear audio for any venue size" },
-    { icon: Zap, label: "Professional Lighting", description: "Dynamic lighting design and effects" },
-    { icon: Camera, label: "Photo Booth Available", description: "Interactive photo booth setup" },
-    { icon: Volume2, label: "MC Services", description: "Professional event hosting" },
-    { icon: CheckCircle, label: "Backup Equipment", description: "Full backup systems for reliability" },
-    { icon: Shield, label: "Fully Insured", description: "Comprehensive public liability coverage" }
-  ];
-
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
@@ -184,20 +55,7 @@ const VendorProfile = () => {
     }, 500);
   }, [vendorId]);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % portfolioImages.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + portfolioImages.length) % portfolioImages.length);
-  };
-
-  const handleShowMoreReviews = () => {
-    setShowAllReviews(true);
-  };
-
   const handleReviewCountClick = () => {
-    setShowAllReviews(true);
     // Scroll to reviews section
     const reviewsSection = document.getElementById('reviews-section');
     if (reviewsSection) {
@@ -225,9 +83,6 @@ const VendorProfile = () => {
           <div className="text-center py-12">
             <h2 className="text-2xl font-serif text-theme-brown mb-4">Vendor Not Found</h2>
             <p className="text-theme-gray-dark mb-6">We couldn't find the vendor you're looking for.</p>
-            <Button onClick={() => window.history.back()} className="bg-theme-brown text-white hover:bg-theme-brown-dark">
-              Go Back to Vendors
-            </Button>
           </div>
         </div>
         <Footer />
@@ -239,108 +94,9 @@ const VendorProfile = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
       
-      {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-theme-brown hover:bg-gray-50 p-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to vendors
-        </Button>
-      </div>
+      <VendorHeader vendor={vendor} onReviewCountClick={handleReviewCountClick} />
       
-      {/* Hero Image Gallery - Airbnb Style */}
-      <div className="relative max-w-7xl mx-auto px-6 py-6">
-        <div className="grid grid-cols-4 gap-2 h-[400px] rounded-xl overflow-hidden">
-          <div className="col-span-2 relative">
-            <img 
-              src={portfolioImages[0].url} 
-              alt="Main venue image"
-              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
-              onClick={() => setShowAllPhotos(true)}
-            />
-          </div>
-          <div className="grid grid-rows-2 gap-2">
-            <img 
-              src={portfolioImages[1].url} 
-              alt="Venue image 2"
-              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
-              onClick={() => setShowAllPhotos(true)}
-            />
-            <img 
-              src={portfolioImages[2].url} 
-              alt="Venue image 3"
-              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
-              onClick={() => setShowAllPhotos(true)}
-            />
-          </div>
-          <div className="grid grid-rows-2 gap-2">
-            <img 
-              src={portfolioImages[3].url} 
-              alt="Venue image 4"
-              className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
-              onClick={() => setShowAllPhotos(true)}
-            />
-            <div className="relative">
-              <img 
-                src={portfolioImages[4].url} 
-                alt="Venue image 5"
-                className="w-full h-full object-cover"
-              />
-              <div 
-                className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center cursor-pointer hover:bg-opacity-40 transition-all"
-                onClick={() => setShowAllPhotos(true)}
-              >
-                <Button variant="outline" className="bg-white text-black hover:bg-gray-100">
-                  Show all photos
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Photo Gallery Modal */}
-      {showAllPhotos && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <div className="relative max-w-4xl mx-auto p-4">
-            <button 
-              onClick={() => setShowAllPhotos(false)}
-              className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full hover:bg-gray-100"
-            >
-              <X className="h-6 w-6" />
-            </button>
-            
-            <div className="relative">
-              <img 
-                src={portfolioImages[currentImageIndex].url}
-                alt={portfolioImages[currentImageIndex].caption}
-                className="w-full max-h-[80vh] object-contain rounded-lg"
-              />
-              
-              <button 
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full hover:bg-gray-100"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              
-              <button 
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full hover:bg-gray-100"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-              
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg">
-                {portfolioImages[currentImageIndex].caption} ({currentImageIndex + 1} of {portfolioImages.length})
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <PhotoGallery images={portfolioImages} />
 
       {/* Main Content - Airbnb Layout */}
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -349,364 +105,20 @@ const VendorProfile = () => {
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Header Section - Airbnb Style */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-3">
-                  <h1 className="text-3xl font-serif text-theme-text-primary">{vendor.name}</h1>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-black text-black" />
-                      <span className="font-medium text-black">{vendor.rating}</span>
-                      <button 
-                        onClick={handleReviewCountClick}
-                        className="underline hover:text-theme-brown transition-colors cursor-pointer"
-                      >
-                        ({vendor.reviewCount} reviews)
-                      </button>
-                    </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      <span className="underline">{vendor.location}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
-                      <Shield className="h-3 w-3 mr-1" />
-                      Verified Vendor
-                    </Badge>
-                    <Badge className="bg-purple-100 text-purple-800 border-purple-200">
-                      <Award className="h-3 w-3 mr-1" />
-                      Super Vendor
-                    </Badge>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <Button variant="ghost" className="text-theme-brown hover:bg-gray-100 border border-theme-brown">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
-                  <Button variant="ghost" className="text-theme-brown hover:bg-gray-100 border border-theme-brown">
-                    <Heart className="h-4 w-4 mr-2" />
-                    Save
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <VendorAmenities vendor={vendor} />
 
             <Separator />
 
-            {/* About Section - Airbnb Style */}
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h2 className="text-2xl font-serif text-theme-text-primary">About this vendor</h2>
-                <p className="text-theme-text-secondary text-base leading-relaxed">
-                  Premier wedding DJ and entertainment specialists creating unforgettable celebrations across Sydney. With over 8 years of experience, we bring the perfect blend of music, lighting, and atmosphere to make your special day extraordinary.
-                </p>
-              </div>
-              
-              {/* Host Info - Airbnb Style */}
-              <div className="flex items-center gap-4 p-6 border border-gray-200 rounded-xl">
-                <div className="w-14 h-14 bg-gradient-to-br from-theme-brown to-theme-brown-dark rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                  RM
-                </div>
-                <div>
-                  <h3 className="font-medium text-theme-text-primary">Hosted by Rhythm Masters</h3>
-                  <p className="text-sm text-theme-text-secondary">{vendor.yearsInBusiness} years hosting events • 200+ events completed</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm text-theme-text-secondary">{vendor.reviewCount} reviews</span>
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-theme-text-secondary">Identity verified</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ServicePackages />
 
             <Separator />
 
-            {/* What this vendor offers - Grid Style */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-serif text-theme-text-primary">What this vendor offers</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {amenities.map((amenity, index) => (
-                  <div key={index} className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
-                    <amenity.icon className="h-6 w-6 text-theme-brown mt-1 flex-shrink-0" />
-                    <div>
-                      <h3 className="font-serif font-medium text-theme-text-primary">{amenity.label}</h3>
-                      <p className="text-sm text-theme-text-secondary">{amenity.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Service Packages - Cards Style */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-serif text-theme-text-primary">Service packages</h2>
-              <div className="grid grid-cols-1 gap-6">
-                {servicePackages.map((pkg, index) => (
-                  <Card key={index} className={`border-2 transition-all hover:shadow-lg ${pkg.popular ? 'border-theme-brown' : 'border-gray-200'}`}>
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-3">
-                            <h3 className="text-xl font-serif font-medium text-theme-text-primary">{pkg.name}</h3>
-                            {pkg.popular && (
-                              <Badge className="bg-theme-brown text-white">Most Popular</Badge>
-                            )}
-                          </div>
-                          <p className="text-theme-text-secondary mb-4">{pkg.description}</p>
-                          <div className="space-y-2">
-                            {pkg.features.map((feature, featureIndex) => (
-                              <div key={featureIndex} className="flex items-center gap-2 text-sm">
-                                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                                <span className="text-theme-text-secondary">{feature}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="text-right ml-8">
-                          <div className="text-2xl font-semibold text-theme-text-primary">{pkg.price}</div>
-                          <div className="text-sm text-theme-text-secondary mb-4">{pkg.duration}</div>
-                          <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white px-6 py-2">
-                            Select Package
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Reviews Section - Airbnb Style */}
-            <div className="space-y-8" id="reviews-section">
-              <div>
-                <h2 className="text-2xl font-serif text-theme-text-primary mb-6">
-                  <Star className="inline h-6 w-6 fill-black text-black mr-2" />
-                  {vendor.rating} · {vendor.reviewCount} reviews
-                </h2>
-              </div>
-              
-              {/* Review Categories */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                {[
-                  { label: "Professionalism", rating: 4.9 },
-                  { label: "Music Quality", rating: 5.0 },
-                  { label: "Equipment", rating: 4.8 },
-                  { label: "Communication", rating: 4.9 },
-                  { label: "Value for Money", rating: 4.7 },
-                  { label: "Overall Experience", rating: 4.9 }
-                ].map((category, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-theme-text-secondary">{category.label}</span>
-                      <span className="text-sm font-medium">{category.rating}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1">
-                      <div 
-                        className="bg-theme-brown h-1 rounded-full" 
-                        style={{ width: `${(category.rating / 5) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Individual Reviews */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {displayedReviews.map((review) => (
-                  <div key={review.id} className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-theme-brown rounded-full flex items-center justify-center text-white font-medium">
-                        {review.avatar}
-                      </div>
-                      <div>
-                        <div className="font-medium text-theme-text-primary">{review.name}</div>
-                        <div className="text-sm text-theme-text-secondary">{review.date}</div>
-                      </div>
-                    </div>
-                    <div className="flex mb-2">
-                      {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-theme-brown text-theme-brown" />
-                      ))}
-                    </div>
-                    <p className="text-theme-text-secondary text-sm leading-relaxed">{review.comment}</p>
-                  </div>
-                ))}
-              </div>
-              
-              {!showAllReviews && (
-                <Button 
-                  variant="outline" 
-                  className="border-theme-brown text-theme-brown hover:bg-gray-50"
-                  onClick={handleShowMoreReviews}
-                >
-                  Show all {vendor.reviewCount} reviews
-                </Button>
-              )}
-            </div>
+            <ReviewSection vendor={vendor} />
           </div>
 
-          {/* Right Column - Booking Card - Airbnb Style */}
+          {/* Right Column - Booking Card */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6">
-              <Card className="border border-gray-300 shadow-xl rounded-xl overflow-hidden">
-                <CardContent className="p-6 space-y-6">
-                  {/* Price Section */}
-                  <div className="space-y-2">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold text-theme-text-primary">{vendor.price.split(' - ')[0]}</span>
-                      <span className="text-theme-text-secondary">starting from</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-theme-brown text-theme-brown" />
-                        <span className="font-medium">{vendor.rating}</span>
-                      </div>
-                      <span className="text-gray-500">·</span>
-                      <button 
-                        onClick={handleReviewCountClick}
-                        className="text-sm text-theme-text-secondary underline hover:text-theme-brown transition-colors"
-                      >
-                        ({vendor.reviewCount} reviews)
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Booking Form */}
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 gap-2 border border-gray-300 rounded-lg overflow-hidden">
-                      <div className="p-3 border-b border-gray-300">
-                        <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">Event Date</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className={cn(
-                                "w-full justify-start text-left font-normal p-0 h-auto",
-                                !selectedDate && "text-gray-900"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {selectedDate ? format(selectedDate, "PPP") : <span>Add date</span>}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={selectedDate}
-                              onSelect={setSelectedDate}
-                              initialFocus
-                              className="pointer-events-auto"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <div className="p-3">
-                        <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">Guests</label>
-                        <Select value={guestCount} onValueChange={setGuestCount}>
-                          <SelectTrigger className="w-full border-0 p-0 h-auto font-normal">
-                            <SelectValue placeholder="Add guest count" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1-25">1-25 guests</SelectItem>
-                            <SelectItem value="26-50">26-50 guests</SelectItem>
-                            <SelectItem value="51-100">51-100 guests</SelectItem>
-                            <SelectItem value="101-150">101-150 guests</SelectItem>
-                            <SelectItem value="151-200">151-200 guests</SelectItem>
-                            <SelectItem value="200+">200+ guests</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <Button className="w-full bg-theme-brown hover:bg-theme-brown-dark text-white py-3 text-base font-medium">
-                      Check availability
-                    </Button>
-
-                    <p className="text-center text-sm text-gray-500">You won't be charged yet</p>
-                  </div>
-
-                  <Separator />
-
-                  {/* Pricing Breakdown */}
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-theme-text-secondary underline">$1,200 x 1 day</span>
-                      <span className="text-theme-text-primary">$1,200</span>
-                    </div>
-                    <Separator />
-                    <div className="flex justify-between font-medium">
-                      <span className="text-theme-text-primary">Total</span>
-                      <span className="text-theme-text-primary">$1,200</span>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  {/* Vendor Info */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-theme-brown to-theme-brown-dark rounded-full flex items-center justify-center text-white font-semibold">
-                        RM
-                      </div>
-                      <div>
-                        <div className="font-medium text-theme-text-primary">Rhythm Masters</div>
-                        <div className="text-sm text-theme-text-secondary">Super Vendor</div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <div className="font-medium text-theme-text-primary">{vendor.reviewCount}</div>
-                        <div className="text-xs text-theme-text-secondary">Reviews</div>
-                      </div>
-                      <div>
-                        <div className="font-medium text-theme-text-primary">{vendor.rating}</div>
-                        <div className="text-xs text-theme-text-secondary">Rating</div>
-                      </div>
-                      <div>
-                        <div className="font-medium text-theme-text-primary">{vendor.yearsInBusiness}</div>
-                        <div className="text-xs text-theme-text-secondary">Years</div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2 text-theme-text-secondary">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span>Usually responds within 2 hours</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-theme-text-secondary">
-                        <Shield className="h-4 w-4 text-blue-500" />
-                        <span>Verified vendor</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-theme-text-secondary">
-                        <Award className="h-4 w-4 text-purple-500" />
-                        <span>Super Vendor status</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-gray-50">
-                      Message
-                    </Button>
-                    <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-gray-50">
-                      Save
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <BookingCard vendor={vendor} onReviewCountClick={handleReviewCountClick} />
           </div>
         </div>
       </div>
