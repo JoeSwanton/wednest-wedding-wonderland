@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -8,15 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MapPin, Star, Heart, Share2, Award, Users, Clock, Music, Headphones, Mic, Speaker, Calendar as CalendarIcon, Phone, Mail, Globe, Instagram, CheckCircle, Shield, Zap, Camera, Volume2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { VendorData } from "@/components/vendors/VendorCard";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const VendorProfile = () => {
   const { vendorId } = useParams();
   const [vendor, setVendor] = useState<VendorData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [guestCount, setGuestCount] = useState<string>("");
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
@@ -36,7 +40,7 @@ const VendorProfile = () => {
     tags: ["Wedding DJ", "MC Services", "Sound & Lighting", "Party Entertainment"],
     specialties: ["Wedding Ceremonies", "Reception Entertainment", "Corporate Events", "Birthday Parties"],
     yearsInBusiness: 8,
-    servicesOffered: ["DJ Services", "MC/Hosting", "Sound System", "Lighting Design", "Photo Booth", "Music Consultation"],
+    servicesOffered: ["DJ Services", "MC Services", "Sound System", "Lighting Design", "Photo Booth", "Music Consultation"],
     verified_vendor: true
   };
 
@@ -332,15 +336,6 @@ const VendorProfile = () => {
 
             <Separator />
 
-            {/* Vendor Profile Image */}
-            <div className="w-full">
-              <img 
-                src="/lovable-uploads/0b425f13-91ab-40a4-b531-432a9f4a7c2b.png"
-                alt="Rhythm Masters Entertainment Profile"
-                className="w-full max-w-4xl mx-auto rounded-xl shadow-sm"
-              />
-            </div>
-
             {/* About Section - Airbnb Style */}
             <div className="space-y-6">
               <div className="space-y-4">
@@ -352,7 +347,7 @@ const VendorProfile = () => {
               
               {/* Host Info - Airbnb Style */}
               <div className="flex items-center gap-4 p-6 border border-gray-200 rounded-xl">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                <div className="w-14 h-14 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white font-semibold text-lg">
                   RM
                 </div>
                 <div>
@@ -416,7 +411,7 @@ const VendorProfile = () => {
                         <div className="text-right ml-8">
                           <div className="text-2xl font-semibold text-gray-900">{pkg.price}</div>
                           <div className="text-sm text-gray-500 mb-4">{pkg.duration}</div>
-                          <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-6 py-2">
+                          <Button className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2">
                             Select Package
                           </Button>
                         </div>
@@ -518,15 +513,49 @@ const VendorProfile = () => {
                     <div className="grid grid-cols-1 gap-2 border border-gray-300 rounded-lg overflow-hidden">
                       <div className="p-3 border-b border-gray-300">
                         <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">Event Date</label>
-                        <div className="text-sm text-gray-900">Add date</div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className={cn(
+                                "w-full justify-start text-left font-normal p-0 h-auto",
+                                !selectedDate && "text-gray-900"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {selectedDate ? format(selectedDate, "PPP") : <span>Add date</span>}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={selectedDate}
+                              onSelect={setSelectedDate}
+                              initialFocus
+                              className="pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </div>
                       <div className="p-3">
                         <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">Guests</label>
-                        <div className="text-sm text-gray-900">Add guest count</div>
+                        <Select value={guestCount} onValueChange={setGuestCount}>
+                          <SelectTrigger className="w-full border-0 p-0 h-auto font-normal">
+                            <SelectValue placeholder="Add guest count" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1-25">1-25 guests</SelectItem>
+                            <SelectItem value="26-50">26-50 guests</SelectItem>
+                            <SelectItem value="51-100">51-100 guests</SelectItem>
+                            <SelectItem value="101-150">101-150 guests</SelectItem>
+                            <SelectItem value="151-200">151-200 guests</SelectItem>
+                            <SelectItem value="200+">200+ guests</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
 
-                    <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 text-base font-medium">
+                    <Button className="w-full bg-amber-700 hover:bg-amber-800 text-white py-3 text-base font-medium">
                       Check availability
                     </Button>
 
@@ -541,14 +570,10 @@ const VendorProfile = () => {
                       <span className="text-gray-700 underline">$1,200 x 1 day</span>
                       <span className="text-gray-900">$1,200</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700 underline">Service fee</span>
-                      <span className="text-gray-900">$150</span>
-                    </div>
                     <Separator />
                     <div className="flex justify-between font-medium">
                       <span className="text-gray-900">Total</span>
-                      <span className="text-gray-900">$1,350</span>
+                      <span className="text-gray-900">$1,200</span>
                     </div>
                   </div>
 
@@ -557,7 +582,7 @@ const VendorProfile = () => {
                   {/* Vendor Info */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                      <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white font-semibold">
                         RM
                       </div>
                       <div>
