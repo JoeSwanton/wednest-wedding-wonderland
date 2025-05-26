@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { MapPin, Star, Heart, Share2, Award, Users, Clock, Music, Headphones, Mic, Speaker, Calendar as CalendarIcon, Phone, Mail, Globe, Instagram, CheckCircle, Shield, Zap, Camera, Volume2, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { MapPin, Star, Heart, Share2, Award, Users, Clock, Music, Headphones, Mic, Speaker, Calendar as CalendarIcon, Phone, Mail, Globe, Instagram, CheckCircle, Shield, Zap, Camera, Volume2, ChevronLeft, ChevronRight, X, ArrowLeft } from "lucide-react";
 import { VendorData } from "@/components/vendors/VendorCard";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -17,12 +18,14 @@ import { cn } from "@/lib/utils";
 
 const VendorProfile = () => {
   const { vendorId } = useParams();
+  const navigate = useNavigate();
   const [vendor, setVendor] = useState<VendorData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [guestCount, setGuestCount] = useState<string>("");
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showAllReviews, setShowAllReviews] = useState(false);
   const { toast } = useToast();
 
   // Enhanced mock data for Rhythm Masters Entertainment
@@ -103,7 +106,7 @@ const VendorProfile = () => {
     }
   ];
 
-  const reviews = [
+  const allReviews = [
     {
       id: 1,
       name: "Emma & James",
@@ -130,8 +133,37 @@ const VendorProfile = () => {
       comment: "Best decision we made for our wedding! The team was incredibly organized and the equipment was top quality. They even helped coordinate our special moments. Worth every penny!",
       helpful: 8,
       avatar: "S"
+    },
+    {
+      id: 4,
+      name: "Rachel & Tom",
+      date: "July 2023",
+      rating: 5,
+      comment: "Amazing service from start to finish! Great communication throughout the planning process and flawless execution on the day. Everyone was raving about the music selection.",
+      helpful: 14,
+      avatar: "R"
+    },
+    {
+      id: 5,
+      name: "Lisa & Mark",
+      date: "June 2023",
+      rating: 4,
+      comment: "Really good DJ service. Music was great and they were very professional. Only minor issue was the setup took a bit longer than expected, but overall very happy.",
+      helpful: 6,
+      avatar: "L"
+    },
+    {
+      id: 6,
+      name: "Amy & Chris",
+      date: "May 2023",
+      rating: 5,
+      comment: "Exceeded all our expectations! The lighting effects were stunning and the music kept the dance floor packed all night. Highly professional team.",
+      helpful: 9,
+      avatar: "A"
     }
   ];
+
+  const displayedReviews = showAllReviews ? allReviews : allReviews.slice(0, 3);
 
   const amenities = [
     { icon: Music, label: "Professional DJ Equipment", description: "High-end mixing decks and controllers" },
@@ -158,6 +190,19 @@ const VendorProfile = () => {
 
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + portfolioImages.length) % portfolioImages.length);
+  };
+
+  const handleShowMoreReviews = () => {
+    setShowAllReviews(true);
+  };
+
+  const handleReviewCountClick = () => {
+    setShowAllReviews(true);
+    // Scroll to reviews section
+    const reviewsSection = document.getElementById('reviews-section');
+    if (reviewsSection) {
+      reviewsSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   if (loading) {
@@ -193,6 +238,18 @@ const VendorProfile = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
+      
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-theme-brown hover:bg-gray-50 p-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to vendors
+        </Button>
+      </div>
       
       {/* Hero Image Gallery - Airbnb Style */}
       <div className="relative max-w-7xl mx-auto px-6 py-6">
@@ -296,12 +353,17 @@ const VendorProfile = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-3">
-                  <h1 className="text-3xl font-normal text-gray-900">{vendor.name}</h1>
+                  <h1 className="text-3xl font-serif text-theme-text-primary">{vendor.name}</h1>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-black text-black" />
                       <span className="font-medium text-black">{vendor.rating}</span>
-                      <span className="underline">({vendor.reviewCount} reviews)</span>
+                      <button 
+                        onClick={handleReviewCountClick}
+                        className="underline hover:text-theme-brown transition-colors cursor-pointer"
+                      >
+                        ({vendor.reviewCount} reviews)
+                      </button>
                     </div>
                     <span>•</span>
                     <div className="flex items-center gap-1">
@@ -322,11 +384,11 @@ const VendorProfile = () => {
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
+                  <Button variant="ghost" className="text-theme-brown hover:bg-gray-100 border border-theme-brown">
                     <Share2 className="h-4 w-4 mr-2" />
                     Share
                   </Button>
-                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
+                  <Button variant="ghost" className="text-theme-brown hover:bg-gray-100 border border-theme-brown">
                     <Heart className="h-4 w-4 mr-2" />
                     Save
                   </Button>
@@ -339,25 +401,25 @@ const VendorProfile = () => {
             {/* About Section - Airbnb Style */}
             <div className="space-y-6">
               <div className="space-y-4">
-                <h2 className="text-2xl font-normal text-gray-900">About this vendor</h2>
-                <p className="text-gray-700 text-base leading-relaxed">
+                <h2 className="text-2xl font-serif text-theme-text-primary">About this vendor</h2>
+                <p className="text-theme-text-secondary text-base leading-relaxed">
                   Premier wedding DJ and entertainment specialists creating unforgettable celebrations across Sydney. With over 8 years of experience, we bring the perfect blend of music, lighting, and atmosphere to make your special day extraordinary.
                 </p>
               </div>
               
               {/* Host Info - Airbnb Style */}
               <div className="flex items-center gap-4 p-6 border border-gray-200 rounded-xl">
-                <div className="w-14 h-14 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                <div className="w-14 h-14 bg-gradient-to-br from-theme-brown to-theme-brown-dark rounded-full flex items-center justify-center text-white font-semibold text-lg">
                   RM
                 </div>
                 <div>
-                  <h3 className="font-medium text-gray-900">Hosted by Rhythm Masters</h3>
-                  <p className="text-sm text-gray-600">{vendor.yearsInBusiness} years hosting events • 200+ events completed</p>
+                  <h3 className="font-medium text-theme-text-primary">Hosted by Rhythm Masters</h3>
+                  <p className="text-sm text-theme-text-secondary">{vendor.yearsInBusiness} years hosting events • 200+ events completed</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm text-gray-700">{vendor.reviewCount} reviews</span>
+                    <span className="text-sm text-theme-text-secondary">{vendor.reviewCount} reviews</span>
                     <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-700">Identity verified</span>
+                    <span className="text-sm text-theme-text-secondary">Identity verified</span>
                   </div>
                 </div>
               </div>
@@ -367,14 +429,14 @@ const VendorProfile = () => {
 
             {/* What this vendor offers - Grid Style */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-normal text-gray-900">What this vendor offers</h2>
+              <h2 className="text-2xl font-serif text-theme-text-primary">What this vendor offers</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {amenities.map((amenity, index) => (
                   <div key={index} className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
-                    <amenity.icon className="h-6 w-6 text-gray-700 mt-1 flex-shrink-0" />
+                    <amenity.icon className="h-6 w-6 text-theme-brown mt-1 flex-shrink-0" />
                     <div>
-                      <h3 className="font-medium text-gray-900">{amenity.label}</h3>
-                      <p className="text-sm text-gray-600">{amenity.description}</p>
+                      <h3 className="font-serif font-medium text-theme-text-primary">{amenity.label}</h3>
+                      <p className="text-sm text-theme-text-secondary">{amenity.description}</p>
                     </div>
                   </div>
                 ))}
@@ -385,33 +447,33 @@ const VendorProfile = () => {
 
             {/* Service Packages - Cards Style */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-normal text-gray-900">Service packages</h2>
+              <h2 className="text-2xl font-serif text-theme-text-primary">Service packages</h2>
               <div className="grid grid-cols-1 gap-6">
                 {servicePackages.map((pkg, index) => (
-                  <Card key={index} className={`border-2 transition-all hover:shadow-lg ${pkg.popular ? 'border-black' : 'border-gray-200'}`}>
+                  <Card key={index} className={`border-2 transition-all hover:shadow-lg ${pkg.popular ? 'border-theme-brown' : 'border-gray-200'}`}>
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-3">
-                            <h3 className="text-xl font-medium text-gray-900">{pkg.name}</h3>
+                            <h3 className="text-xl font-serif font-medium text-theme-text-primary">{pkg.name}</h3>
                             {pkg.popular && (
-                              <Badge className="bg-black text-white">Most Popular</Badge>
+                              <Badge className="bg-theme-brown text-white">Most Popular</Badge>
                             )}
                           </div>
-                          <p className="text-gray-600 mb-4">{pkg.description}</p>
+                          <p className="text-theme-text-secondary mb-4">{pkg.description}</p>
                           <div className="space-y-2">
                             {pkg.features.map((feature, featureIndex) => (
                               <div key={featureIndex} className="flex items-center gap-2 text-sm">
                                 <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                                <span className="text-gray-700">{feature}</span>
+                                <span className="text-theme-text-secondary">{feature}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                         <div className="text-right ml-8">
-                          <div className="text-2xl font-semibold text-gray-900">{pkg.price}</div>
-                          <div className="text-sm text-gray-500 mb-4">{pkg.duration}</div>
-                          <Button className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2">
+                          <div className="text-2xl font-semibold text-theme-text-primary">{pkg.price}</div>
+                          <div className="text-sm text-theme-text-secondary mb-4">{pkg.duration}</div>
+                          <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white px-6 py-2">
                             Select Package
                           </Button>
                         </div>
@@ -425,9 +487,9 @@ const VendorProfile = () => {
             <Separator />
 
             {/* Reviews Section - Airbnb Style */}
-            <div className="space-y-8">
+            <div className="space-y-8" id="reviews-section">
               <div>
-                <h2 className="text-2xl font-normal text-gray-900 mb-6">
+                <h2 className="text-2xl font-serif text-theme-text-primary mb-6">
                   <Star className="inline h-6 w-6 fill-black text-black mr-2" />
                   {vendor.rating} · {vendor.reviewCount} reviews
                 </h2>
@@ -445,12 +507,12 @@ const VendorProfile = () => {
                 ].map((category, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-700">{category.label}</span>
+                      <span className="text-sm text-theme-text-secondary">{category.label}</span>
                       <span className="text-sm font-medium">{category.rating}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1">
                       <div 
-                        className="bg-black h-1 rounded-full" 
+                        className="bg-theme-brown h-1 rounded-full" 
                         style={{ width: `${(category.rating / 5) * 100}%` }}
                       ></div>
                     </div>
@@ -460,30 +522,36 @@ const VendorProfile = () => {
 
               {/* Individual Reviews */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {reviews.map((review) => (
+                {displayedReviews.map((review) => (
                   <div key={review.id} className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-medium">
+                      <div className="w-10 h-10 bg-theme-brown rounded-full flex items-center justify-center text-white font-medium">
                         {review.avatar}
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">{review.name}</div>
-                        <div className="text-sm text-gray-500">{review.date}</div>
+                        <div className="font-medium text-theme-text-primary">{review.name}</div>
+                        <div className="text-sm text-theme-text-secondary">{review.date}</div>
                       </div>
                     </div>
                     <div className="flex mb-2">
                       {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-black text-black" />
+                        <Star key={i} className="h-4 w-4 fill-theme-brown text-theme-brown" />
                       ))}
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">{review.comment}</p>
+                    <p className="text-theme-text-secondary text-sm leading-relaxed">{review.comment}</p>
                   </div>
                 ))}
               </div>
               
-              <Button variant="outline" className="border-black text-black hover:bg-gray-50">
-                Show all {vendor.reviewCount} reviews
-              </Button>
+              {!showAllReviews && (
+                <Button 
+                  variant="outline" 
+                  className="border-theme-brown text-theme-brown hover:bg-gray-50"
+                  onClick={handleShowMoreReviews}
+                >
+                  Show all {vendor.reviewCount} reviews
+                </Button>
+              )}
             </div>
           </div>
 
@@ -495,16 +563,21 @@ const VendorProfile = () => {
                   {/* Price Section */}
                   <div className="space-y-2">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold text-gray-900">{vendor.price.split(' - ')[0]}</span>
-                      <span className="text-gray-600">starting from</span>
+                      <span className="text-2xl font-semibold text-theme-text-primary">{vendor.price.split(' - ')[0]}</span>
+                      <span className="text-theme-text-secondary">starting from</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-black text-black" />
+                        <Star className="h-4 w-4 fill-theme-brown text-theme-brown" />
                         <span className="font-medium">{vendor.rating}</span>
                       </div>
                       <span className="text-gray-500">·</span>
-                      <span className="text-sm text-gray-500 underline">({vendor.reviewCount} reviews)</span>
+                      <button 
+                        onClick={handleReviewCountClick}
+                        className="text-sm text-theme-text-secondary underline hover:text-theme-brown transition-colors"
+                      >
+                        ({vendor.reviewCount} reviews)
+                      </button>
                     </div>
                   </div>
 
@@ -555,7 +628,7 @@ const VendorProfile = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-amber-700 hover:bg-amber-800 text-white py-3 text-base font-medium">
+                    <Button className="w-full bg-theme-brown hover:bg-theme-brown-dark text-white py-3 text-base font-medium">
                       Check availability
                     </Button>
 
@@ -567,13 +640,13 @@ const VendorProfile = () => {
                   {/* Pricing Breakdown */}
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-700 underline">$1,200 x 1 day</span>
-                      <span className="text-gray-900">$1,200</span>
+                      <span className="text-theme-text-secondary underline">$1,200 x 1 day</span>
+                      <span className="text-theme-text-primary">$1,200</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-medium">
-                      <span className="text-gray-900">Total</span>
-                      <span className="text-gray-900">$1,200</span>
+                      <span className="text-theme-text-primary">Total</span>
+                      <span className="text-theme-text-primary">$1,200</span>
                     </div>
                   </div>
 
@@ -582,40 +655,40 @@ const VendorProfile = () => {
                   {/* Vendor Info */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center text-white font-semibold">
+                      <div className="w-12 h-12 bg-gradient-to-br from-theme-brown to-theme-brown-dark rounded-full flex items-center justify-center text-white font-semibold">
                         RM
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">Rhythm Masters</div>
-                        <div className="text-sm text-gray-500">Super Vendor</div>
+                        <div className="font-medium text-theme-text-primary">Rhythm Masters</div>
+                        <div className="text-sm text-theme-text-secondary">Super Vendor</div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>
-                        <div className="font-medium text-gray-900">{vendor.reviewCount}</div>
-                        <div className="text-xs text-gray-500">Reviews</div>
+                        <div className="font-medium text-theme-text-primary">{vendor.reviewCount}</div>
+                        <div className="text-xs text-theme-text-secondary">Reviews</div>
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">{vendor.rating}</div>
-                        <div className="text-xs text-gray-500">Rating</div>
+                        <div className="font-medium text-theme-text-primary">{vendor.rating}</div>
+                        <div className="text-xs text-theme-text-secondary">Rating</div>
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">{vendor.yearsInBusiness}</div>
-                        <div className="text-xs text-gray-500">Years</div>
+                        <div className="font-medium text-theme-text-primary">{vendor.yearsInBusiness}</div>
+                        <div className="text-xs text-theme-text-secondary">Years</div>
                       </div>
                     </div>
 
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-theme-text-secondary">
                         <CheckCircle className="h-4 w-4 text-green-500" />
                         <span>Usually responds within 2 hours</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-theme-text-secondary">
                         <Shield className="h-4 w-4 text-blue-500" />
                         <span>Verified vendor</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-theme-text-secondary">
                         <Award className="h-4 w-4 text-purple-500" />
                         <span>Super Vendor status</span>
                       </div>
@@ -624,10 +697,10 @@ const VendorProfile = () => {
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="border-black text-black hover:bg-gray-50">
+                    <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-gray-50">
                       Message
                     </Button>
-                    <Button variant="outline" className="border-black text-black hover:bg-gray-50">
+                    <Button variant="outline" className="border-theme-brown text-theme-brown hover:bg-gray-50">
                       Save
                     </Button>
                   </div>
