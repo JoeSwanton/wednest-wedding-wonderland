@@ -15,11 +15,11 @@ interface GuestCountStepProps {
 
 const GuestCountStep = ({ data, updateData, onNext, onBack }: GuestCountStepProps) => {
   const guestOptions = [
-    { value: "lt_10", label: "👫 Less than 10", delay: 0.4 },
-    { value: "10_to_50", label: "👨‍👩‍👧‍👦 10–50", delay: 0.5 },
-    { value: "51_to_100", label: "🎪 51–100", delay: 0.6 },
-    { value: "101_to_150", label: "🏛️ 101–150", delay: 0.7 },
-    { value: "more_than_150", label: "🎉 More than 150", delay: 0.8 }
+    { value: "lt_10", label: "Less than 10", delay: 0.4 },
+    { value: "10_to_50", label: "10–50", delay: 0.5 },
+    { value: "51_to_100", label: "51–100", delay: 0.6 },
+    { value: "101_to_150", label: "101–150", delay: 0.7 },
+    { value: "more_than_150", label: "More than 150", delay: 0.8 }
   ];
 
   return (
@@ -61,7 +61,7 @@ const GuestCountStep = ({ data, updateData, onNext, onBack }: GuestCountStepProp
           >
             <label className="flex items-center space-x-3 cursor-pointer">
               <RadioGroupItem value="exact" id="guests-exact" />
-              <span className="font-medium text-theme-text-primary">🎯 We know the exact number</span>
+              <span className="font-medium text-theme-text-primary">We know the exact number</span>
             </label>
             
             {data.guest_count === "exact" && (

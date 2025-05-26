@@ -14,10 +14,10 @@ interface LocationStepProps {
 
 const LocationStep = ({ data, updateData, onNext, onBack }: LocationStepProps) => {
   const options = [
-    { value: "booked", label: "🏛️ We've booked a venue already", delay: 0.4 },
-    { value: "city_region", label: "🗺️ We have a city/region in mind", delay: 0.5 },
-    { value: "destination", label: "✈️ We're considering a destination wedding", delay: 0.6 },
-    { value: "exploring", label: "🔍 We're still exploring ideas", delay: 0.7 }
+    { value: "booked", label: "We've booked a venue already", delay: 0.4 },
+    { value: "city_region", label: "We have a city/region in mind", delay: 0.5 },
+    { value: "destination", label: "We're considering a destination wedding", delay: 0.6 },
+    { value: "exploring", label: "We're still exploring ideas", delay: 0.7 }
   ];
 
   return (

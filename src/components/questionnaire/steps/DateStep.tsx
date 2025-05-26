@@ -63,7 +63,7 @@ const DateStep = ({ data, updateData, onNext, onBack }: DateStepProps) => {
             <RadioGroupItem value="chosen" id="date-chosen" className="mt-1" />
             <div className="flex-1">
               <label htmlFor="date-chosen" className="flex items-center gap-2 cursor-pointer font-medium text-theme-text-primary">
-                📅 We've chosen a date
+                We've chosen a date
               </label>
               {data.wedding_date_status === "chosen" && (
                 <motion.div
@@ -107,7 +107,7 @@ const DateStep = ({ data, updateData, onNext, onBack }: DateStepProps) => {
             className="flex items-center space-x-3 p-4 rounded-lg border-2 border-theme-cream hover:border-theme-brown transition-colors cursor-pointer"
           >
             <RadioGroupItem value="month_year" id="date-month-year" />
-            <span className="font-medium text-theme-text-primary">📆 We have a month and year in mind</span>
+            <span className="font-medium text-theme-text-primary">We have a month and year in mind</span>
           </motion.label>
 
           <motion.label
@@ -118,7 +118,7 @@ const DateStep = ({ data, updateData, onNext, onBack }: DateStepProps) => {
             className="flex items-center space-x-3 p-4 rounded-lg border-2 border-theme-cream hover:border-theme-brown transition-colors cursor-pointer"
           >
             <RadioGroupItem value="undecided" id="date-undecided" />
-            <span className="font-medium text-theme-text-primary">🤔 We haven't decided yet</span>
+            <span className="font-medium text-theme-text-primary">We haven't decided yet</span>
           </motion.label>
         </RadioGroup>
       </motion.div>
