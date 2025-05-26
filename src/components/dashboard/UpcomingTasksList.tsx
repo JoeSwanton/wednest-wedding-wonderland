@@ -63,7 +63,7 @@ const UpcomingTasksList = () => {
   };
   
   return (
-    <Card className="shadow-sm border-theme-cream/30 h-full">
+    <Card className="shadow-lg border-theme-cream/50 h-full bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <div>
           <CardTitle className="text-lg text-theme-brown flex items-center gap-1.5">
@@ -83,10 +83,10 @@ const UpcomingTasksList = () => {
           {tasks.map((task) => (
             <div 
               key={task.id} 
-              className={`flex justify-between items-center p-3 rounded-md border ${
+              className={`flex justify-between items-center p-3 rounded-md border shadow-sm ${
                 task.completed 
                   ? 'bg-gray-50/80 border-gray-200' 
-                  : 'bg-theme-cream/5 hover:bg-theme-cream/10 border-theme-cream/40 hover:border-theme-cream/80 shadow-sm'
+                  : 'bg-theme-cream/10 hover:bg-theme-cream/20 border-theme-cream/60 hover:border-theme-cream/80 hover:shadow-md'
               } cursor-pointer group transition-all duration-200`}
             >
               <div className="flex items-start gap-3 flex-1">
@@ -119,7 +119,7 @@ const UpcomingTasksList = () => {
           ))}
         </div>
         
-        <Button className="w-full mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white flex items-center justify-center gap-1.5 shadow-sm">
+        <Button className="w-full mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition-shadow">
           <Plus className="h-4 w-4" />
           <span>Add New Task</span>
         </Button>

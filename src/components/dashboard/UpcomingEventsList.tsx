@@ -63,7 +63,7 @@ const UpcomingEventsList = () => {
   };
   
   return (
-    <Card className="shadow-sm border-theme-cream/30 h-full">
+    <Card className="shadow-lg border-theme-cream/50 h-full bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <div>
           <CardTitle className="text-lg text-theme-brown flex items-center gap-1.5">
@@ -83,9 +83,9 @@ const UpcomingEventsList = () => {
           {events.map((event) => (
             <div 
               key={event.id} 
-              className="flex items-start gap-3 p-3 rounded-md hover:bg-gray-50 cursor-pointer group transition-all duration-200"
+              className="flex items-start gap-3 p-3 rounded-md hover:bg-gray-50 cursor-pointer group transition-all duration-200 border border-theme-cream/40 hover:border-theme-cream/80 shadow-sm hover:shadow-md bg-white/60"
             >
-              <div className="flex flex-col items-center justify-center bg-theme-cream/30 w-12 h-16 rounded-md border border-theme-cream/50 shadow-sm">
+              <div className="flex flex-col items-center justify-center bg-theme-cream/40 w-12 h-16 rounded-md border border-theme-cream/60 shadow-sm">
                 <span className="text-xs text-theme-brown-light font-medium">{event.date.split(' ')[0]}</span>
                 <span className="text-lg font-bold text-theme-brown">{event.date.split(' ')[1]}</span>
               </div>
@@ -127,7 +127,7 @@ const UpcomingEventsList = () => {
           ))}
         </div>
         
-        <Button className="w-full mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white flex items-center justify-center gap-1.5 shadow-sm">
+        <Button className="w-full mt-4 bg-theme-brown hover:bg-theme-brown-dark text-white flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition-shadow">
           <Plus className="h-4 w-4" />
           <span>Add New Event</span>
         </Button>

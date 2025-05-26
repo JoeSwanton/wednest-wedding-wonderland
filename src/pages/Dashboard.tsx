@@ -63,7 +63,13 @@ const Dashboard = () => {
     return null; // Return nothing while redirecting
   }
   
-  const hasWeddingInfo = weddingDetails && weddingDetails.selected_date;
+  // Check if questionnaire is complete (all required fields filled)
+  const isQuestionnaireComplete = weddingDetails && 
+    weddingDetails.partner1_name && 
+    weddingDetails.partner2_name && 
+    weddingDetails.wedding_date_status && 
+    weddingDetails.wedding_location_status && 
+    weddingDetails.guest_count;
   
   return (
     <div className="min-h-screen flex bg-theme-cream/10">
@@ -76,9 +82,9 @@ const Dashboard = () => {
           {/* Wedding Summary Header */}
           <WeddingSummaryHeader weddingDetails={weddingDetails} loading={loading} />
           
-          {/* Setup CTA if wedding info is missing */}
-          {!hasWeddingInfo && (
-            <div className="dashboard-card mb-6 bg-theme-beige/30 animate-fade-in">
+          {/* Setup CTA if questionnaire is not complete */}
+          {!isQuestionnaireComplete && (
+            <div className="dashboard-card mb-6 bg-theme-beige/30 animate-fade-in shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="text-lg font-serif font-semibold text-theme-brown">Complete Your Wedding Profile</h4>
