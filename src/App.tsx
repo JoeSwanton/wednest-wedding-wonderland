@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
@@ -22,7 +21,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const Questionnaire = lazy(() => import("./pages/Questionnaire"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-const CustomerDashboard = lazy(() => import("./pages/CustomerDashboard"));
+const StreamlinedCustomerDashboard = lazy(() => import("./pages/StreamlinedCustomerDashboard"));
 
 // Lazy loaded couples dashboard pages
 const Checklist = lazy(() => import("./pages/Checklist"));
@@ -33,7 +32,7 @@ const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
 
 // Lazy loaded vendor pages
-const VendorDashboard = lazy(() => import("./pages/vendor/VendorDashboard"));
+const StreamlinedVendorDashboard = lazy(() => import("./pages/StreamlinedVendorDashboard"));
 const VendorBookings = lazy(() => import("./pages/vendor/VendorBookings"));
 const VendorListings = lazy(() => import("./pages/vendor/VendorListings"));
 const VendorMessages = lazy(() => import("./pages/vendor/VendorMessages"));
@@ -83,10 +82,10 @@ function App() {
             }>
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/questionnaire" element={<Questionnaire />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+              <Route path="/dashboard" element={<StreamlinedCustomerDashboard />} />
+              <Route path="/customer-dashboard" element={<StreamlinedCustomerDashboard />} />
               
-              {/* Couples dashboard pages */}
+              {/* Keep existing couples tools but de-emphasize them */}
               <Route path="/checklist" element={<Checklist />} />
               <Route path="/budget" element={<Budget />} />
               <Route path="/guest-list" element={<GuestList />} />
@@ -94,9 +93,9 @@ function App() {
               <Route path="/messages" element={<Messages />} />
               <Route path="/settings" element={<Settings />} />
               
-              {/* Vendor routes */}
-              <Route path="/vendor" element={<VendorDashboard />} />
-              <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+              {/* Vendor routes - use streamlined dashboard */}
+              <Route path="/vendor" element={<StreamlinedVendorDashboard />} />
+              <Route path="/vendor/dashboard" element={<StreamlinedVendorDashboard />} />
               <Route path="/vendor/bookings" element={<VendorBookings />} />
               <Route path="/vendor/listings" element={<VendorListings />} />
               <Route path="/vendor/messages" element={<VendorMessages />} />
