@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSavedVendors } from "@/hooks/useSavedVendors";
+import { useRecentlyViewedVendors } from "@/hooks/useRecentlyViewedVendors";
 
 export interface VendorData {
   id: number;
@@ -31,21 +33,19 @@ interface VendorCardProps {
 
 const VendorCard = ({ vendor }: VendorCardProps) => {
   const { userProfile } = useAuth();
-  const { savedVendors, toggleSavedVendor, isVendorSaved } = useSavedVendors();
+  const { toggleSavedVendor, isVendorSaved } = useSavedVendors();
+  const { addRecentlyViewed } = useRecentlyViewedVendors();
   const [showTooltip, setShowTooltip] = useState(false);
   const isCouple = userProfile?.user_role === 'couple';
   const isSaved = isVendorSaved(vendor.id);
 
   // Create stable calculations based on vendor ID to prevent random changes on re-render
   const stableCalculations = useMemo(() => {
-    // Use vendor ID as seed for consistent "random" values
     const seed = vendor.id;
     
-    // Response time calculation based on vendor ID
     const times = ["1h", "2h", "24h", "48h"];
     const responseTime = times[seed % times.length];
     
-    // Booking urgency calculation based on vendor ID
     const urgencies = [
       "Booked 3x this week",
       "Booked 2x this week", 
@@ -54,10 +54,8 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
     ];
     const bookingUrgency = urgencies[(seed * 3) % urgencies.length];
     
-    // Stable high demand calculation
     const isHighDemand = vendor.availability.includes("High") || (seed % 10) < 7;
     
-    // Use the actual verified_vendor field from the vendor data, fallback to stable calculation for mock data
     const isVerified = vendor.verified_vendor !== undefined ? vendor.verified_vendor : (seed % 10) < 6;
     
     return {
@@ -68,7 +66,6 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
     };
   }, [vendor.id, vendor.availability, vendor.verified_vendor]);
 
-  // Format the price to show "From $X"
   const formatPrice = (price: string) => {
     if (price.includes('$')) return price;
     const priceNum = parseInt(price.replace(/[^0-9]/g, ''));
@@ -89,6 +86,19 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
     if (isCouple) {
       toggleSavedVendor(vendor);
     }
+  };
+
+  const handleCardClick = () => {
+    // Track this vendor view
+    addRecentlyViewed({
+      id: vendor.id,
+      name: vendor.name,
+      type: vendor.type,
+      location: vendor.location,
+      rating: vendor.rating,
+      price: formatPrice(vendor.price),
+      image: vendor.imageUrl
+    });
   };
 
   return (
@@ -209,7 +219,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
         </div>
         
         {/* Full-width subtle CTA button - always at bottom */}
-        <Link to={`/vendors/${vendor.id}`} className="block mt-auto">
+        <Link to={`/vendors/${vendor.id}`} className="block mt-auto" onClick={handleCardClick}>
           <Button className="w-full bg-theme-cream text-theme-brown border border-theme-beige hover:bg-theme-brown hover:text-white text-sm py-2.5 rounded-xl transition-all duration-300">
             Check Availability
           </Button>

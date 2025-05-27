@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Star, Heart, MapPin, MessageCircle, DollarSign, Filter, Zap, Clock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,11 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSavedVendors } from "@/hooks/useSavedVendors";
+import { useRecentlyViewedVendors } from "@/hooks/useRecentlyViewedVendors";
 
 const FeaturedVendorsNearYou = () => {
   const [activeFilter, setActiveFilter] = useState("top-rated");
   const { userProfile } = useAuth();
   const { toggleSavedVendor, isVendorSaved } = useSavedVendors();
+  const { addRecentlyViewed } = useRecentlyViewedVendors();
   const isCouple = userProfile?.user_role === 'couple';
   
   const filters = [
@@ -74,6 +75,19 @@ const FeaturedVendorsNearYou = () => {
     if (isCouple) {
       toggleSavedVendor(vendor);
     }
+  };
+
+  const handleVendorClick = (vendor: any) => {
+    // Track the vendor view
+    addRecentlyViewed({
+      id: vendor.id,
+      name: vendor.name,
+      type: vendor.type,
+      location: vendor.location,
+      rating: vendor.rating,
+      price: vendor.price,
+      image: vendor.image
+    });
   };
 
   return (
@@ -189,7 +203,7 @@ const FeaturedVendorsNearYou = () => {
                     <DollarSign className="h-4 w-4 mr-1" />
                     <span className="font-semibold text-sm">{vendor.price}</span>
                   </div>
-                  <Link to={`/vendors/${vendor.id}`}>
+                  <Link to={`/vendors/${vendor.id}`} onClick={() => handleVendorClick(vendor)}>
                     <Button className="bg-theme-brown hover:bg-theme-brown-dark text-white text-sm px-4 py-2 rounded-xl hover:scale-105 hover:shadow-lg transition-all">
                       View Details
                     </Button>
