@@ -1,32 +1,43 @@
 
 import { useState, useMemo } from "react";
-import { mockVendors } from "@/data/mockVendors";
-import VendorFilters from "@/components/vendors/VendorFilters";
+import { mockBusinesses } from "@/data/mockVendors";
 import VendorPagination from "@/components/vendors/VendorPagination";
 import SimplifiedVendorCard from "@/components/vendors/SimplifiedVendorCard";
-import { useVendorFiltering } from "@/hooks/useVendorFiltering";
 
 const VendorListings = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [priceRange, setPriceRange] = useState("");
+  const [rating, setRating] = useState(0);
+  const [availability, setAvailability] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  
   const vendorsPerPage = 12;
 
-  const {
-    filteredVendors,
-    searchTerm,
-    setSearchTerm,
-    selectedCategory,
-    setSelectedCategory,
-    selectedLocation,
-    setSelectedLocation,
-    priceRange,
-    setPriceRange,
-    rating,
-    setRating,
-    availability,
-    setAvailability,
-    sortBy,
-    setSortBy
-  } = useVendorFiltering(mockVendors);
+  // Filter vendors based on criteria
+  const filteredVendors = useMemo(() => {
+    return mockBusinesses.filter(vendor => {
+      const matchesSearch = searchTerm === "" || 
+        vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesCategory = selectedCategory === "" || selectedCategory === "all" || 
+        vendor.type.toLowerCase() === selectedCategory.toLowerCase();
+      
+      const matchesLocation = selectedLocation === "" || selectedLocation === "Any Location" ||
+        vendor.location.includes(selectedLocation);
+
+      const matchesRating = rating === 0 || vendor.rating >= rating;
+
+      const matchesAvailability = availability === "" || 
+        vendor.availability.toLowerCase() === availability.toLowerCase();
+
+      return matchesSearch && matchesCategory && matchesLocation && matchesRating && matchesAvailability;
+    });
+  }, [searchTerm, selectedCategory, selectedLocation, rating, availability]);
 
   // Pagination
   const totalPages = Math.ceil(filteredVendors.length / vendorsPerPage);
@@ -40,25 +51,6 @@ const VendorListings = () => {
 
   return (
     <div className="min-h-screen bg-theme-cream/10">
-      {/* Filters */}
-      <VendorFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
-        priceRange={priceRange}
-        setPriceRange={setPriceRange}
-        rating={rating}
-        setRating={setRating}
-        availability={availability}
-        setAvailability={setAvailability}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        vendorCount={filteredVendors.length}
-      />
-
       {/* Results */}
       <div className="container mx-auto px-4 pb-16">
         {currentVendors.length === 0 ? (

@@ -97,6 +97,7 @@ const SimplifiedOnboardingSteps = ({ currentStep, setCurrentStep, onComplete }: 
           <StepComponent 
             formData={formData} 
             updateFormData={updateFormData}
+            onNext={handleNext}
           />
         </CardContent>
       </Card>

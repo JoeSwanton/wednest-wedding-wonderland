@@ -174,3 +174,6 @@ export const mockBusinesses: VendorData[] = [
     yearsInBusiness: 13
   }
 ];
+
+// Export alias for backward compatibility
+export const mockVendors = mockBusinesses;
