@@ -13,9 +13,9 @@ const VendorCardBadges = ({ tags, isVerified }: VendorCardBadgesProps) => {
     <>
       {/* Verified badge above tags */}
       {isVerified && (
-        <div className="mb-2">
-          <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium w-fit">
-            <CheckCircle className="h-3 w-3" />
+        <div className="mb-3">
+          <div className="flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg text-sm font-bold w-fit shadow-md">
+            <CheckCircle className="h-4 w-4" />
             <span>Verified by Enosi</span>
           </div>
         </div>
@@ -23,12 +23,12 @@ const VendorCardBadges = ({ tags, isVerified }: VendorCardBadgesProps) => {
       
       {/* Tags on separate line below location */}
       {tags.length > 0 && (
-        <div className="flex gap-1 flex-wrap mb-3">
+        <div className="flex gap-2 flex-wrap mb-4">
           {tags.slice(0, 2).map((tag, index) => (
             <Badge 
               key={index} 
               variant="outline" 
-              className="border-theme-beige text-theme-brown-light text-xs px-2 py-0.5 rounded-full bg-theme-cream/30 whitespace-nowrap"
+              className="border-2 border-theme-brown/30 text-theme-brown text-sm px-3 py-1.5 rounded-lg bg-theme-cream/50 whitespace-nowrap font-medium hover:bg-theme-cream transition-colors"
             >
               {tag}
             </Badge>

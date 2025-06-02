@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
@@ -98,7 +97,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden bg-white border border-theme-beige rounded-2xl hover:shadow-xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1 flex flex-col h-full">
+    <Card className="overflow-hidden bg-white border-2 border-theme-beige/40 rounded-2xl hover:shadow-2xl hover:border-theme-brown/30 transition-all duration-300 group cursor-pointer transform hover:-translate-y-2 hover:scale-[1.02] flex flex-col h-full shadow-lg">
       <VendorCardImage
         vendor={vendor}
         isTopRated={isTopRated}
