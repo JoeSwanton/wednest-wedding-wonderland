@@ -6,10 +6,20 @@ import { logger } from '@/lib/logger';
 
 export interface SavedVendor {
   id: string;
-  vendor_id: number;
+  vendor_id: string;
   user_id: string;
   created_at: string;
   vendor_data?: any;
+  vendor_profiles?: {
+    business_name: string;
+    business_category: string;
+    business_email: string;
+    city: string;
+    state: string;
+    bio: string;
+    logo_url?: string;
+    base_price_range?: string;
+  };
 }
 
 // Circuit breaker to prevent infinite retries
@@ -65,7 +75,19 @@ export const useSavedVendorsDB = () => {
 
       const { data, error: fetchError } = await supabase
         .from('saved_vendors')
-        .select('*')
+        .select(`
+          *,
+          vendor_profiles!saved_vendors_vendor_id_fkey (
+            business_name,
+            business_category,
+            business_email,
+            city,
+            state,
+            bio,
+            logo_url,
+            base_price_range
+          )
+        `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -75,13 +97,7 @@ export const useSavedVendorsDB = () => {
         throw fetchError;
       }
 
-      // Convert vendor_id from string to number for consistency
-      const transformedData = (data || []).map(item => ({
-        ...item,
-        vendor_id: parseInt(item.vendor_id?.toString() || '0', 10)
-      }));
-
-      setSavedVendors(transformedData);
+      setSavedVendors(data || []);
       circuitBreaker.current.onSuccess();
       
     } catch (error) {
@@ -126,7 +142,7 @@ export const useSavedVendorsDB = () => {
     }
   }, [user, fetchSavedVendors]);
 
-  const removeSavedVendor = useCallback(async (vendorId: number) => {
+  const removeSavedVendor = useCallback(async (vendorId: string) => {
     if (!user || !circuitBreaker.current.canAttempt()) return false;
 
     try {
@@ -134,7 +150,7 @@ export const useSavedVendorsDB = () => {
         .from('saved_vendors')
         .delete()
         .eq('user_id', user.id)
-        .eq('vendor_id', vendorId.toString());
+        .eq('vendor_id', vendorId);
 
       if (deleteError) throw deleteError;
 
@@ -149,7 +165,17 @@ export const useSavedVendorsDB = () => {
     }
   }, [user, fetchSavedVendors]);
 
-  const isVendorSaved = useCallback((vendorId: number) => {
+  const toggleSavedVendor = useCallback(async (vendorId: string) => {
+    const isCurrentlySaved = savedVendors.some(saved => saved.vendor_id === vendorId);
+    
+    if (isCurrentlySaved) {
+      return await removeSavedVendor(vendorId);
+    } else {
+      return await saveVendor({ id: vendorId });
+    }
+  }, [savedVendors, saveVendor, removeSavedVendor]);
+
+  const isVendorSaved = useCallback((vendorId: string) => {
     return savedVendors.some(saved => saved.vendor_id === vendorId);
   }, [savedVendors]);
 
@@ -166,6 +192,7 @@ export const useSavedVendorsDB = () => {
     error,
     saveVendor,
     removeSavedVendor,
+    toggleSavedVendor,
     isVendorSaved,
     refetch: fetchSavedVendors
   };

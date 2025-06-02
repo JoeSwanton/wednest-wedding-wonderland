@@ -25,11 +25,12 @@ interface VendorCardProps {
 
 const SimplifiedVendorCard = ({ vendor }: VendorCardProps) => {
   const { isVendorSaved, toggleSavedVendor } = useSavedVendorsDB();
-  const isSaved = isVendorSaved(vendor.id.toString());
+  const vendorIdString = vendor.id.toString();
+  const isSaved = isVendorSaved(vendorIdString);
 
   const handleSaveToggle = (e: React.MouseEvent) => {
     e.preventDefault();
-    toggleSavedVendor(vendor.id.toString());
+    toggleSavedVendor(vendorIdString);
   };
 
   return (
@@ -119,7 +120,7 @@ const SimplifiedVendorCard = ({ vendor }: VendorCardProps) => {
                 View Details
               </Button>
             </Link>
-            <InquiryDialog vendorId={vendor.id.toString()} vendorName={vendor.name}>
+            <InquiryDialog vendorId={vendorIdString} vendorName={vendor.name}>
               <Button size="sm" className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
                 Contact
               </Button>

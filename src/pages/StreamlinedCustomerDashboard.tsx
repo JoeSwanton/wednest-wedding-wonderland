@@ -123,10 +123,10 @@ const StreamlinedCustomerDashboard = () => {
                   {savedVendors.slice(0, 3).map((savedVendor) => (
                     <div key={savedVendor.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                       <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden">
-                        {savedVendor.vendor_profiles.logo_url ? (
+                        {savedVendor.vendor_profiles?.logo_url ? (
                           <img 
                             src={savedVendor.vendor_profiles.logo_url} 
-                            alt={savedVendor.vendor_profiles.business_name}
+                            alt={savedVendor.vendor_profiles.business_name || 'Vendor'}
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -135,10 +135,10 @@ const StreamlinedCustomerDashboard = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-theme-brown truncate">
-                          {savedVendor.vendor_profiles.business_name}
+                          {savedVendor.vendor_profiles?.business_name || 'Unknown Vendor'}
                         </h4>
                         <p className="text-sm text-theme-brown-light">
-                          {savedVendor.vendor_profiles.business_category}
+                          {savedVendor.vendor_profiles?.business_category || 'Category'}
                         </p>
                       </div>
                     </div>
