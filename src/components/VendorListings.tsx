@@ -3,6 +3,8 @@ import { useState, useMemo } from "react";
 import { mockBusinesses } from "@/data/mockVendors";
 import VendorPagination from "@/components/vendors/VendorPagination";
 import SimplifiedVendorCard from "@/components/vendors/SimplifiedVendorCard";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { Loading } from "@/components/ui/Loading";
 
 // Transform mock data to match SimplifiedVendorCard props
 const transformVendorData = (vendors: any[]) => {
@@ -34,10 +36,17 @@ const VendorListings = () => {
   
   const vendorsPerPage = 12;
 
-  // Transform and filter vendors
-  const transformedVendors = useMemo(() => transformVendorData(mockBusinesses), []);
+  // Transform and filter vendors with error handling
+  const transformedVendors = useMemo(() => {
+    if (!mockBusinesses || !Array.isArray(mockBusinesses)) {
+      return [];
+    }
+    return transformVendorData(mockBusinesses);
+  }, []);
 
   const filteredVendors = useMemo(() => {
+    if (!transformedVendors.length) return [];
+    
     return transformedVendors.filter(vendor => {
       const matchesSearch = searchTerm === "" || 
         vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -68,34 +77,42 @@ const VendorListings = () => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, selectedLocation, priceRange, rating, availability, sortBy]);
 
+  if (!mockBusinesses) {
+    return <Loading text="Loading vendor listings..." />;
+  }
+
   return (
     <div className="min-h-screen bg-theme-cream/10">
-      {/* Results */}
-      <div className="container mx-auto px-4 pb-16">
-        {currentVendors.length === 0 ? (
-          <div className="text-center py-16">
-            <h3 className="text-xl font-semibold text-theme-brown mb-2">No vendors found</h3>
-            <p className="text-theme-brown-light">Try adjusting your filters to find more vendors.</p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {currentVendors.map((vendor) => (
-                <SimplifiedVendorCard key={vendor.id} vendor={vendor} />
-              ))}
+      <ErrorBoundary>
+        {/* Results */}
+        <div className="container mx-auto px-4 pb-16">
+          {currentVendors.length === 0 ? (
+            <div className="text-center py-16">
+              <h3 className="text-xl font-semibold text-theme-brown mb-2">No vendors found</h3>
+              <p className="text-theme-brown-light">Try adjusting your filters to find more vendors.</p>
             </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+                {currentVendors.map((vendor) => (
+                  <ErrorBoundary key={vendor.id}>
+                    <SimplifiedVendorCard vendor={vendor} />
+                  </ErrorBoundary>
+                ))}
+              </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <VendorPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            )}
-          </>
-        )}
-      </div>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <VendorPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
+            </>
+          )}
+        </div>
+      </ErrorBoundary>
     </div>
   );
 };

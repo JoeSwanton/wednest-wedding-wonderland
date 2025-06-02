@@ -10,6 +10,7 @@ import VendorFilters from "@/components/vendors/VendorFilters";
 import VendorMapView from "@/components/vendors/VendorMapView";
 import VendorListingHeader from "@/components/vendors/VendorListingHeader";
 import VendorShowcase from "@/components/vendors/VendorShowcase";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const Vendors = () => {
   // State for search filters
@@ -74,83 +75,85 @@ const Vendors = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <Navbar />
-      <Separator className="bg-theme-brown h-[1px] w-full" />
-      
-      <div className="flex-grow">
-        <VendorHeader
-          selectedCategory={selectedCategory}
-          selectedLocation={selectedLocation}
-        />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navbar />
+        <Separator className="bg-theme-brown h-[1px] w-full" />
         
-        {/* Vendor Showcase Section */}
-        <VendorShowcase />
-        
-        <div className="container mx-auto px-4 py-8 md:py-12">
-          {/* Enhanced Search Section */}
-          <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/50 overflow-hidden mb-8">
-            <VendorSearch 
-              onSearchChange={handleSearchChange}
-              onCategoryChange={handleCategoryChange}
-              onLocationChange={handleLocationChange}
-              onPriceChange={handlePriceChange}
-              onStyleChange={handleStyleChange}
-              onAvailabilityChange={handleAvailabilityChange}
-              onRatingChange={handleRatingChange}
-              onViewChange={handleViewChange}
-            />
-          </div>
-          
-          {/* Active Filters */}
-          <VendorFilters
-            searchQuery={searchQuery}
+        <div className="flex-grow">
+          <VendorHeader
             selectedCategory={selectedCategory}
             selectedLocation={selectedLocation}
-            priceFilter={priceFilter}
-            styleFilter={styleFilter || []}
-            availabilityFilter={availabilityFilter}
-            ratingFilter={ratingFilter}
-            onClearSearch={() => setSearchQuery("")}
-            onClearCategory={() => setSelectedCategory("")}
-            onClearLocation={() => setSelectedLocation("")}
-            onClearPrice={() => setPriceFilter("")}
-            onClearStyle={(style) => setStyleFilter((styleFilter || []).filter(s => s !== style))}
-            onClearAvailability={() => setAvailabilityFilter("")}
-            onClearRating={() => setRatingFilter(0)}
-            onClearAll={clearAllFilters}
           />
           
-          {/* Vendor Listing */}
-          <div className="mt-8">
-            <VendorListingHeader 
+          {/* Vendor Showcase Section */}
+          <VendorShowcase />
+          
+          <div className="container mx-auto px-4 py-8 md:py-12">
+            {/* Enhanced Search Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/50 overflow-hidden mb-8">
+              <VendorSearch 
+                onSearchChange={handleSearchChange}
+                onCategoryChange={handleCategoryChange}
+                onLocationChange={handleLocationChange}
+                onPriceChange={handlePriceChange}
+                onStyleChange={handleStyleChange}
+                onAvailabilityChange={handleAvailabilityChange}
+                onRatingChange={handleRatingChange}
+                onViewChange={handleViewChange}
+              />
+            </div>
+            
+            {/* Active Filters */}
+            <VendorFilters
+              searchQuery={searchQuery}
               selectedCategory={selectedCategory}
               selectedLocation={selectedLocation}
+              priceFilter={priceFilter}
+              styleFilter={styleFilter || []}
+              availabilityFilter={availabilityFilter}
+              ratingFilter={ratingFilter}
+              onClearSearch={() => setSearchQuery("")}
+              onClearCategory={() => setSelectedCategory("")}
+              onClearLocation={() => setSelectedLocation("")}
+              onClearPrice={() => setPriceFilter("")}
+              onClearStyle={(style) => setStyleFilter((styleFilter || []).filter(s => s !== style))}
+              onClearAvailability={() => setAvailabilityFilter("")}
+              onClearRating={() => setRatingFilter(0)}
+              onClearAll={clearAllFilters}
             />
             
-            {/* Map or Grid view */}
-            <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/30 overflow-hidden">
-              {viewMode === "grid" ? (
-                <div className="p-6">
-                  <VendorCards 
-                    searchQuery={searchQuery}
-                    selectedCategory={selectedCategory}
-                    selectedLocation={selectedLocation}
-                    priceFilter={priceFilter}
-                    styleFilter={styleFilter}
-                    availabilityFilter={availabilityFilter}
-                    ratingFilter={ratingFilter}
-                  />
-                </div>
-              ) : (
-                <VendorMapView />
-              )}
+            {/* Vendor Listing */}
+            <div className="mt-8">
+              <VendorListingHeader 
+                selectedCategory={selectedCategory}
+                selectedLocation={selectedLocation}
+              />
+              
+              {/* Map or Grid view */}
+              <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/30 overflow-hidden">
+                {viewMode === "grid" ? (
+                  <div className="p-6">
+                    <VendorCards 
+                      searchQuery={searchQuery}
+                      selectedCategory={selectedCategory}
+                      selectedLocation={selectedLocation}
+                      priceFilter={priceFilter}
+                      styleFilter={styleFilter}
+                      availabilityFilter={availabilityFilter}
+                      ratingFilter={ratingFilter}
+                    />
+                  </div>
+                ) : (
+                  <VendorMapView />
+                )}
+              </div>
             </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ErrorBoundary>
   );
 };
 

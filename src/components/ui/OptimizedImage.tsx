@@ -35,9 +35,11 @@ export function OptimizedImage({
   }, [priority]);
 
   useEffect(() => {
-    setCurrentSrc(src);
-    setIsError(false);
-    setIsLoaded(false);
+    if (src !== currentSrc) {
+      setCurrentSrc(src);
+      setIsError(false);
+      setIsLoaded(false);
+    }
   }, [src]);
 
   const handleLoad = () => {

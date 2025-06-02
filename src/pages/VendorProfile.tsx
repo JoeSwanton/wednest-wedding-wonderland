@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 import { VendorData } from "@/components/vendors/VendorCard";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { Loading } from "@/components/ui/Loading";
 
 // Import the new components
 import PhotoGallery from "@/components/vendor-profile/PhotoGallery";
@@ -68,7 +70,7 @@ const VendorProfile = () => {
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />
         <div className="flex-grow flex items-center justify-center">
-          <div className="animate-spin h-8 w-8 border-4 border-theme-brown border-t-transparent rounded-full"></div>
+          <Loading text="Loading vendor profile..." />
         </div>
         <Footer />
       </div>
@@ -91,40 +93,42 @@ const VendorProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      
-      <VendorHeader vendor={vendor} onReviewCountClick={handleReviewCountClick} />
-      
-      <PhotoGallery images={portfolioImages} />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        
+        <VendorHeader vendor={vendor} onReviewCountClick={handleReviewCountClick} />
+        
+        <PhotoGallery images={portfolioImages} />
 
-      {/* Main Content - Airbnb Layout */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+        {/* Main Content - Airbnb Layout */}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             
-            <VendorAmenities vendor={vendor} />
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-2 space-y-8">
+              
+              <VendorAmenities vendor={vendor} />
 
-            <Separator />
+              <Separator />
 
-            <ServicePackages />
+              <ServicePackages />
 
-            <Separator />
+              <Separator />
 
-            <ReviewSection vendor={vendor} />
-          </div>
+              <ReviewSection vendor={vendor} />
+            </div>
 
-          {/* Right Column - Booking Card */}
-          <div className="lg:col-span-1">
-            <BookingCard vendor={vendor} onReviewCountClick={handleReviewCountClick} />
+            {/* Right Column - Booking Card */}
+            <div className="lg:col-span-1">
+              <BookingCard vendor={vendor} onReviewCountClick={handleReviewCountClick} />
+            </div>
           </div>
         </div>
-      </div>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ErrorBoundary>
   );
 };
 
