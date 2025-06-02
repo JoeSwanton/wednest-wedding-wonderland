@@ -4,6 +4,23 @@ import { mockBusinesses } from "@/data/mockVendors";
 import VendorPagination from "@/components/vendors/VendorPagination";
 import SimplifiedVendorCard from "@/components/vendors/SimplifiedVendorCard";
 
+// Transform mock data to match SimplifiedVendorCard props
+const transformVendorData = (vendors: any[]) => {
+  return vendors.map(vendor => ({
+    id: vendor.id,
+    name: vendor.name,
+    type: vendor.type,
+    location: vendor.location,
+    image: vendor.image || vendor.imageUrl || '/placeholder.svg',
+    rating: vendor.rating,
+    reviewCount: vendor.reviewCount,
+    priceRange: vendor.priceRange || vendor.price || 'Contact for pricing',
+    tags: vendor.tags || [],
+    verified: vendor.verified || false,
+    featured: vendor.featured || false
+  }));
+};
+
 const VendorListings = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,12 +33,13 @@ const VendorListings = () => {
   
   const vendorsPerPage = 12;
 
-  // Filter vendors based on criteria
+  // Transform and filter vendors
+  const transformedVendors = useMemo(() => transformVendorData(mockBusinesses), []);
+
   const filteredVendors = useMemo(() => {
-    return mockBusinesses.filter(vendor => {
+    return transformedVendors.filter(vendor => {
       const matchesSearch = searchTerm === "" || 
         vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vendor.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
       
       const matchesCategory = selectedCategory === "" || selectedCategory === "all" || 
@@ -33,11 +51,11 @@ const VendorListings = () => {
       const matchesRating = rating === 0 || vendor.rating >= rating;
 
       const matchesAvailability = availability === "" || 
-        vendor.availability.toLowerCase() === availability.toLowerCase();
+        vendor.availability?.toLowerCase() === availability.toLowerCase();
 
       return matchesSearch && matchesCategory && matchesLocation && matchesRating && matchesAvailability;
     });
-  }, [searchTerm, selectedCategory, selectedLocation, rating, availability]);
+  }, [transformedVendors, searchTerm, selectedCategory, selectedLocation, rating, availability]);
 
   // Pagination
   const totalPages = Math.ceil(filteredVendors.length / vendorsPerPage);

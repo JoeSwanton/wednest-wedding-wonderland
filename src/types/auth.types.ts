@@ -9,6 +9,7 @@ export interface UserProfile {
   business_category?: string;
   bio?: string;
   is_admin?: boolean;
+  display_name?: string;
 }
 
 export interface AuthContextType {

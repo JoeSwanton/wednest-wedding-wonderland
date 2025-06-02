@@ -40,7 +40,9 @@ export const useVendorInquiries = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setInquiries(data || []);
+      
+      // Type assertion to ensure proper typing
+      setInquiries((data || []) as VendorInquiry[]);
     } catch (error) {
       console.error('Error fetching inquiries:', error);
       toast({
@@ -103,7 +105,7 @@ export const useVendorInquiries = () => {
         .insert({
           vendor_id: vendorId,
           customer_id: user.id,
-          customer_name: userProfile.display_name || 'Wedding Couple',
+          customer_name: userProfile.full_name || 'Wedding Couple',
           customer_email: user.email || '',
           ...inquiryData
         });

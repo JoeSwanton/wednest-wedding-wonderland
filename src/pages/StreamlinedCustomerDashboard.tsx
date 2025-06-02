@@ -10,10 +10,13 @@ import {
   User, 
   CheckCircle, 
   Clock,
-  ArrowRight
+  ArrowRight,
+  TrendingUp
 } from "lucide-react";
 import { useSavedVendorsDB } from "@/hooks/useSavedVendorsDB";
 import { useRecentlyViewedVendors } from "@/hooks/useRecentlyViewedVendors";
+import RecommendationsWidget from "@/components/customer/RecommendationsWidget";
+import WeddingProgressTracker from "@/components/customer/WeddingProgressTracker";
 
 const StreamlinedCustomerDashboard = () => {
   const { user, userProfile } = useAuth();
@@ -21,7 +24,7 @@ const StreamlinedCustomerDashboard = () => {
   const { savedVendors, loading: savedLoading } = useSavedVendorsDB();
   const { recentlyViewed } = useRecentlyViewedVendors();
 
-  const firstName = userProfile?.display_name?.split(' ')[0] || 'there';
+  const firstName = userProfile?.display_name?.split(' ')[0] || userProfile?.full_name?.split(' ')[0] || 'there';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-theme-beige/30">
@@ -37,7 +40,7 @@ const StreamlinedCustomerDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/vendors')}>
             <CardContent className="p-6 text-center">
               <Search className="h-12 w-12 mx-auto mb-4 text-wednest-sage" />
@@ -67,11 +70,26 @@ const StreamlinedCustomerDashboard = () => {
               </p>
             </CardContent>
           </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="h-12 w-12 mx-auto mb-4 text-wednest-sage" />
+              <h3 className="font-serif text-lg text-theme-brown mb-2">Budget Tracker</h3>
+              <p className="text-sm text-theme-brown-light">
+                Monitor your wedding budget and expenses
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Wedding Progress */}
+          <div className="lg:col-span-1">
+            <WeddingProgressTracker />
+          </div>
+
           {/* Saved Vendors */}
-          <Card>
+          <Card className="lg:col-span-1">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2 text-theme-brown">
@@ -136,7 +154,7 @@ const StreamlinedCustomerDashboard = () => {
           </Card>
 
           {/* Recently Viewed */}
-          <Card>
+          <Card className="lg:col-span-1">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-theme-brown">
                 <Clock className="h-5 w-5 text-wednest-sage" />
@@ -171,7 +189,7 @@ const StreamlinedCustomerDashboard = () => {
                         <p className="text-sm text-theme-brown-light">{vendor.type}</p>
                       </div>
                       <Badge variant="outline" className="text-xs">
-                        {vendor.priceRange}
+                        {vendor.priceRange || 'Contact for pricing'}
                       </Badge>
                     </div>
                   ))}
@@ -179,6 +197,11 @@ const StreamlinedCustomerDashboard = () => {
               )}
             </CardContent>
           </Card>
+        </div>
+
+        {/* Recommendations */}
+        <div className="mt-8">
+          <RecommendationsWidget />
         </div>
       </div>
     </div>
