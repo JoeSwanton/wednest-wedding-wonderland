@@ -75,7 +75,13 @@ export const useSavedVendorsDB = () => {
         throw fetchError;
       }
 
-      setSavedVendors(data || []);
+      // Convert vendor_id from string to number for consistency
+      const transformedData = (data || []).map(item => ({
+        ...item,
+        vendor_id: parseInt(item.vendor_id?.toString() || '0', 10)
+      }));
+
+      setSavedVendors(transformedData);
       circuitBreaker.current.onSuccess();
       
     } catch (error) {
@@ -103,7 +109,7 @@ export const useSavedVendorsDB = () => {
         .from('saved_vendors')
         .insert({
           user_id: user.id,
-          vendor_id: vendorData.id,
+          vendor_id: vendorData.id.toString(),
           vendor_data: vendorData
         });
 
@@ -128,7 +134,7 @@ export const useSavedVendorsDB = () => {
         .from('saved_vendors')
         .delete()
         .eq('user_id', user.id)
-        .eq('vendor_id', vendorId);
+        .eq('vendor_id', vendorId.toString());
 
       if (deleteError) throw deleteError;
 

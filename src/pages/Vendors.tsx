@@ -3,13 +3,12 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
-import VendorSearch from "@/components/VendorSearch";
 import VendorCards from "@/components/VendorCards";
 import VendorHeader from "@/components/vendors/VendorHeader";
 import VendorFilters from "@/components/vendors/VendorFilters";
 import VendorMapView from "@/components/vendors/VendorMapView";
-import VendorListingHeader from "@/components/vendors/VendorListingHeader";
 import VendorShowcase from "@/components/vendors/VendorShowcase";
+import VendorSearchHero from "@/components/vendors/VendorSearchHero";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const Vendors = () => {
@@ -81,29 +80,20 @@ const Vendors = () => {
         <Separator className="bg-theme-brown h-[1px] w-full" />
         
         <div className="flex-grow">
-          <VendorHeader
+          {/* Hero Section with Search */}
+          <VendorSearchHero
+            searchQuery={searchQuery}
             selectedCategory={selectedCategory}
             selectedLocation={selectedLocation}
+            onSearchChange={handleSearchChange}
+            onCategoryChange={handleCategoryChange}
+            onLocationChange={handleLocationChange}
           />
           
           {/* Vendor Showcase Section */}
           <VendorShowcase />
           
           <div className="container mx-auto px-4 py-8 md:py-12">
-            {/* Enhanced Search Section */}
-            <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/50 overflow-hidden mb-8">
-              <VendorSearch 
-                onSearchChange={handleSearchChange}
-                onCategoryChange={handleCategoryChange}
-                onLocationChange={handleLocationChange}
-                onPriceChange={handlePriceChange}
-                onStyleChange={handleStyleChange}
-                onAvailabilityChange={handleAvailabilityChange}
-                onRatingChange={handleRatingChange}
-                onViewChange={handleViewChange}
-              />
-            </div>
-            
             {/* Active Filters */}
             <VendorFilters
               searchQuery={searchQuery}
@@ -125,11 +115,6 @@ const Vendors = () => {
             
             {/* Vendor Listing */}
             <div className="mt-8">
-              <VendorListingHeader 
-                selectedCategory={selectedCategory}
-                selectedLocation={selectedLocation}
-              />
-              
               {/* Map or Grid view */}
               <div className="bg-white rounded-2xl shadow-sm border border-theme-beige/30 overflow-hidden">
                 {viewMode === "grid" ? (
