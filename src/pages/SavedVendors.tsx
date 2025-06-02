@@ -55,12 +55,12 @@ const SavedVendors = () => {
                   <div 
                     className="h-48 bg-gray-200 bg-cover bg-center"
                     style={{
-                      backgroundImage: savedVendor.vendor_profiles.logo_url 
+                      backgroundImage: savedVendor.vendor_profiles?.logo_url 
                         ? `url(${savedVendor.vendor_profiles.logo_url})` 
                         : undefined
                     }}
                   >
-                    {!savedVendor.vendor_profiles.logo_url && (
+                    {!savedVendor.vendor_profiles?.logo_url && (
                       <div className="h-full flex items-center justify-center text-gray-500">
                         No Image
                       </div>
@@ -80,26 +80,31 @@ const SavedVendors = () => {
                   <div className="space-y-3">
                     <div>
                       <h3 className="font-serif font-medium text-lg text-theme-brown">
-                        {savedVendor.vendor_profiles.business_name}
+                        {savedVendor.vendor_profiles?.business_name || 'Unknown Business'}
                       </h3>
                       <Badge variant="secondary" className="text-xs">
-                        {savedVendor.vendor_profiles.business_category}
+                        {savedVendor.vendor_profiles?.business_category || 'Unknown Category'}
                       </Badge>
                     </div>
 
                     <div className="flex items-center gap-1 text-sm text-gray-500">
                       <MapPin className="h-3 w-3" />
-                      <span>{savedVendor.vendor_profiles.city}, {savedVendor.vendor_profiles.state}</span>
+                      <span>
+                        {savedVendor.vendor_profiles?.city && savedVendor.vendor_profiles?.state 
+                          ? `${savedVendor.vendor_profiles.city}, ${savedVendor.vendor_profiles.state}`
+                          : 'Location not available'
+                        }
+                      </span>
                     </div>
 
-                    {savedVendor.vendor_profiles.base_price_range && (
+                    {savedVendor.vendor_profiles?.base_price_range && (
                       <div className="text-sm font-medium text-theme-brown">
                         {savedVendor.vendor_profiles.base_price_range}
                       </div>
                     )}
 
                     <p className="text-sm text-theme-brown-light line-clamp-2">
-                      {savedVendor.vendor_profiles.bio}
+                      {savedVendor.vendor_profiles?.bio || 'No description available'}
                     </p>
 
                     <div className="flex gap-2 pt-2">
@@ -110,7 +115,7 @@ const SavedVendors = () => {
                       </Link>
                       <InquiryDialog 
                         vendorId={savedVendor.vendor_id} 
-                        vendorName={savedVendor.vendor_profiles.business_name}
+                        vendorName={savedVendor.vendor_profiles?.business_name || 'Unknown Business'}
                       >
                         <Button size="sm" className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
                           <MessageSquare className="h-4 w-4" />

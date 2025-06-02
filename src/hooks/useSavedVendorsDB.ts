@@ -6,10 +6,19 @@ import { logger } from '@/lib/logger';
 
 export interface SavedVendor {
   id: string;
-  vendor_id: number;
+  vendor_id: string;
   user_id: string;
   created_at: string;
   vendor_data?: any;
+  vendor_profiles?: {
+    business_name: string;
+    business_category: string;
+    city: string;
+    state: string;
+    logo_url?: string;
+    bio?: string;
+    base_price_range?: string;
+  };
 }
 
 // Circuit breaker to prevent infinite retries
@@ -65,7 +74,18 @@ export const useSavedVendorsDB = () => {
 
       const { data, error: fetchError } = await supabase
         .from('saved_vendors')
-        .select('*')
+        .select(`
+          *,
+          vendor_profiles!saved_vendors_vendor_id_fkey (
+            business_name,
+            business_category,
+            city,
+            state,
+            logo_url,
+            bio,
+            base_price_range
+          )
+        `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -103,7 +123,7 @@ export const useSavedVendorsDB = () => {
         .from('saved_vendors')
         .insert({
           user_id: user.id,
-          vendor_id: vendorData.id,
+          vendor_id: vendorData.id.toString(),
           vendor_data: vendorData
         });
 
@@ -120,7 +140,7 @@ export const useSavedVendorsDB = () => {
     }
   }, [user, fetchSavedVendors]);
 
-  const removeSavedVendor = useCallback(async (vendorId: number) => {
+  const removeSavedVendor = useCallback(async (vendorId: string) => {
     if (!user || !circuitBreaker.current.canAttempt()) return false;
 
     try {
@@ -143,9 +163,23 @@ export const useSavedVendorsDB = () => {
     }
   }, [user, fetchSavedVendors]);
 
-  const isVendorSaved = useCallback((vendorId: number) => {
+  const isVendorSaved = useCallback((vendorId: string) => {
     return savedVendors.some(saved => saved.vendor_id === vendorId);
   }, [savedVendors]);
+
+  const toggleSavedVendor = useCallback(async (vendorId: string) => {
+    if (!user) return false;
+
+    const isCurrentlySaved = isVendorSaved(vendorId);
+    
+    if (isCurrentlySaved) {
+      return await removeSavedVendor(vendorId);
+    } else {
+      // For toggling, we need minimal vendor data
+      const vendorData = { id: vendorId };
+      return await saveVendor(vendorData);
+    }
+  }, [user, isVendorSaved, removeSavedVendor, saveVendor]);
 
   // Only fetch when user is available and circuit breaker allows it
   useEffect(() => {
@@ -161,6 +195,7 @@ export const useSavedVendorsDB = () => {
     saveVendor,
     removeSavedVendor,
     isVendorSaved,
+    toggleSavedVendor,
     refetch: fetchSavedVendors
   };
 };

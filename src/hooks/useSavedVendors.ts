@@ -6,7 +6,7 @@ import { logger } from '@/lib/logger';
 
 export const useSavedVendors = () => {
   const { user } = useAuth();
-  const [localSavedVendors, setLocalSavedVendors] = useState<Set<number>>(new Set());
+  const [localSavedVendors, setLocalSavedVendors] = useState<Set<string>>(new Set());
   
   // Use the DB hook with error handling
   const { 
@@ -15,7 +15,8 @@ export const useSavedVendors = () => {
     error: dbError,
     saveVendor: dbSaveVendor,
     removeSavedVendor: dbRemoveSavedVendor,
-    isVendorSaved: dbIsVendorSaved
+    isVendorSaved: dbIsVendorSaved,
+    toggleSavedVendor: dbToggleSavedVendor
   } = useSavedVendorsDB();
 
   // Sync local state with DB state
@@ -32,7 +33,12 @@ export const useSavedVendors = () => {
       return;
     }
 
-    const vendorId = vendor.id;
+    const vendorId = vendor.id?.toString() || vendor.vendor_id?.toString();
+    if (!vendorId) {
+      logger.error('No vendor ID provided');
+      return;
+    }
+
     const isCurrentlySaved = localSavedVendors.has(vendorId);
 
     try {
@@ -46,12 +52,7 @@ export const useSavedVendors = () => {
       setLocalSavedVendors(newSavedVendors);
 
       // Attempt DB operation
-      let success = false;
-      if (isCurrentlySaved) {
-        success = await dbRemoveSavedVendor(vendorId);
-      } else {
-        success = await dbSaveVendor(vendor);
-      }
+      const success = await dbToggleSavedVendor(vendorId);
 
       // Revert on failure
       if (!success) {
@@ -64,11 +65,12 @@ export const useSavedVendors = () => {
       setLocalSavedVendors(localSavedVendors);
       logger.error('Error toggling saved vendor', { error });
     }
-  }, [user, localSavedVendors, dbSaveVendor, dbRemoveSavedVendor]);
+  }, [user, localSavedVendors, dbToggleSavedVendor]);
 
-  const isVendorSaved = useCallback((vendorId: number) => {
+  const isVendorSaved = useCallback((vendorId: string | number) => {
+    const id = vendorId.toString();
     // Use local state for immediate feedback, fallback to DB state
-    return localSavedVendors.has(vendorId) || (dbError ? false : dbIsVendorSaved(vendorId));
+    return localSavedVendors.has(id) || (dbError ? false : dbIsVendorSaved(id));
   }, [localSavedVendors, dbIsVendorSaved, dbError]);
 
   return {

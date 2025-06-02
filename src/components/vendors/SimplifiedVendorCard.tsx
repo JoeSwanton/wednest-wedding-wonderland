@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Star, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import InquiryDialog from "@/components/vendor/InquiryDialog";
-import { useSavedVendorsDB } from "@/hooks/useSavedVendorsDB";
+import { useSavedVendors } from "@/hooks/useSavedVendors";
 
 interface VendorCardProps {
   vendor: {
@@ -24,12 +24,12 @@ interface VendorCardProps {
 }
 
 const SimplifiedVendorCard = ({ vendor }: VendorCardProps) => {
-  const { isVendorSaved, toggleSavedVendor } = useSavedVendorsDB();
+  const { isVendorSaved, toggleSavedVendor } = useSavedVendors();
   const isSaved = isVendorSaved(vendor.id.toString());
 
   const handleSaveToggle = (e: React.MouseEvent) => {
     e.preventDefault();
-    toggleSavedVendor(vendor.id.toString());
+    toggleSavedVendor({ id: vendor.id });
   };
 
   return (
