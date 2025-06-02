@@ -7,13 +7,15 @@ interface LoadingProps {
   className?: string;
   text?: string;
   variant?: 'spinner' | 'dots' | 'pulse';
+  'aria-label'?: string;
 }
 
 export function Loading({ 
   size = 'md', 
   className, 
   text, 
-  variant = 'spinner' 
+  variant = 'spinner',
+  'aria-label': ariaLabel = 'Loading content'
 }: LoadingProps) {
   const sizeClasses = {
     sm: 'h-4 w-4',
@@ -29,8 +31,12 @@ export function Loading({
 
   if (variant === 'dots') {
     return (
-      <div className={cn('flex items-center justify-center p-8', className)}>
-        <div className="flex space-x-1">
+      <div 
+        className={cn('flex items-center justify-center p-8', className)}
+        role="status"
+        aria-label={ariaLabel}
+      >
+        <div className="flex space-x-1" aria-hidden="true">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
@@ -53,12 +59,19 @@ export function Loading({
 
   if (variant === 'pulse') {
     return (
-      <div className={cn('flex items-center justify-center p-8', className)}>
+      <div 
+        className={cn('flex items-center justify-center p-8', className)}
+        role="status"
+        aria-label={ariaLabel}
+      >
         <div className="flex flex-col items-center space-y-3">
-          <div className={cn(
-            'rounded-full bg-theme-brown animate-pulse',
-            sizeClasses[size]
-          )} />
+          <div 
+            className={cn(
+              'rounded-full bg-theme-brown animate-pulse',
+              sizeClasses[size]
+            )}
+            aria-hidden="true"
+          />
           {text && (
             <p className={cn('text-theme-brown', textSizeClasses[size])}>
               {text}
@@ -70,9 +83,16 @@ export function Loading({
   }
 
   return (
-    <div className={cn('flex items-center justify-center p-8', className)}>
+    <div 
+      className={cn('flex items-center justify-center p-8', className)}
+      role="status"
+      aria-label={ariaLabel}
+    >
       <div className="flex flex-col items-center space-y-2">
-        <Loader2 className={cn('animate-spin text-theme-brown', sizeClasses[size])} />
+        <Loader2 
+          className={cn('animate-spin text-theme-brown', sizeClasses[size])} 
+          aria-hidden="true"
+        />
         {text && (
           <p className={cn('text-theme-brown', textSizeClasses[size])}>
             {text}
@@ -91,6 +111,8 @@ export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivEl
         'animate-pulse rounded-md bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200',
         className
       )}
+      role="status"
+      aria-label="Loading content"
       {...props}
     />
   );
@@ -100,7 +122,7 @@ export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivEl
 export function PageLoading() {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <Loading size="lg" text="Loading..." />
+      <Loading size="lg" text="Loading..." aria-label="Loading page content" />
     </div>
   );
 }

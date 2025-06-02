@@ -19,6 +19,10 @@ import SavedVendors from "./pages/SavedVendors";
 // Import AuthProvider
 import { AuthProvider } from "./contexts/AuthContext";
 
+// Config and logging
+import config from "./lib/config";
+import { logger } from "./lib/logger";
+
 // Lazy loaded authenticated pages
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const Questionnaire = lazy(() => import("./pages/Questionnaire"));
@@ -38,15 +42,47 @@ const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 2,
+      retry: (failureCount, error: any) => {
+        // Don't retry on 4xx errors
+        if (error?.status >= 400 && error?.status < 500) {
+          return false;
+        }
+        return failureCount < 2;
+      },
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes
+      refetchOnWindowFocus: false,
     },
     mutations: {
-      retry: 1,
+      retry: (failureCount, error: any) => {
+        if (error?.status >= 400 && error?.status < 500) {
+          return false;
+        }
+        return failureCount < 1;
+      },
+      onError: (error: any) => {
+        logger.error('Mutation error', { error: error.message }, error);
+      },
     },
   },
 });
+
+// Add global error handler for unhandled promise rejections
+if (config.isProduction) {
+  window.addEventListener('unhandledrejection', (event) => {
+    logger.error('Unhandled promise rejection', { reason: event.reason });
+    event.preventDefault();
+  });
+
+  window.addEventListener('error', (event) => {
+    logger.error('Global error', { 
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno
+    }, event.error);
+  });
+}
 
 function App() {
   return (

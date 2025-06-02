@@ -12,9 +12,11 @@ import RecentlyViewedVendors from "@/components/landing/RecentlyViewedVendors";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePerformanceMonitoring } from "@/hooks/usePerformanceMonitoring";
 
 const Index = () => {
   const { user } = useAuth();
+  usePerformanceMonitoring('Homepage');
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
