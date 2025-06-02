@@ -2,6 +2,7 @@
 import React from "react";
 import { Star, Award, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import VendorCardActions from "./VendorCardActions";
 
 interface VendorCardImageProps {
@@ -51,15 +52,13 @@ const VendorCardImage = ({
         )}
       </div>
 
-      {/* Image with hover effect and fallback */}
-      <img 
-        src={vendor.imageUrl} 
-        alt={`${vendor.name} - ${vendor.type}`} 
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src = `https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800&h=600`;
-        }}
+      {/* Optimized image with improved error handling */}
+      <OptimizedImage
+        src={vendor.imageUrl}
+        alt={`${vendor.name} - ${vendor.type}`}
+        className="w-full h-full group-hover:scale-110 transition-transform duration-500"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority={false}
       />
     </div>
   );

@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
 
-## Project info
+# Enosi Wedding Vendor Marketplace
 
-**URL**: https://lovable.dev/projects/a7b1f4da-0955-41b9-8226-68c93c017916
+A modern wedding vendor marketplace platform built with React and TypeScript, connecting couples with trusted wedding professionals.
 
-## How can I edit this code?
+## 🚀 Tech Stack
+- **Vite** - Build tool
+- **TypeScript** - Type safety
+- **React 18** - UI framework
+- **shadcn-ui** - Component library
+- **Tailwind CSS** - Styling
+- **Supabase** - Backend & Authentication
+- **React Router** - Navigation
+- **Tanstack Query** - Data fetching
 
-There are several ways of editing your application.
+## 📋 Prerequisites
+- Node.js 18.x or higher
+- npm or yarn
 
-**Use Lovable**
+## 🛠️ Setup Instructions
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a7b1f4da-0955-41b9-8226-68c93c017916) and start prompting.
+### Method 1: Using Lovable (Recommended)
+1. Visit [Lovable Project](https://lovable.dev/projects/a7b1f4da-0955-41b9-8226-68c93c017916)
+2. Start editing with AI assistance
+3. Changes auto-commit to this repository
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+### Method 2: Local Development
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🌐 Deployment
+Simply open Lovable and click Share → Publish.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🔧 Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
 
-**Use GitHub Codespaces**
+## 🎨 Features
+- **Vendor Discovery** - Browse and search wedding vendors by category
+- **User Authentication** - Secure login for couples and vendors
+- **Vendor Profiles** - Detailed vendor information and portfolios
+- **Dashboard Systems** - Separate dashboards for couples and vendors
+- **Responsive Design** - Works on all devices
+- **Real-time Updates** - Live vendor availability and pricing
+- **Advanced Filtering** - Find vendors by location, price, and specialties
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🏗️ Project Structure
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page components
+├── hooks/              # Custom React hooks
+├── contexts/           # React contexts
+├── types/              # TypeScript type definitions
+├── lib/                # Utility functions
+└── integrations/       # External service integrations
+```
 
-## What technologies are used for this project?
+## 🔐 Environment Variables
+Create a `.env.local` file with:
+```
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-This project is built with:
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/a7b1f4da-0955-41b9-8226-68c93c017916) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 📞 Support
+For support, visit the [Lovable Discord community](https://discord.com/channels/1119885301872070706/1280461670979993613)
