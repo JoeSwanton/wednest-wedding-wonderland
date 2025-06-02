@@ -84,6 +84,42 @@ export type Database = {
           },
         ]
       }
+      saved_vendors: {
+        Row: {
+          created_at: string | null
+          id: string
+          user_id: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          user_id: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          user_id?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_vendors_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_vendors_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           bio: string | null
@@ -123,6 +159,66 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "vendor_view"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_inquiries: {
+        Row: {
+          budget_range: string | null
+          created_at: string | null
+          customer_email: string
+          customer_id: string
+          customer_name: string
+          guest_count: string | null
+          id: string
+          message: string
+          status: string | null
+          updated_at: string | null
+          vendor_id: string
+          wedding_date: string | null
+        }
+        Insert: {
+          budget_range?: string | null
+          created_at?: string | null
+          customer_email: string
+          customer_id: string
+          customer_name: string
+          guest_count?: string | null
+          id?: string
+          message: string
+          status?: string | null
+          updated_at?: string | null
+          vendor_id: string
+          wedding_date?: string | null
+        }
+        Update: {
+          budget_range?: string | null
+          created_at?: string | null
+          customer_email?: string
+          customer_id?: string
+          customer_name?: string
+          guest_count?: string | null
+          id?: string
+          message?: string
+          status?: string | null
+          updated_at?: string | null
+          vendor_id?: string
+          wedding_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_inquiries_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_inquiries_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -224,6 +320,8 @@ export type Database = {
           abn: string | null
           address: string | null
           application_status: string | null
+          availability_status: string | null
+          base_price_range: string | null
           bio: string
           business_category: string
           business_email: string
@@ -240,6 +338,7 @@ export type Database = {
           phone: string
           postcode: string | null
           required_actions: string[] | null
+          search_keywords: string | null
           service_radius: number | null
           specialties: string[] | null
           state: string
@@ -255,6 +354,8 @@ export type Database = {
           abn?: string | null
           address?: string | null
           application_status?: string | null
+          availability_status?: string | null
+          base_price_range?: string | null
           bio: string
           business_category: string
           business_email: string
@@ -271,6 +372,7 @@ export type Database = {
           phone: string
           postcode?: string | null
           required_actions?: string[] | null
+          search_keywords?: string | null
           service_radius?: number | null
           specialties?: string[] | null
           state: string
@@ -286,6 +388,8 @@ export type Database = {
           abn?: string | null
           address?: string | null
           application_status?: string | null
+          availability_status?: string | null
+          base_price_range?: string | null
           bio?: string
           business_category?: string
           business_email?: string
@@ -302,6 +406,7 @@ export type Database = {
           phone?: string
           postcode?: string | null
           required_actions?: string[] | null
+          search_keywords?: string | null
           service_radius?: number | null
           specialties?: string[] | null
           state?: string

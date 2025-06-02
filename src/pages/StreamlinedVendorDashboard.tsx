@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VendorLayout from "@/components/vendor/VendorLayout";
+import VendorInquiriesList from "@/components/vendor/VendorInquiriesList";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Eye, MessageSquare, Calendar as CalendarIcon, CheckCircle, Clock, AlertCircle } from "lucide-react";
@@ -13,23 +14,6 @@ const sampleMetrics = {
   inquiries: 3,
   responseRate: "85%"
 };
-
-const sampleInquiries = [
-  { 
-    id: 1, 
-    couple: "Emily & Michael", 
-    date: "2025-06-10", 
-    message: "We love your photography style! Are you available for our wedding?",
-    createdAt: "2025-05-10T14:30:00Z"
-  },
-  { 
-    id: 2, 
-    couple: "Jessica & Daniel", 
-    date: "2025-07-22", 
-    message: "Hi! We're planning a garden wedding and would love to know more.",
-    createdAt: "2025-05-12T09:15:00Z"
-  },
-];
 
 const StreamlinedVendorDashboard = () => {
   const { userProfile } = useAuth();
@@ -125,42 +109,7 @@ const StreamlinedVendorDashboard = () => {
         </div>
 
         {/* Recent Inquiries */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-wednest-sage" />
-              Recent Inquiries
-            </CardTitle>
-            <CardDescription>Messages from couples interested in your services</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {sampleInquiries.length > 0 ? (
-              <div className="space-y-4">
-                {sampleInquiries.map(inquiry => (
-                  <div key={inquiry.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow bg-white">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="font-medium text-wednest-brown">{inquiry.couple}</span>
-                      <span className="text-xs text-gray-500">
-                        {new Date(inquiry.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="text-xs text-wednest-gold mb-2">Wedding Date: {inquiry.date}</div>
-                    <p className="text-sm text-wednest-brown-light mb-3">{inquiry.message}</p>
-                    <Button size="sm" className="bg-wednest-sage hover:bg-wednest-sage-dark text-white">
-                      Reply
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-wednest-brown-light">
-                <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No inquiries yet</p>
-                <p className="text-sm">Complete your profile to start receiving messages from couples</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <VendorInquiriesList />
 
         {/* Quick Actions */}
         <Card>
