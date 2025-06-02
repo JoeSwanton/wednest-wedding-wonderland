@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import TrendingDestinations from "@/components/landing/TrendingDestinations";
@@ -8,6 +9,8 @@ import LastMinuteDeals from "@/components/landing/LastMinuteDeals";
 import WhatCouplesAreSaying from "@/components/landing/WhatCouplesAreSaying";
 import CreateAccountCTA from "@/components/landing/CreateAccountCTA";
 import RecentlyViewedVendors from "@/components/landing/RecentlyViewedVendors";
+import ExploreByState from "@/components/landing/ExploreByState";
+import SocialProofBanner from "@/components/landing/SocialProofBanner";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,16 +25,25 @@ const Index = () => {
       <Navbar />
       <Separator className="bg-theme-brown h-[1px] w-full" />
       <main className="flex-grow">
-        {/* Hero Search Bar - Keep top and expand (pill style with icons) */}
+        {/* Hero Search Bar - Clean and focused */}
         <Hero />
+        
+        {/* Social Proof Banner - Right after hero */}
+        <SocialProofBanner />
         
         {/* Recently Viewed - Show after hero for signed in users */}
         {user && <RecentlyViewedVendors />}
         
-        {/* Trending Destinations - 1st scroll section */}
+        {/* Last-Minute Deals - Moved higher up for urgency */}
+        <LastMinuteDeals />
+        
+        {/* Trending Wedding Destinations */}
         <TrendingDestinations />
         
-        {/* Browse by Vendor Type Section */}
+        {/* Explore by State - New location-based section */}
+        <ExploreByState />
+        
+        {/* Browse by Vendor Type Section - Now as carousel */}
         <div className="w-full py-16 px-4 md:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
@@ -43,22 +55,18 @@ const Index = () => {
               </p>
             </div>
             
-            {/* Browse by Vendor Type - Below Trending */}
             <VendorListings />
           </div>
         </div>
         
-        {/* Popular Vendors in Your City - Below Browse */}
+        {/* Popular Vendors in Your City */}
         <FeaturedVendorsNearYou />
         
-        {/* Last-Minute Deals - Mid-page placement */}
-        <LastMinuteDeals />
-        
-        {/* Vendor by Timeline - Below Featured Vendors */}
-        <PlanByTimeline />
-        
-        {/* Testimonials - Near footer */}
+        {/* Testimonials - Moved higher with metrics */}
         <WhatCouplesAreSaying />
+        
+        {/* Vendor by Timeline */}
+        <PlanByTimeline />
         
         {/* Create Account CTA - Only show when user is not signed in */}
         {!user && <CreateAccountCTA />}

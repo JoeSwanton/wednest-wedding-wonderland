@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarIcon, ChevronDown, MapPin, Search, X, ArrowRight, Users, Star, Clock } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown, MapPin, Search, X, Users } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -15,6 +15,7 @@ const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [location, setLocation] = useState("");
   const [vendorType, setVendorType] = useState("");
+  const [guestCount, setGuestCount] = useState("");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -35,6 +36,7 @@ const Hero = () => {
     if (location) params.append("location", location);
     if (vendorType) params.append("category", vendorType);
     if (date) params.append("date", date.toISOString().split('T')[0]);
+    if (guestCount) params.append("guests", guestCount);
 
     // Navigate to vendors page with search parameters
     navigate(`/vendors?${params.toString()}`);
@@ -52,7 +54,6 @@ const Hero = () => {
     setInputValue(value);
     setLocation(value);
     
-    // Show suggestions immediately if user has typed at least 2 characters
     if (value.length >= 2) {
       setShowSuggestions(true);
       setIsLocationOpen(true);
@@ -63,7 +64,6 @@ const Hero = () => {
   };
 
   const handleInputFocus = () => {
-    // Only open if there's enough text and matching suggestions
     if (inputValue.length >= 2 && filteredLocations.length > 0) {
       setShowSuggestions(true);
       setIsLocationOpen(true);
@@ -81,44 +81,28 @@ const Hero = () => {
   };
 
   return (
-    <div className="w-full bg-theme-brown py-16 md:py-24 px-4 md:px-8 text-white relative overflow-hidden">
+    <div className="w-full bg-theme-brown py-20 md:py-32 px-4 md:px-8 text-white relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
       </div>
       
-      <div className="max-w-7xl mx-auto text-center relative z-10">
-        {/* Updated hero headline - more focused and benefit-driven */}
+      <div className="max-w-6xl mx-auto text-center relative z-10">
+        {/* Simplified hero headline */}
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-tight">
-          Plan Your Perfect Wedding
+          Find Your Perfect Wedding Team
         </h1>
         
-        {/* Enhanced value proposition */}
-        <p className="text-xl md:text-2xl text-white/90 mb-4 max-w-4xl mx-auto">
-          Compare prices, availability, and book directly with trusted wedding professionals near you
+        {/* Clean value proposition */}
+        <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
+          Compare, connect, and book trusted wedding vendors across Australia
         </p>
         
-        {/* Trust signals */}
-        <div className="flex flex-wrap justify-center items-center gap-6 mb-10 text-white/80">
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            <span className="text-sm">1,200+ verified vendors</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm">4.8 average rating</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            <span className="text-sm">Instant booking</span>
-          </div>
-        </div>
-        
-        {/* Enhanced search bar - larger and more prominent */}
-        <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-6 max-w-6xl mx-auto mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            {/* Location Input - larger and more prominent */}
-            <div className="md:col-span-5 relative">
+        {/* Single-row search bar - Booking.com style */}
+        <div className="bg-white rounded-xl shadow-2xl p-3 max-w-5xl mx-auto mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+            {/* Location Input */}
+            <div className="md:col-span-4 relative">
               <Popover open={isLocationOpen} onOpenChange={setIsLocationOpen}>
                 <PopoverTrigger asChild>
                   <div className="relative">
@@ -127,39 +111,36 @@ const Hero = () => {
                       value={inputValue}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
-                      placeholder="Where's your wedding?"
-                      className="w-full pl-12 pr-10 py-4 h-14 text-lg border-2 border-theme-beige/30 bg-white text-theme-brown placeholder:text-theme-brown-light hover:border-theme-brown/60 focus:border-theme-brown focus:ring-2 focus:ring-theme-brown/20 transition-all rounded-xl"
+                      placeholder="Where?"
+                      className="w-full pl-10 pr-8 py-3 h-12 border-0 bg-white text-theme-brown placeholder:text-theme-brown-light focus:ring-2 focus:ring-theme-brown/20 transition-all rounded-lg"
                     />
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-theme-brown-light" />
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-theme-brown-light" />
                     {inputValue && (
                       <Button 
                         variant="ghost" 
                         onClick={clearInput}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 rounded-full hover:bg-theme-cream/20"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 rounded-full hover:bg-theme-cream/20"
                       >
-                        <X className="h-5 w-5 text-theme-brown-light" />
+                        <X className="h-4 w-4 text-theme-brown-light" />
                       </Button>
                     )}
                   </div>
                 </PopoverTrigger>
                 {showSuggestions && filteredLocations.length > 0 && (
-                  <PopoverContent className="w-[calc(100vw-2rem)] md:w-[400px] p-0" align="start">
+                  <PopoverContent className="w-[calc(100vw-2rem)] md:w-[350px] p-0" align="start">
                     <Command>
                       <CommandList>
                         <CommandEmpty>No location found.</CommandEmpty>
-                        <CommandGroup heading="Popular wedding destinations">
+                        <CommandGroup>
                           {filteredLocations.slice(0, 6).map((location, index) => (
                             <CommandItem
                               key={`location-${index}`}
                               value={location}
                               onSelect={() => handleLocationSelect(location)}
-                              className="flex items-center py-3 cursor-pointer"
+                              className="flex items-center py-2 cursor-pointer"
                             >
-                              <MapPin className="h-5 w-5 text-theme-brown-light mr-3 flex-shrink-0" />
-                              <div>
-                                <div className="font-medium">{location}</div>
-                                <div className="text-sm text-theme-brown-light">Australia</div>
-                              </div>
+                              <MapPin className="h-4 w-4 text-theme-brown-light mr-2 flex-shrink-0" />
+                              <span>{location}</span>
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -170,21 +151,18 @@ const Hero = () => {
               </Popover>
             </div>
             
-            {/* Wedding Date - enhanced */}
+            {/* Wedding Date */}
             <div className="md:col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
-                    className="w-full h-14 justify-between border-2 border-theme-beige/30 bg-white text-theme-brown placeholder:text-theme-brown-light hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-all rounded-xl text-lg"
+                    className="w-full h-12 justify-start border-0 bg-white text-theme-brown hover:bg-theme-cream/10 transition-all rounded-lg"
                   >
-                    <div className="flex items-center">
-                      <CalendarIcon className="mr-3 h-6 w-6 text-theme-brown-light" />
-                      <span className={cn("truncate", !date && "text-theme-brown-light")}>
-                        {date ? format(date, "MMM dd, yyyy") : "Wedding date"}
-                      </span>
-                    </div>
-                    <ChevronDown className="ml-2 h-5 w-5 text-theme-brown-light" />
+                    <CalendarIcon className="mr-2 h-5 w-5 text-theme-brown-light" />
+                    <span className={cn("truncate", !date && "text-theme-brown-light")}>
+                      {date ? format(date, "MMM dd, yyyy") : "When?"}
+                    </span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -193,71 +171,55 @@ const Hero = () => {
                     selected={date} 
                     onSelect={setDate} 
                     initialFocus 
-                    className={cn("p-3")} 
                   />
                 </PopoverContent>
               </Popover>
             </div>
             
-            {/* Vendor Type - enhanced */}
-            <div className="md:col-span-3">
+            {/* Vendor Type */}
+            <div className="md:col-span-2">
               <Select value={vendorType} onValueChange={setVendorType}>
-                <SelectTrigger className="h-14 border-2 border-theme-beige/30 bg-white text-theme-brown [&>span]:text-theme-brown-light hover:border-theme-brown/60 hover:bg-theme-cream/10 transition-all rounded-xl text-lg">
-                  <SelectValue placeholder="Vendor type" />
+                <SelectTrigger className="h-12 border-0 bg-white text-theme-brown hover:bg-theme-cream/10 transition-all rounded-lg">
+                  <SelectValue placeholder="What?" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="photographer">Photographers</SelectItem>
+                  <SelectItem value="photographer">Photography</SelectItem>
                   <SelectItem value="venue">Venues</SelectItem>
                   <SelectItem value="catering">Catering</SelectItem>
-                  <SelectItem value="florist">Florists</SelectItem>
-                  <SelectItem value="music">Music & Entertainment</SelectItem>
-                  <SelectItem value="cake">Cake & Dessert</SelectItem>
+                  <SelectItem value="florist">Flowers</SelectItem>
+                  <SelectItem value="music">Music</SelectItem>
+                  <SelectItem value="cake">Cakes</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Guest Count */}
+            <div className="md:col-span-2">
+              <Select value={guestCount} onValueChange={setGuestCount}>
+                <SelectTrigger className="h-12 border-0 bg-white text-theme-brown hover:bg-theme-cream/10 transition-all rounded-lg">
+                  <Users className="mr-2 h-4 w-4 text-theme-brown-light" />
+                  <SelectValue placeholder="Guests?" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1-50">1-50 guests</SelectItem>
+                  <SelectItem value="51-100">51-100 guests</SelectItem>
+                  <SelectItem value="101-150">101-150 guests</SelectItem>
+                  <SelectItem value="151-200">151-200 guests</SelectItem>
+                  <SelectItem value="200+">200+ guests</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
-            {/* Enhanced Search Button */}
+            {/* Search Button */}
             <div className="md:col-span-1">
               <Button 
                 onClick={handleSearch} 
                 size="lg"
-                className="w-full h-14 bg-theme-brown hover:bg-theme-brown-dark text-white transition-all rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="w-full h-12 bg-theme-brown hover:bg-theme-brown-dark text-white transition-all rounded-lg font-semibold shadow-lg hover:shadow-xl"
               >
-                <Search className="h-6 w-6" />
+                <Search className="h-5 w-5" />
               </Button>
             </div>
-          </div>
-        </div>
-        
-        {/* Ghost CTA for browsing */}
-        <div className="mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/vendors')}
-            className="text-white hover:bg-white/10 border border-white/30 hover:border-white/50 px-8 py-3 rounded-xl text-lg group transition-all"
-          >
-            Or browse by category 
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </div>
-        
-        {/* Enhanced benefits bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-white/80 max-w-4xl mx-auto">
-          <div className="flex flex-col items-center p-4 rounded-lg bg-white/5 backdrop-blur-sm">
-            <div className="w-3 h-3 bg-white rounded-full mb-2"></div>
-            <span className="font-medium">Verified Vendors</span>
-          </div>
-          <div className="flex flex-col items-center p-4 rounded-lg bg-white/5 backdrop-blur-sm">
-            <div className="w-3 h-3 bg-white rounded-full mb-2"></div>
-            <span className="font-medium">Instant Booking</span>
-          </div>
-          <div className="flex flex-col items-center p-4 rounded-lg bg-white/5 backdrop-blur-sm">
-            <div className="w-3 h-3 bg-white rounded-full mb-2"></div>
-            <span className="font-medium">Price Comparison</span>
-          </div>
-          <div className="flex flex-col items-center p-4 rounded-lg bg-white/5 backdrop-blur-sm">
-            <div className="w-3 h-3 bg-white rounded-full mb-2"></div>
-            <span className="font-medium">Planning Tools</span>
           </div>
         </div>
       </div>
