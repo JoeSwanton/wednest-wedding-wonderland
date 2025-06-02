@@ -6,7 +6,7 @@ import { logger } from '@/lib/logger';
 
 export const useSavedVendors = () => {
   const { user } = useAuth();
-  const [localSavedVendors, setLocalSavedVendors] = useState<Set<string>>(new Set());
+  const [localSavedVendors, setLocalSavedVendors] = useState<Set<number>>(new Set());
   
   // Use the DB hook with error handling
   const { 
@@ -32,7 +32,7 @@ export const useSavedVendors = () => {
       return;
     }
 
-    const vendorId = vendor.id.toString();
+    const vendorId = vendor.id;
     const isCurrentlySaved = localSavedVendors.has(vendorId);
 
     try {
@@ -66,7 +66,7 @@ export const useSavedVendors = () => {
     }
   }, [user, localSavedVendors, dbSaveVendor, dbRemoveSavedVendor]);
 
-  const isVendorSaved = useCallback((vendorId: string) => {
+  const isVendorSaved = useCallback((vendorId: number) => {
     // Use local state for immediate feedback, fallback to DB state
     return localSavedVendors.has(vendorId) || (dbError ? false : dbIsVendorSaved(vendorId));
   }, [localSavedVendors, dbIsVendorSaved, dbError]);

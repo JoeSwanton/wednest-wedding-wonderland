@@ -6,20 +6,10 @@ import { logger } from '@/lib/logger';
 
 export interface SavedVendor {
   id: string;
-  vendor_id: string;
+  vendor_id: number;
   user_id: string;
   created_at: string;
   vendor_data?: any;
-  vendor_profiles?: {
-    business_name: string;
-    business_category: string;
-    business_email: string;
-    city: string;
-    state: string;
-    bio: string;
-    logo_url?: string;
-    base_price_range?: string;
-  };
 }
 
 // Circuit breaker to prevent infinite retries
@@ -75,19 +65,7 @@ export const useSavedVendorsDB = () => {
 
       const { data, error: fetchError } = await supabase
         .from('saved_vendors')
-        .select(`
-          *,
-          vendor_profiles!saved_vendors_vendor_id_fkey (
-            business_name,
-            business_category,
-            business_email,
-            city,
-            state,
-            bio,
-            logo_url,
-            base_price_range
-          )
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -125,7 +103,7 @@ export const useSavedVendorsDB = () => {
         .from('saved_vendors')
         .insert({
           user_id: user.id,
-          vendor_id: vendorData.id.toString(),
+          vendor_id: vendorData.id,
           vendor_data: vendorData
         });
 
@@ -142,7 +120,7 @@ export const useSavedVendorsDB = () => {
     }
   }, [user, fetchSavedVendors]);
 
-  const removeSavedVendor = useCallback(async (vendorId: string) => {
+  const removeSavedVendor = useCallback(async (vendorId: number) => {
     if (!user || !circuitBreaker.current.canAttempt()) return false;
 
     try {
@@ -165,17 +143,7 @@ export const useSavedVendorsDB = () => {
     }
   }, [user, fetchSavedVendors]);
 
-  const toggleSavedVendor = useCallback(async (vendorId: string) => {
-    const isCurrentlySaved = savedVendors.some(saved => saved.vendor_id === vendorId);
-    
-    if (isCurrentlySaved) {
-      return await removeSavedVendor(vendorId);
-    } else {
-      return await saveVendor({ id: vendorId });
-    }
-  }, [savedVendors, saveVendor, removeSavedVendor]);
-
-  const isVendorSaved = useCallback((vendorId: string) => {
+  const isVendorSaved = useCallback((vendorId: number) => {
     return savedVendors.some(saved => saved.vendor_id === vendorId);
   }, [savedVendors]);
 
@@ -192,7 +160,6 @@ export const useSavedVendorsDB = () => {
     error,
     saveVendor,
     removeSavedVendor,
-    toggleSavedVendor,
     isVendorSaved,
     refetch: fetchSavedVendors
   };
