@@ -140,7 +140,7 @@ const FeaturedVendorsNearYou = () => {
                 <FeaturedVendorCard
                   vendor={vendor}
                   isCouple={isCouple}
-                  isVendorSaved={isVendorSaved}
+                  isVendorSaved={(id: number) => isVendorSaved(id)}
                   onSaveVendor={handleSaveVendor}
                   onVendorClick={handleVendorClick}
                 />
