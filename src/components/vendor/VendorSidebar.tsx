@@ -16,21 +16,8 @@ import {
 } from "@/components/ui/sidebar";
 import { 
   Home, 
-  Calendar, 
-  MessageSquare, 
-  Package, 
-  DollarSign, 
-  Star, 
-  TrendingUp, 
   Settings, 
-  Info, 
-  List,
   LogOut,
-  Image,
-  Inbox,
-  Edit,
-  Plus,
-  ToggleRight,
   Building
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -48,7 +35,6 @@ const VendorSidebar = () => {
         description: "You have been signed out of your account."
       });
     } catch (error) {
-      console.error("Error signing out:", error);
       toast({
         title: "Sign out failed",
         description: "There was a problem signing you out. Please try again.",
@@ -87,79 +73,9 @@ const VendorSidebar = () => {
               
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/vendor/listings">
-                    <List />
-                    <span>My Listings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/bookings">
-                    <Calendar />
-                    <span>Bookings & Inquiries</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/messages">
-                    <MessageSquare />
-                    <span>Messages</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        
-        <SidebarGroup>
-          <SidebarGroupLabel>Business</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/business-profile">
+                  <Link to="/vendor/dashboard">
                     <Building />
-                    <span>Business Profile</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/packages">
-                    <Package />
-                    <span>Packages & Pricing</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/earnings">
-                    <DollarSign />
-                    <span>Payments & Earnings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/reviews">
-                    <Star />
-                    <span>Reviews</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/insights">
-                    <TrendingUp />
-                    <span>Performance & Insights</span>
+                    <span>Dashboard</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -173,18 +89,9 @@ const VendorSidebar = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/vendor/settings">
+                  <Link to="/profile">
                     <Settings />
                     <span>Account Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/vendor/subscription">
-                    <Info />
-                    <span>Subscription & Billing</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

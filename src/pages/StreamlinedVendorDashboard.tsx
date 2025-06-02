@@ -7,14 +7,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Eye, MessageSquare, Calendar as CalendarIcon, CheckCircle, Clock, AlertCircle } from "lucide-react";
 
-// Mock data for simple metrics
-const mockMetrics = {
+// Sample metrics for demonstration
+const sampleMetrics = {
   profileViews: 47,
   inquiries: 3,
   responseRate: "85%"
 };
 
-const mockInquiries = [
+const sampleInquiries = [
   { 
     id: 1, 
     couple: "Emily & Michael", 
@@ -35,7 +35,7 @@ const StreamlinedVendorDashboard = () => {
   const { userProfile } = useAuth();
   const businessName = userProfile?.business_name || "Your Business";
   
-  // Mock application status
+  // Application status - in production this would come from database
   const applicationStatus = "approved"; // Could be: pending_review, approved, needs_changes
 
   const getStatusBadge = (status: string) => {
@@ -90,7 +90,7 @@ const StreamlinedVendorDashboard = () => {
               <CardDescription>This month</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{mockMetrics.profileViews}</div>
+              <div className="text-3xl font-bold">{sampleMetrics.profileViews}</div>
               <p className="text-sm text-green-600 mt-1">+12% from last month</p>
             </CardContent>
           </Card>
@@ -104,7 +104,7 @@ const StreamlinedVendorDashboard = () => {
               <CardDescription>This month</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{mockMetrics.inquiries}</div>
+              <div className="text-3xl font-bold">{sampleMetrics.inquiries}</div>
               <p className="text-sm text-blue-600 mt-1">New couples interested</p>
             </CardContent>
           </Card>
@@ -118,7 +118,7 @@ const StreamlinedVendorDashboard = () => {
               <CardDescription>Average response time</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{mockMetrics.responseRate}</div>
+              <div className="text-3xl font-bold">{sampleMetrics.responseRate}</div>
               <p className="text-sm text-green-600 mt-1">Within 2 hours</p>
             </CardContent>
           </Card>
@@ -134,9 +134,9 @@ const StreamlinedVendorDashboard = () => {
             <CardDescription>Messages from couples interested in your services</CardDescription>
           </CardHeader>
           <CardContent>
-            {mockInquiries.length > 0 ? (
+            {sampleInquiries.length > 0 ? (
               <div className="space-y-4">
-                {mockInquiries.map(inquiry => (
+                {sampleInquiries.map(inquiry => (
                   <div key={inquiry.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow bg-white">
                     <div className="flex justify-between items-start mb-2">
                       <span className="font-medium text-wednest-brown">{inquiry.couple}</span>
