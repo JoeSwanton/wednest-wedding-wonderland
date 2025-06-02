@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 
 interface RecentlyViewedVendor {
@@ -6,7 +7,7 @@ interface RecentlyViewedVendor {
   type: string;
   location: string;
   rating: number;
-  price: string;
+  priceRange: string;
   image: string;
   viewedAt: number;
 }

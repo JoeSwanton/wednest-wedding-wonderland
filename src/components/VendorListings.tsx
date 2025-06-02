@@ -17,7 +17,8 @@ const transformVendorData = (vendors: any[]) => {
     priceRange: vendor.priceRange || vendor.price || 'Contact for pricing',
     tags: vendor.tags || [],
     verified: vendor.verified || false,
-    featured: vendor.featured || false
+    featured: vendor.featured || false,
+    availability: vendor.availability || 'available'
   }));
 };
 
