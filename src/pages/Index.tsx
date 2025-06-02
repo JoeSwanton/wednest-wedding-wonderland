@@ -8,6 +8,7 @@ import PlanByTimeline from "@/components/landing/PlanByTimeline";
 import LastMinuteDeals from "@/components/landing/LastMinuteDeals";
 import WhatCouplesAreSaying from "@/components/landing/WhatCouplesAreSaying";
 import CreateAccountCTA from "@/components/landing/CreateAccountCTA";
+import RecentlyViewedVendors from "@/components/landing/RecentlyViewedVendors";
 import Footer from "@/components/Footer";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,6 +23,9 @@ const Index = () => {
       <main className="flex-grow">
         {/* Hero Search Bar - Keep top and expand (pill style with icons) */}
         <Hero />
+        
+        {/* Recently Viewed - Show after hero for signed in users */}
+        {user && <RecentlyViewedVendors />}
         
         {/* Trending Destinations - 1st scroll section */}
         <TrendingDestinations />

@@ -12,7 +12,7 @@ const RecentlyViewedVendors = () => {
   }
 
   return (
-    <div className="mb-12">
+    <div className="container mx-auto px-4 mb-12">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl md:text-2xl font-serif text-theme-brown">
           Recently Viewed
@@ -56,7 +56,7 @@ const RecentlyViewedVendors = () => {
                 {vendor.type} • {vendor.location}
               </div>
               <div className="flex justify-between items-center">
-                <div className="text-sm font-semibold text-theme-brown">{vendor.price}</div>
+                <div className="text-sm font-semibold text-theme-brown">{vendor.priceRange}</div>
                 <Button size="sm" className="bg-theme-brown hover:bg-theme-brown-dark text-white text-xs px-3">
                   View Details
                 </Button>

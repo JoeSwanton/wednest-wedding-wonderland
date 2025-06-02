@@ -85,7 +85,7 @@ const FeaturedVendorsNearYou = () => {
       type: vendor.type,
       location: vendor.location,
       rating: vendor.rating,
-      price: vendor.price,
+      priceRange: vendor.price,
       image: vendor.image
     });
   };

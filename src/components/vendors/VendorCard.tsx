@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { MapPin, Heart, Star, Calendar, Clock, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -96,7 +95,7 @@ const VendorCard = ({ vendor }: VendorCardProps) => {
       type: vendor.type,
       location: vendor.location,
       rating: vendor.rating,
-      price: formatPrice(vendor.price),
+      priceRange: formatPrice(vendor.price),
       image: vendor.imageUrl
     });
   };
