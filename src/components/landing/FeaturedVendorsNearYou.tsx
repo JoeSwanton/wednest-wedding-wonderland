@@ -9,11 +9,12 @@ import { useRecentlyViewedVendors } from "@/hooks/useRecentlyViewedVendors";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import VendorFilterTabs from "./VendorFilterTabs";
 import FeaturedVendorCard from "./FeaturedVendorCard";
+import { logger } from "@/lib/logger";
 
 const FeaturedVendorsNearYou = () => {
   const [activeFilter, setActiveFilter] = useState("top-rated");
   const { userProfile } = useAuth();
-  const { toggleSavedVendor, isVendorSaved } = useSavedVendors();
+  const { toggleSavedVendor, isVendorSaved, error: savedVendorsError } = useSavedVendors();
   const { addRecentlyViewed } = useRecentlyViewedVendors();
   const isCouple = userProfile?.user_role === 'couple';
   
@@ -71,21 +72,25 @@ const FeaturedVendorsNearYou = () => {
     }
   ];
 
-  const handleSaveVendor = (e: React.MouseEvent, vendor: any) => {
+  const handleSaveVendor = async (e: React.MouseEvent, vendor: any) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isCouple) {
-      try {
-        toggleSavedVendor(vendor);
-      } catch (error) {
-        // Silently handle save errors to prevent UI issues
-      }
+    
+    if (!isCouple) {
+      logger.warn('Non-couple user attempting to save vendor');
+      return;
+    }
+
+    try {
+      await toggleSavedVendor(vendor);
+    } catch (error) {
+      logger.error('Error in handleSaveVendor', { error });
+      // Don't throw - just log and continue
     }
   };
 
   const handleVendorClick = (vendor: any) => {
     try {
-      // Track the vendor view
       addRecentlyViewed({
         id: vendor.id,
         name: vendor.name,
@@ -96,9 +101,15 @@ const FeaturedVendorsNearYou = () => {
         image: vendor.image
       });
     } catch (error) {
-      // Silently handle tracking errors
+      logger.error('Error tracking vendor view', { error });
+      // Don't throw - just log and continue
     }
   };
+
+  // Show error state if saved vendors functionality is broken
+  if (savedVendorsError) {
+    logger.warn('Saved vendors functionality degraded', { error: savedVendorsError });
+  }
 
   return (
     <ErrorBoundary>
@@ -121,14 +132,19 @@ const FeaturedVendorsNearYou = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {vendors.map((vendor) => (
-              <FeaturedVendorCard
-                key={vendor.id}
-                vendor={vendor}
-                isCouple={isCouple}
-                isVendorSaved={isVendorSaved}
-                onSaveVendor={handleSaveVendor}
-                onVendorClick={handleVendorClick}
-              />
+              <ErrorBoundary key={vendor.id} fallback={
+                <div className="bg-gray-100 rounded-2xl p-6 text-center">
+                  <p className="text-gray-500">Unable to load vendor</p>
+                </div>
+              }>
+                <FeaturedVendorCard
+                  vendor={vendor}
+                  isCouple={isCouple}
+                  isVendorSaved={isVendorSaved}
+                  onSaveVendor={handleSaveVendor}
+                  onVendorClick={handleVendorClick}
+                />
+              </ErrorBoundary>
             ))}
           </div>
 

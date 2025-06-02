@@ -1,51 +1,81 @@
 
-import { useState, useEffect } from 'react';
-import { VendorData } from '@/components/vendors/VendorCard';
+import { useState, useCallback, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSavedVendorsDB } from './useSavedVendorsDB';
+import { logger } from '@/lib/logger';
 
 export const useSavedVendors = () => {
-  const [savedVendors, setSavedVendors] = useState<VendorData[]>([]);
+  const { user } = useAuth();
+  const [localSavedVendors, setLocalSavedVendors] = useState<Set<number>>(new Set());
+  
+  // Use the DB hook with error handling
+  const { 
+    savedVendors: dbSavedVendors, 
+    loading: dbLoading, 
+    error: dbError,
+    saveVendor: dbSaveVendor,
+    removeSavedVendor: dbRemoveSavedVendor,
+    isVendorSaved: dbIsVendorSaved
+  } = useSavedVendorsDB();
 
-  // Load saved vendors from localStorage on mount
+  // Sync local state with DB state
   useEffect(() => {
-    const saved = localStorage.getItem('savedVendors');
-    if (saved) {
-      try {
-        setSavedVendors(JSON.parse(saved));
-      } catch (error) {
-        console.error('Error loading saved vendors:', error);
-        setSavedVendors([]);
-      }
+    if (dbSavedVendors && Array.isArray(dbSavedVendors)) {
+      const vendorIds = new Set(dbSavedVendors.map(vendor => vendor.vendor_id));
+      setLocalSavedVendors(vendorIds);
     }
-  }, []);
+  }, [dbSavedVendors]);
 
-  // Save to localStorage whenever savedVendors changes
-  useEffect(() => {
-    localStorage.setItem('savedVendors', JSON.stringify(savedVendors));
-  }, [savedVendors]);
+  const toggleSavedVendor = useCallback(async (vendor: any) => {
+    if (!user) {
+      logger.warn('Cannot save vendor: user not authenticated');
+      return;
+    }
 
-  const toggleSavedVendor = (vendor: VendorData) => {
-    setSavedVendors(prev => {
-      const isAlreadySaved = prev.some(v => v.id === vendor.id);
-      if (isAlreadySaved) {
-        return prev.filter(v => v.id !== vendor.id);
+    const vendorId = vendor.id;
+    const isCurrentlySaved = localSavedVendors.has(vendorId);
+
+    try {
+      // Optimistic update
+      const newSavedVendors = new Set(localSavedVendors);
+      if (isCurrentlySaved) {
+        newSavedVendors.delete(vendorId);
       } else {
-        return [...prev, vendor];
+        newSavedVendors.add(vendorId);
       }
-    });
-  };
+      setLocalSavedVendors(newSavedVendors);
 
-  const isVendorSaved = (vendorId: number) => {
-    return savedVendors.some(v => v.id === vendorId);
-  };
+      // Attempt DB operation
+      let success = false;
+      if (isCurrentlySaved) {
+        success = await dbRemoveSavedVendor(vendorId);
+      } else {
+        success = await dbSaveVendor(vendor);
+      }
 
-  const clearSavedVendors = () => {
-    setSavedVendors([]);
-  };
+      // Revert on failure
+      if (!success) {
+        setLocalSavedVendors(localSavedVendors);
+        logger.error('Failed to toggle saved vendor, reverting local state');
+      }
+      
+    } catch (error) {
+      // Revert optimistic update on error
+      setLocalSavedVendors(localSavedVendors);
+      logger.error('Error toggling saved vendor', { error });
+    }
+  }, [user, localSavedVendors, dbSaveVendor, dbRemoveSavedVendor]);
+
+  const isVendorSaved = useCallback((vendorId: number) => {
+    // Use local state for immediate feedback, fallback to DB state
+    return localSavedVendors.has(vendorId) || (dbError ? false : dbIsVendorSaved(vendorId));
+  }, [localSavedVendors, dbIsVendorSaved, dbError]);
 
   return {
-    savedVendors,
+    savedVendors: dbSavedVendors || [],
+    loading: dbLoading,
+    error: dbError,
     toggleSavedVendor,
-    isVendorSaved,
-    clearSavedVendors
+    isVendorSaved
   };
 };
