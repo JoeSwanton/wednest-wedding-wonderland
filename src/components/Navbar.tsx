@@ -65,9 +65,9 @@ const Navbar = () => {
   return <nav className="w-full py-3 px-4 md:px-8 flex items-center justify-between border-b border-theme-beige bg-theme-brown">
       <Link to="/" className="flex items-center">
         <img 
-          src="/lovable-uploads/43ecfcb9-5e73-459e-9507-d03324a0fc6c.png" 
+          src="/lovable-uploads/99b89483-5dd2-4469-af6f-680d3a466993.png" 
           alt="Enosi" 
-          className="h-6 md:h-7 w-auto"
+          className="h-8 md:h-10 w-auto"
         />
       </Link>
       

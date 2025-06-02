@@ -134,12 +134,19 @@ const DashboardSidebar = () => {
     )}>
       <div className="p-4 border-b border-gray-100 flex items-center justify-between">
         <Link to="/" className={cn("flex items-center", isCollapsed && "justify-center")}>
-          <h1 className={cn("text-xl font-serif font-semibold text-theme-brown transition-opacity duration-300", 
-            isCollapsed && "opacity-0 w-0")}>
-            Enosi
-          </h1>
-          <span className={cn("text-xl font-serif font-semibold text-theme-brown", 
-            !isCollapsed && "hidden")}>E</span>
+          {isCollapsed ? (
+            <img 
+              src="/lovable-uploads/99b89483-5dd2-4469-af6f-680d3a466993.png" 
+              alt="Enosi" 
+              className="h-6 w-auto"
+            />
+          ) : (
+            <img 
+              src="/lovable-uploads/99b89483-5dd2-4469-af6f-680d3a466993.png" 
+              alt="Enosi" 
+              className="h-8 w-auto"
+            />
+          )}
         </Link>
         <button 
           onClick={() => setIsCollapsed(!isCollapsed)}
